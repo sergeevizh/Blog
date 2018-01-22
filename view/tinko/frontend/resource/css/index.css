@@ -1,0 +1,217 @@
+/* для главной страницы сайта */
+#about-company {
+    list-style: none;
+    background: url(../img/icon-about-company.png) left center no-repeat;
+    padding-left: 30px;
+}
+    #about-company > li {
+        font-size: 16px;
+        line-height: 18px;
+    }
+
+/* слайдер */
+#banner-slider {
+    list-style: none;
+    margin-bottom: 20px;
+}
+    #banner-slider li:not(:first-child) {
+        display: none;
+    }
+    #banner-slider img {
+        max-width: 100%;
+    }
+
+/* вкладки: новинки и лидеры продаж */
+#new-hit-tabs {
+    margin-bottom: 20px;
+}
+    #new-hit-tabs > ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-bottom: 1px solid #d1d1d1;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    #new-hit-tabs > ul:after {
+        content: ' ';
+        display: table;
+        clear: both;
+    }
+        #new-hit-tabs > ul > li {
+            float: left;
+            position: relative;
+            border: 1px solid #d1d1d1;
+            border-bottom: none;
+            margin-left: 10px;
+            background: #f0f0f0;
+        }
+        #new-hit-tabs > ul > li:first-child {
+            margin-left: 20px;
+        }
+        #new-hit-tabs > ul > li.current {
+            background: #fff;
+        }
+        #new-hit-tabs > ul > li.current:after {
+            display: block;
+            box-sizing: border-box;
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: #fff;
+            top: 32px;
+            content: '';
+        }
+            #new-hit-tabs > ul > li > a {
+                display: block;
+                padding: 0 15px;
+                height: 32px;
+                line-height: 32px;
+                color: #395985;
+                text-decoration: none;
+                max-width: 105px;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+                #new-hit-tabs > ul > li > a > span {
+                    border-bottom: 1px dashed #395985;
+                }
+    #new-hit-tabs > div {
+        max-height: 180px;
+        overflow: hidden;
+    }
+
+.new-hit-item {
+    box-sizing: border-box;
+    padding: 4px;
+    border: 1px solid #f0f0f0;
+    width: 130px;
+    height: 176px;
+    background: #fafafa;
+    text-align: center;
+}
+    .new-hit-item > div:first-child {
+        height: 30px;
+        margin-bottom: 4px;
+        overflow: hidden;
+    }
+        .new-hit-item > div:first-child > a {
+            font-size: 14px;
+            line-height: 15px;
+            height: 30px;
+            display: block;
+        }
+    .new-hit-item > div:nth-child(2) {
+        margin-bottom: 5px;
+    }
+        .new-hit-item > div:nth-child(2) > a {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            padding: 4px;
+            border: 1px solid #f0f0f0;
+            background: #fff;
+        }
+    .new-hit-item > div:last-child {
+        height: 17px;
+        color: #969696;
+        overflow: hidden;
+    }
+        .new-hit-item > div:last-child > span {
+            font-weight: bold;
+            color: #395985;
+            font-size: 16px;
+            line-height: 16px;
+            letter-spacing: -1px;
+            word-spacing: -1px;
+        }
+
+#hit-products > ul, #new-products > ul {
+    overflow: hidden;
+    list-style: none;
+}
+    #hit-products > ul > li, #new-products > ul > li {
+        float: left;
+        /* !!! */ margin: 0 10px 10px 0;
+    }
+
+/* список новостей */
+.news-list {
+
+}
+    .news-list > div {
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    .news-list > div:last-child {
+        margin-bottom: 0;
+    }
+        .news-list > div > div:first-child {
+            float: left
+        }
+        .news-list > div > div:first-child a {
+            display: block;
+            width: 80px;
+            height: 80px;
+            padding: 5px;
+            border: 1px solid #d1d1d1;
+        }
+        .news-list > div > div:first-child img {
+            width: 80px;
+            height: 80px;
+        }
+        .news-list > div > div:last-child {
+            margin-left: 110px;
+        }
+            .news-list > div > div:last-child .news-date {
+                margin-bottom: 2px;
+                font-size: 12px;
+                color: #969696;
+            }
+            .news-list > div > div:last-child .news-heading {
+
+            }
+                .news-list > div > div:last-child .news-heading h3 {
+                    margin: 0 0 5px 0;
+                    font-size: 15px;
+                    line-height: 17px;
+                }
+                .news-list > div > div:last-child .news-heading h3 a {
+                    font-size: 15px;
+                    line-height: 17px;
+                    font-weight: normal;
+                }
+            .news-list > div > div:last-child .news-excerpt {
+                margin-bottom: 5px;
+            }
+                .news-list > div > div:last-child .news-category a {
+                    font-size: 12px;
+                }
+
+@media screen and (max-width: 560px) {
+    /* список новостей */
+    .news-list > div > div:first-child {
+        display: none;
+    }
+    .news-list > div > div:last-child {
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #new-hit-tabs > ul > li {
+        margin-left: 5px;
+    }
+    #new-hit-tabs > ul > li:first-child {
+        margin-left: 5px;
+    }
+        #new-hit-tabs > ul > li > a {
+            padding: 0 5px;
+        }
+}
+@media screen and (max-width: 400px) {
+    .tabs > ul > li > a {
+        max-width: 120px !important;
+    }
+}
