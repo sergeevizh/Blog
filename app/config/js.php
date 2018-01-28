@@ -23,36 +23,11 @@ $js = array(
             'fancybox/jquery.fancybox.pack.js',
             'lightbox.js',
         ),
-        'wished'          => 'wished.js',        // избранное (отложенные товары)
-        'page-40'         => array(              // для страницы «Контакты»
+        'page-40'         => array(              // для страниц
             'tabs.js',
             'fancybox/jquery.mousewheel-3.0.6.pack.js',
             'fancybox/jquery.fancybox.pack.js',
             'lightbox.js'
-        ),
-        'page-39'         => array(              // для страницы «О компании»
-            'fancybox/jquery.mousewheel-3.0.6.pack.js',
-            'fancybox/jquery.fancybox.pack.js',
-            'lightbox.js',
-        ),
-        'page-41'         => array(              // для страницы «Доставка»
-            'tabs.js',
-            'http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU',
-            'page/offices-map-route.js',
-            'page/delivery-map.js',
-        ),
-        'page-51'         => array(              // для страницы «Партнеры»
-            'fancybox/jquery.mousewheel-3.0.6.pack.js',
-            'fancybox/jquery.fancybox.pack.js',
-            'lightbox.js',
-        ),
-        'page-52'         => array(              // для страницы «Библиотека»
-            'page/library.js',
-        ),
-        'page-55'         => array(              // для страницы «Новый сайт»
-            'fancybox/jquery.mousewheel-3.0.6.pack.js',
-            'fancybox/jquery.fancybox.pack.js',
-            'lightbox.js',
         ),
         /*
          * ПРИМЕР ПОДКЛЮЧЕНИЯ ФАЙЛОВ, НЕ УДАЛЯТЬ!

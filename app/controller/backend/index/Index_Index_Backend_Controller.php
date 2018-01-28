@@ -24,18 +24,18 @@ class Index_Index_Backend_Controller extends Backend_Controller {
          */
         parent::input();
 
-        // получаем от модели массив последних заказов в магазине
-        $lastOrders = $this->orderBackendModel->getAllOrders();
-
-        // получаем от модели массив последних новостей
-        $lastNews = $this->blogBackendModel->getAllPosts();
+        // получаем от модели массив последних постов блога
+        $lastPosts = $this->blogBackendModel->getAllPosts();
+        
+        // получаем от модели массив последних статей
+        $lastArticles = $this->articleBackendModel->getAllArticles();
 
         /*
          * переменные, которые будут переданы в шаблон center.php
          */
         $this->centerVars = array(
-            'lastOrders' => $lastOrders, // массив последних заказов
-            'lastNews'   => $lastNews,   // массив последних новостей
+            'lastPosts'     => $lastPosts,    // массив последних постов
+            'lastArticles'  => $lastArticles, // массив последних статей
         );
 
     }

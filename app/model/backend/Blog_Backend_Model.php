@@ -99,64 +99,6 @@ class Blog_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Возвращает массив файлов за последние $count месяцев
-     */
-    public function getFoldersAndFiles($count = 5) {
-        $year = date('Y');
-        $month = date('n');
-        while ($count) {
-            $temp = $month;
-            if (strlen($temp) == 1) {
-                $temp = '0' . $temp;
-            }
-            $folder = 'files/blog/' . $year . '/' . $temp;
-            $files[$folder] = $this->getFiles($folder);
-            $count--;
-            $month--;
-            if ( ! $month) {
-                $month = 12;
-                $year--;
-            }
-        }
-        return $files;
-    }
-
-    /**
-     * Функция возвращает массив файлов в папке $folder
-     */
-    private function getFiles($folder) {
-        if (!is_dir($folder)) {
-            return array();
-        }
-        $items = scandir($folder);
-        $files = array();
-        foreach ($items as $item) {
-            if ($item == '.' || $item == '..') continue;
-            $type = null;
-            $ext = pathinfo($item, PATHINFO_EXTENSION);
-            if (in_array($ext, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) {
-                $type = 'img';
-            } elseif ($ext == 'pdf') {
-                $type = 'pdf';
-            } elseif ($ext == 'zip') {
-                $type = 'zip';
-            } elseif (in_array($ext, array('doc', 'docx'))) {
-                $type = 'doc';
-            } elseif (in_array($ext, array('xls', 'xlsx'))) {
-                $type = 'xls';
-            } elseif (in_array($ext, array('ppt', 'pptx'))) {
-                $type = 'ppt';
-            }
-            $files[] = array(
-                'name' => $item,
-                'path' => $this->config->site->url . $folder . '/' . $item,
-                'type' => $type
-            );
-        }
-        return $files;
-    }
-
-    /**
      * Функция добавляет новую запись (пост) блога
      */
     public function addPost($data) {
@@ -190,6 +132,9 @@ class Blog_Backend_Model extends Backend_Model {
 
         // загружаем файл изображения
         $this->uploadImage($id);
+        
+        // загружаем файлы поста
+        $this->uploadFiles($id);
 
     }
 
@@ -265,34 +210,32 @@ class Blog_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Функция загружает файл для дальнейшей вставки его в запись (пост) блога
+     * Функция загружает новые файлы и удаляет старые для поста
+     * с уникальным идентификатором $id
      */
-    public function uploadFiles() {
+    private function uploadFiles($id) {
 
-        if (empty($_FILES['files'])) {
-            return;
+        // создаем директорию для хранения файлов поста
+        if (!is_dir('files/blog/' . $id)) {
+            mkdir('files/blog/' . $id);
         }
 
-        // создаем папку, если она еще не существует
-        $year = date('Y');
-        $folder = 'files/blog/' . $year;
-        if ( ! is_dir($folder)) {
-            mkdir($folder);
-        }
-        $month = date('m');
-        $folder = $folder . '/' . $month;
-        if ( ! is_dir($folder)) {
-            mkdir($folder);
+        // удаляем файлы, загруженные ранее
+        if (isset($_POST['remove_files'])) {
+            foreach ($_POST['remove_files'] as $name) {
+                if (is_file('files/blog/' . $id . '/' . $name)) {
+                    unlink('files/blog/' . $id . '/' . $name);
+                }
+            }
         }
 
-        // допустимые mime-типы файлов
+        // загружаем новые файлы
         $mimeTypes = array(
             'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png', 'image/bmp',
             'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'application/zip', 'application/x-zip-compressed', 'application/pdf');
-        // донустимые расширения файлов
         $exts = array(
             'jpg', 'jpeg', 'gif', 'png', 'bmp', 'doc', 'docx',
             'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'pdf'
@@ -300,10 +243,6 @@ class Blog_Backend_Model extends Backend_Model {
         $count = count($_FILES['files']['name']);
         // цикл по всем загруженным файлам
         for ($i = 0; $i < $count; $i++) {
-            // произошла ошибка при загрузке файла
-            if ($_FILES['files']['error'][$i]) {
-                continue;
-            }
             $ext = pathinfo($_FILES['files']['name'][$i], PATHINFO_EXTENSION);
             // недопустимое расширение файла
             if ( ! in_array($ext, $exts)) {
@@ -316,7 +255,7 @@ class Blog_Backend_Model extends Backend_Model {
             // загружаем файл
             move_uploaded_file(
                 $_FILES['files']['tmp_name'][$i],
-                $folder . '/' . $_FILES['files']['name'][$i]
+                'files/blog/' . $id . '/' . $_FILES['files']['name'][$i]
             );
         }
 
@@ -332,11 +271,17 @@ class Blog_Backend_Model extends Backend_Model {
                   WHERE
                       `id` = :id";
         $this->database->execute($query, array('id' => $id));
-        // удаляем файл изображения
-        $temp = (string)$id;
-        $folfer = $temp[0];
-        if (is_file('files/blog/thumb/' . $folfer . '/' . $id . '.jpg')) {
-            unlink('files/blog/thumb/' . $folfer . '/' . $id . '.jpg');
+        // удаляем файлы и директорию
+        $dir = 'files/blog/' . $id;
+        if (is_dir($dir)) {
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                if ($file == '.' || $file == '..') {
+                    continue;
+                }
+                unlink($dir . '/' . $file);
+            }
+            rmdir($dir);
         }
     }
 

@@ -10,37 +10,9 @@ class Article_Frontend_Model extends Frontend_Model {
     }
 
     /**
-     * Возвращает массив всех статей; результаты работы кэшируются
-     */
-    public function getAllArticles($start = 0) {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->allArticles($start);
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()-start-' . $start;
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
-    }
-
-    /**
      * Возвращает массив всех статей (во всех категориях)
      */
-    protected function allArticles($start = 0) {
+    public function getAllArticles($start = 0) {
 
         $query = "SELECT
                       `a`.`id` AS `id`, `a`.`name` AS `name`, `a`.`excerpt` AS `excerpt`,
@@ -48,7 +20,7 @@ class Article_Frontend_Model extends Frontend_Model {
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
                   FROM
-                      `articles` `a` INNER JOIN `articles_categories` `b`
+                      `article_items` `a` INNER JOIN `article_categories` `b`
                       ON `a`.`category` = `b`.`id`
                   WHERE
                       1
@@ -80,75 +52,17 @@ class Article_Frontend_Model extends Frontend_Model {
     }
 
     /**
-     * Возвращает общее количество статей (во всех категориях);
-     * результат работы кэшируется
-     */
-    public function getCountAllArticles() {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->countAllArticles();
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()';
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
-    }
-
-    /**
      * Возвращает общее количество статей (во всех категориях)
      */
-    protected function countAllArticles() {
-        $query = "SELECT COUNT(*) FROM `articles` WHERE 1";
-        return $this->database->fetchOne($query, array(), $this->enableDataCache);
-    }
-
-    /**
-     * Возвращает массив статей категории с уникальным идентификатором $id;
-     * результат работы кэшируется
-     */
-    public function getCategoryArticles($id, $start) {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->categoryArticles($id, $start);
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()-id-' . $id . '-start-' . $start;
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
+    public function getCountAllArticles() {
+        $query = "SELECT COUNT(*) FROM `article_items` WHERE 1";
+        return $this->database->fetchOne($query);
     }
 
     /**
      * Возвращает массив статей категории с уникальным идентификатором $id
      */
-    protected function categoryArticles($id, $start) {
+    public function getCategoryArticles($id, $start) {
 
         $query = "SELECT
                       `a`.`id` AS `id`, `a`.`name` AS `name`, `a`.`excerpt` AS `excerpt`,
@@ -156,7 +70,7 @@ class Article_Frontend_Model extends Frontend_Model {
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
                   FROM
-                      `articles` `a` INNER JOIN `articles_categories` `b` ON `a`.`category` = `b`.`id`
+                      `article_items` `a` INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       `a`.`category` = :id
                   ORDER BY
@@ -187,80 +101,22 @@ class Article_Frontend_Model extends Frontend_Model {
     }
 
     /**
-     * Возвращает количество статей в категории с уникальным идентификатором $id;
-     * результат работы кэшируется
-     */
-    public function getCountCategoryArticles($id) {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->countCategoryArticles($id);
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()-id-' . $id;
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
-    }
-
-    /**
      * Возвращает количество статей в категории с уникальным идентификатором $id
      */
-    protected function countCategoryArticles($id) {
+    public function getCountCategoryArticles($id) {
         $query = "SELECT
                       COUNT(*)
                   FROM
-                      `articles`
+                      `article_items`
                   WHERE
                       `category` = :id";
         return $this->database->fetchOne($query, array('id' => $id));
     }
 
     /**
-     * Возвращает информацию о статье с уникальным идентификатором $id;
-     * результат работы кэшируется
-     */
-    public function getArticle($id) {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->article($id);
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()-id-' . $id;
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
-    }
-
-    /**
      * Возвращает информацию о статье с уникальным идентификатором $id
      */
-    protected function article($id) {
+    protected function getArticle($id) {
 
         $query = "SELECT
                       `a`.`name` AS `name`, `a`.`keywords` AS `keywords`, `a`.`description` AS `description`,
@@ -269,7 +125,7 @@ class Article_Frontend_Model extends Frontend_Model {
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
                   FROM
-                      `articles` `a` INNER JOIN `articles_categories` `b` ON `a`.`category` = `b`.`id`
+                      `article_items` `a` INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       `a`.`id` = :id";
         return $this->database->fetch($query, array('id' => $id));
@@ -277,42 +133,14 @@ class Article_Frontend_Model extends Frontend_Model {
     }
 
     /**
-     * Возвращает массив всех категорий статей; результат работы кэшируется
-     */
-    public function getCategories() {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->categories();
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()';
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
-    }
-
-    /**
      * Возвращает массив всех категорий статей
      */
-    protected function categories() {
+    public function getCategories() {
 
         $query = "SELECT
                       `id`, `name`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       1
                   ORDER BY
@@ -328,43 +156,14 @@ class Article_Frontend_Model extends Frontend_Model {
     }
 
     /**
-     * Возвращает информацию о категории с уникальным идентификатором $id;
-     * результат работы кэшируется
-     */
-    public function getCategory($id) {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->category($id);
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()-id-' . $id;
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
-    }
-
-    /**
      * Возвращает информацию о категории с уникальным идентификатором $id
      */
-    protected function category($id) {
+    public function getCategory($id) {
 
         $query = "SELECT
                       `name`, `description`, `keywords`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       `id` = :id";
         return $this->database->fetch($query, array('id' => $id));

@@ -49,33 +49,28 @@ class Additem_Menu_Backend_Controller extends Menu_Backend_Controller {
         // получаем от модели массив всех страниц сайта
         $pages = $this->menuBackendModel->getAllPages();
 
-        // получаем от модели массив категорий каталога верхнего уровня
-        $catalogCategories = $this->menuBackendModel->getRootCategories();
-
         // получаем массив всех категорий блога
         $blogCategories = $this->menuBackendModel->getBlogCategories();
 
-        // получаем массив всех категорий типовых решений
-        $solutionCategories = $this->menuBackendModel->getSolutionCategories();
+        // получаем массив всех категорий статей
+        $articleCategories = $this->menuBackendModel->getArticleCategories();
 
         /*
          * массив переменных, которые будут переданы в шаблон center.php
          */
         $this->centerVars = array(
             // хлебные крошки
-            'breadcrumbs'         => $breadcrumbs,
+            'breadcrumbs'       => $breadcrumbs,
             // атрибут action тега form
-            'action'              => $this->menuBackendModel->getURL('backend/menu/additem'),
+            'action'            => $this->menuBackendModel->getURL('backend/menu/additem'),
             // массив всех пунктов меню для возможности выбора родителя
-            'menuItems'           => $menuItems,
+            'menuItems'         => $menuItems,
             // массив всех страниц сайта
-            'pages'               => $pages,
-            // массив категорий каталога верхнего уровня
-            'catalogCategories'   => $catalogCategories,
+            'pages'             => $pages,
             // массив категорий блога
-            'blogCategories'      => $blogCategories,
-            // массив категорий типовых решений
-            'solutionCategories'  => $solutionCategories,
+            'blogCategories'    => $blogCategories,
+            // массив категорий статей
+            'articleCategories' => $solutionCategories,
         );
         // если были ошибки при заполнении формы, передаем в шаблон массив сообщений об ошибках
         if ($this->issetSessionData('addMenuItemForm')) {

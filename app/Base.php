@@ -15,11 +15,6 @@ abstract class Base {
     protected $config;
 
     /**
-     * для хранения экземпляра класса Cache
-     */
-    protected $cache;
-
-    /**
      * для хранения экземпляра класса базы данных Database
      */
     protected $database;
@@ -36,8 +31,6 @@ abstract class Base {
         $this->register = Register::getInstance();
         // настройки приложения, экземпляр класса Config
         $this->config = Config::getInstance();
-        // экземпляр класса Cache
-        $this->cache = Cache::getInstance();
         // экземпляр класса базы данных
         $this->database = Database::getInstance();
         // административная часть сайта?

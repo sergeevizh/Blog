@@ -64,41 +64,36 @@ class Edititem_Menu_Backend_Controller extends Menu_Backend_Controller {
         // получаем от модели массив всех страниц сайта
         $pages = $this->menuBackendModel->getAllPages();
 
-        // получаем от модели массив категорий каталога верхнего уровня
-        $catalogCategories = $this->menuBackendModel->getRootCategories();
-
         // получаем массив всех категорий блога
         $blogCategories = $this->menuBackendModel->getBlogCategories();
 
-        // получаем массив всех категорий типовых решений
-        $solutionCategories = $this->menuBackendModel->getSolutionCategories();
+        // получаем массив всех категорий статей
+        $articleCategories = $this->menuBackendModel->getArticleCategories();
 
         /*
          * массив переменных, которые будут переданы в шаблон center.php
          */
         $this->centerVars = array(
             // хлебные крошки
-            'breadcrumbs'        => $breadcrumbs,
+            'breadcrumbs'       => $breadcrumbs,
             // атрибут action тега form
-            'action'             => $this->menuBackendModel->getURL('backend/menu/edititem/id/' . $this->params['id']),
+            'action'            => $this->menuBackendModel->getURL('backend/menu/edititem/id/' . $this->params['id']),
             // уникальный идентификатор пункта меню
-            'id'                 => $this->params['id'],
+            'id'                => $this->params['id'],
             // наименование пункта меню
-            'name'               => $menuItem['name'],
+            'name'              => $menuItem['name'],
             // URL пункта меню
-            'url'                => $menuItem['url'],
+            'url'               => $menuItem['url'],
             // родитель пункта меню
-            'parent'             => $menuItem['parent'],
+            'parent'            => $menuItem['parent'],
             // массив всех пунктов меню для возможности выбора родителя
-            'menuItems'          => $menuItems,
+            'menuItems'         => $menuItems,
             // массив всех страниц сайта
-            'pages'              => $pages,
-            // массив категорий каталога верхнего уровня
-            'catalogCategories'  => $catalogCategories,
+            'pages'             => $pages,
             // массив категорий блога
-            'blogCategories'     => $blogCategories,
-            // массив категорий типовых решений
-            'solutionCategories' => $solutionCategories,
+            'blogCategories'    => $blogCategories,
+            // массив категорий статей
+            'articleCategories' => $articleCategories,
         );
         // если были ошибки при заполнении формы, передаем в шаблон сохраненные данные
         // формы и массив сообщений об ошибках

@@ -22,39 +22,10 @@ $css = array(
             'fancybox/jquery.fancybox.css',
         ),
         'sitemap'         => 'sitemap.css',   // карта сайта
-        'page-40'         => array(           // для страницы «Контакты»
+        'page'         => array(              // для страниц
             'tabs.css',
             'page/contacts.css',
             'fancybox/jquery.fancybox.css',
-        ),
-        'page-39'          => array(          // для страницы «О компании»
-            'page/about.css',
-            'fancybox/jquery.fancybox.css',
-        ),
-        'page-41'         => array(           // для страницы «Доставка»
-            'tabs.css',
-        ),
-        'page-49'         => array(           // для страницы «Консультанты»
-            'page/consultants.css',
-        ),
-        'page-51'         => array(           // для страницы «Партнеры»
-            'page/partners.css',
-            'fancybox/jquery.fancybox.css',
-        ),
-        'page-52'         => array(           // для страницы «Библиотека»
-            'page/library.css',
-        ),
-        'page-53'         => array(           // для страницы «Госзакупки»
-            'page/trading.css',
-        ),
-        'page-54'         => array(           // для страницы «Грани безопасности»
-            'page/journal.css',
-        ),
-        'page-55'         => array(           // для страницы «Новый сайт»
-            'fancybox/jquery.fancybox.css',
-        ),
-        'page-56'         => array(           // для страницы «В помощь покупателю»
-            'page/for-buyer.css',
         ),
         /*
          * ПРИМЕР ПОДКЛЮЧЕНИЯ ФАЙЛОВ, НЕ УДАЛЯТЬ!

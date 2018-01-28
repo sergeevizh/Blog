@@ -91,22 +91,6 @@ class Sitemap_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Функция возвращает корневые категории каталога, для контроллеров,
-     * отвечающих за добавление/редактирование элемента карты сайта
-     */
-    public  function getRootCategories() {
-        $query = "SELECT
-                      `id`, `name`
-                  FROM
-                      `categories`
-                  WHERE
-                      `parent` = 0
-                  ORDER BY
-                      `sortorder`";
-        return $this->database->fetchAll($query, array());
-    }
-
-    /**
      * Возвращает массив категорий блога, для контроллеров, отвечающих
      * за добавление/редактирование элемента карты сайта
      */
@@ -123,14 +107,14 @@ class Sitemap_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Возвращает массив категорий типовых решений, для контроллеров,
+     * Возвращает массив категорий статей, для контроллеров,
      * отвечающих за добавление/редактирование элемента карты сайта
      */
-    public function getSolutionCategories() {
+    public function getArticleCategories() {
         $query = "SELECT
                       `id`, `name`
                   FROM
-                      `solutions_categories`
+                      `article_categories`
                   WHERE
                       1
                   ORDER BY

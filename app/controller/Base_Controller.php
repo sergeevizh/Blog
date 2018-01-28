@@ -41,11 +41,6 @@ abstract class Base_Controller extends Base {
     protected $notFoundRecord = false;
 
     /**
-     * запрос с использованием XmlHttpRequest?
-     */
-    protected $xhr = false;
-
-    /**
      *  параметры, передаваемые контроллеру
      */
     protected $params;
@@ -119,8 +114,6 @@ abstract class Base_Controller extends Base {
         parent::__construct();
         // параметры, передававаемые контроллеру
         $this->params = $params;
-        // запрос с использованием XmlHttpRequest?
-        $this->xhr = Router::getInstance()->isXHR();
     }
 
     /**
@@ -128,15 +121,7 @@ abstract class Base_Controller extends Base {
      * необходимые для формирования страницы
      */
     protected function input() {
-        /*
-         * задать пути к файлам шаблонов и пути к подключаемым css и js файлам;
-         * если запрос с использованием XmlHttpRequest, пути к файлам шаблонов
-         * задавать не нужно и css, js файлы подключать не надо, потому как
-         * страница целиком не будет формироваться
-         */
-        if ( ! $this->xhr) {
-            $this->setCssJsTemplateFiles();
-        }
+        $this->setCssJsTemplateFiles();
     }
 
     /**
@@ -381,10 +366,6 @@ abstract class Base_Controller extends Base {
          * подключаемые css файлы
          */
         $host = $this->config->site->url;
-        // Content Delivery Network только для общедоступной части сайта
-        if ( ! $this->backend && $this->config->cdn->enable->css) {
-            $host = $this->config->cdn->url;
-        }
         if (isset($this->config->css->$backfront->$name)) {
             $temp = $this->config->css->$backfront->$name;
             if (is_object($temp)) { // подключаем несколько файлов
@@ -425,10 +406,6 @@ abstract class Base_Controller extends Base {
          * подключаемые js файлы
          */
         $host = $this->config->site->url;
-        // Content Delivery Network только для общедоступной части сайта
-        if (!$this->backend && $this->config->cdn->enable->js) {
-            $host = $this->config->cdn->url;
-        }
         if (isset($this->config->js->$backfront->$name)) {
             $temp = $this->config->js->$backfront->$name;
             if (is_object($temp)) { // подключаем несколько файлов

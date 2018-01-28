@@ -4,22 +4,12 @@ DirectoryIndex index.php
 RewriteEngine On
 
 #
-# 301 редирект с www.server.com/some/path/ на www.server.com/some/path
-#
-# под это условие попадают и запросы типа server.com/some/path/, т.е.
-# если сработал этот редирект, то server.com => www.server.com уже не
-# сработает, так что в итоге будет только один редирект
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} ^(.+)/$
-RewriteRule ^(.+)/$ http://www.host2.ru/$1 [R=301,L]
-
-#
 # 301 редирект с /index.php на корень сайта «/»
 #
 # проверяем соответствие «GET /index.php?a=b HTTP/1.1»; «{3,9}» — потому
 # что GET, POST, PUT, DELETE, …; «?a=b» — могут быть, могут не быть
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php.*\ HTTP/
-RewriteRule ^(.*)index\.php$ http://www.host2.ru [R=301,L]
+RewriteRule ^(.*)index\.php$ http://www.host12.ru [R=301,L]
 
 #
 # одна точка входа, все запросы (кроме файлов и директорий) на /index.php

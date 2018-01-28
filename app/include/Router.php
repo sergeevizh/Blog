@@ -12,11 +12,6 @@ class Router {
     private static $instance;
 
     /**
-     * запрос с использованием XmlHttpRequest?
-     */
-    private $xhr = false;
-
-    /**
      * имя контроллера, по умолчанию index
      */
     private $controller = 'index';
@@ -52,19 +47,9 @@ class Router {
     private $register;
 
     /**
-     * для хранения экземпляра класса Cache
-     */
-    private $cache;
-
-    /**
      * для хранения экземпляра класса базы данных Database
      */
     private $database;
-
-    /**
-     * кэширование данных разрешено?
-     */
-    protected $enableDataCache;
 
 
     /**
@@ -88,46 +73,8 @@ class Router {
         $this->register = Register::getInstance();
         // настройки приложения, экземпляр класса Config
         $this->config = Config::getInstance();
-        // экземпляр класса Cache
-        $this->cache = Cache::getInstance();
         // экземпляр класса базы данных
         $this->database = Database::getInstance();
-        // кэширование данных разрешено?
-        $this->enableDataCache = $this->config->cache->enable->data;
-
-        /*
-         * Этот код не имеет отношения к обычной работе приложения, когда роутер
-         * анализирует строку $_SERVER['REQUEST_URI'], чтобы определить, какой
-         * контроллер должен формировать страницу сайта. Передавая конструктору
-         * параметры, можно принудительно задать имя класса контроллера, который
-         * будет запущен в работу и параметры, передаваемые этому контроллеру.
-         * Таким образом приложение можно запускать из командной строки для
-         * формирования кэша, см. исходный код файла cache/make-cache.php.
-         */
-        if ( ! empty($class)) {
-            /*
-             * Имя класса контроллера: четыре части, разделенные символом подчеркивания,
-             * например Category_Catalog_Frontend_Controller
-             */
-            $temp = explode('_', strtolower($class));
-            if (class_exists($class)) { // такой класс существует?
-                $this->controllerClassName = $class;
-                $this->controller = $temp[1];
-                $this->action = $temp[0];
-                if ('backend' == $temp[1]) {
-                    $this->backend = true;
-                }
-            } else {
-                throw new Exception( 'Класс контроллера ' . $class . ' не найден');
-            }
-            $this->params = $params;
-            return;
-        }
-
-        // запрос с использованием XmlHttpRequest?
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-            $this->xhr = true;
-        }
 
         /*
          * Для того, чтобы через виртуальные адреса controller/action/params
@@ -138,21 +85,6 @@ class Router {
          */
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // строка frontend/catalog/category/id/17
 
-        // если включено кэширование данных
-        if ($this->enableDataCache) {
-            // получаем данные из кэша
-            $data = $this->getCachedData($path);
-
-            $this->xhr                 = $data['xhr'];
-            $this->controller          = $data['controller'];
-            $this->action              = $data['action'];
-            $this->controllerClassName = $data['controllerClassName'];
-            $this->params              = $data['params'];
-            $this->backend             = $data['backend'];
-
-            return;
-        }
-
         $this->parseURL($path);
 
     }
@@ -161,14 +93,6 @@ class Router {
 
         $path = trim($path, '/');
         if ('index.php' == strtolower($path) || '' == $path) {
-            if ($this->xhr) {
-                $this->controllerClassName = 'Xhr_' . $this->controllerClassName;
-                if ( ! class_exists($this->controllerClassName)) { // такой класс существует?
-                    $this->xhr = false;
-                    $this->controller = 'notfound';
-                    $this->controllerClassName = 'Index_Notfound_Frontend_Controller';
-                }
-            }
             return;
         }
         // в админке путь всегда начинается с backend
@@ -220,10 +144,6 @@ class Router {
             return;
         }
 
-        // контроллер обрабытывает запрос типа XmlHttpRequest?
-        if ($this->xhr) {
-            $this->controllerClassName = 'Xhr_' . $this->controllerClassName;
-        }
         if ( ! class_exists($this->controllerClassName)) { // такой класс существует?
             $this->setNotFound();
             return;
@@ -241,52 +161,6 @@ class Router {
                 }
             }
         }
-
-    }
-
-    private function getCachedData($path) {
-
-        $xhr = $this->xhr ? 'true' : 'false';
-        $key = __CLASS__ . '-' . md5($path) . '-xhr-' . $xhr;
-
-        /*
-         * Данные сохранены в кэше?
-         */
-        if ($this->cache->isExists($key)) {
-            // получаем данные из кэша
-            return $this->cache->getValue($key);
-        }
-
-        /*
-         * Данных в кэше нет, но другой процесс поставил блокировку и в
-         * этот момент получает данные, чтобы записать их в кэш, нам надо
-         * их только получить из кэша после снятия блокировки
-         */
-        if ($this->cache->isLocked($key)) {
-            return $this->cache->getValue($key);
-        }
-
-        /*
-         * Данных в кэше нет, блокировка не стоит, значит:
-         * 1. ставим блокировку
-         * 2. получаем данные
-         * 3. записываем данные в кэш
-         * 4. снимаем блокировку
-         */
-        $this->cache->lockValue($key);
-        $this->parseURL($path);
-        $data = array(
-            'xhr'                 => $this->xhr,
-            'controller'          => $this->controller,
-            'action'              => $this->action,
-            'controllerClassName' => $this->controllerClassName,
-            'params'              => $this->params,
-            'backend'             => $this->backend
-        );
-        $this->cache->setValue($key, $data);
-        $this->cache->unlockValue($key);
-
-        return $data;
 
     }
 
@@ -328,13 +202,6 @@ class Router {
     }
 
     /**
-     * Возвращает true, если запрос типа XmlHttpRequest
-     */
-    public function isXHR() {
-        return $this->xhr;
-    }
-
-    /**
      * Функция принудительно устанавливает контроллер Index_Notfound_Frontend_Controller
      * или Index_Notfound_Backend_Controller; это происходит, если роутер не смог найти
      * класс контроллера после анализа $_SERVER['REQUEST_URI'] или если были переданы
@@ -342,7 +209,6 @@ class Router {
      * и index.php.
      */
     public function setNotFound() {
-        $this->xhr = false;
         $this->controller = 'notfound';
         $this->action = 'index';
         $frontback = ($this->backend) ? 'Backend' : 'Frontend';
@@ -380,7 +246,7 @@ class Router {
                       `pages`
                   WHERE
                       1";
-        $pages = $this->database->fetchAll($query, array(), $this->enableDataCache);
+        $pages = $this->database->fetchAll($query);
         foreach ($pages as $page) {
             if ($path === $page['sefurl']) {
                 return 'frontend/page/index/id/' . $page['id'];
