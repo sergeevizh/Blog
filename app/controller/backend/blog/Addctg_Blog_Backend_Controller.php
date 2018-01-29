@@ -37,6 +37,10 @@ class Addctg_Blog_Backend_Controller extends Blog_Backend_Controller {
 
         $this->title = 'Новая категория. ' . $this->title;
 
+        // получаем от модели массив категорий верхнего уровня,
+        // для возможности выбора родителя
+        $parents = $this->blogBackendModel->getRootCategories();
+
         // формируем хлебные крошки
         $breadcrumbs = array(
             array(
@@ -60,7 +64,9 @@ class Addctg_Blog_Backend_Controller extends Blog_Backend_Controller {
             // хлебные крошки
             'breadcrumbs' => $breadcrumbs,
             // атрибут action тега form
-            'action' => $this->blogBackendModel->getURL('backend/blog/addctg'),
+            'action'      => $this->blogBackendModel->getURL('backend/blog/addctg'),
+            // массив категорий верхнего уровня
+            'parents'     => $parents,
         );
         // если были ошибки при заполнении формы, передаем в шаблон массив сообщений об ошибках
         if ($this->issetSessionData('addBlogCategoryForm')) {
@@ -91,6 +97,12 @@ class Addctg_Blog_Backend_Controller extends Blog_Backend_Controller {
         // мета-тег description
         $data['description'] = trim(iconv_substr($_POST['description'], 0, 250));
         $data['description'] = str_replace('"', '', $data['description']);
+
+        // родительская категория
+        $data['parent'] = 0;
+        if (ctype_digit($_POST['parent'])) {
+            $data['parent'] = $_POST['parent'];
+        }
 
         // порядок сортировки
         $data['sortorder'] = 1;

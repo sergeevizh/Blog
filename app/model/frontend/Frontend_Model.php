@@ -5,12 +5,6 @@
  */
 abstract class Frontend_Model extends Base_Model {
 
-    /**
-     * кэшировать данные?
-     */
-    protected $enableDataCache;
-
-
     public function __construct() {
         parent::__construct();
     }

@@ -173,41 +173,17 @@
                 padding: 3px;
             }
 
-/* список всех файлов */
-#all-blog-files {
-
+/* ссылка на страницу с формой для добавления статьи */
+#add-post-all-ctgs {
+    overflow: hidden;
+    list-style: none;
+    margin: 0 0 15px 0;
+    padding: 0;
 }
-    #all-blog-files > div:first-child {
-        margin-bottom: 10px;
+    #add-post-all-ctgs > li:first-child {
+        float: left;
+        width: 50%;
     }
-        #all-blog-files > div:first-child input[type="submit"] {
-            padding: 1px 15px;
-        }
-    #all-blog-files > div:last-child {
-
+    #add-post-all-ctgs > li:last-child {
+        text-align: right;
     }
-        #all-blog-files > div:last-child > div {
-            border: 1px solid #d1d1d1;
-            padding: 5px;
-            margin-bottom: 5px;
-        }
-            #all-blog-files > div:last-child > div > span {
-                display: block;
-                font-size: 15px;
-                margin-bottom: 3px;
-            }
-                #all-blog-files > div:last-child > div > div > ul {
-                    list-style: none;
-                    margin: 0;
-                    padding: 0;
-                    -webkit-column-count: 4;
-                    -moz-column-count: 4;
-                    column-count: 4;
-                }
-                    #all-blog-files > div:last-child > div > div > ul > li > a:hover {
-                        text-decoration: none;
-                    }
-                        #all-blog-files > div:last-child > div > div > ul > li > a:hover > span {
-                            text-decoration: underline;
-                        }
-

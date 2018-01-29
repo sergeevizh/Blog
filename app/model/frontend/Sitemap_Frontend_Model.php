@@ -10,38 +10,9 @@ class Sitemap_Frontend_Model extends Frontend_Model {
     }
 
     /**
-     * Функция возвращает массив всех элементов карты сайта в виде дерева;
-     * результат работы кэшируется
-     */
-    public function getSitemap() {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->sitemap();
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()';
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
-    }
-
-    /**
      * Функция возвращает массив всех элементов карты сайта в виде дерева
      */
-    protected function sitemap() {
+    public function getSitemap() {
         // получаем все элементы карты сайта
         $query = "SELECT
                       `id`, `capurl`, `name`, `parent`
@@ -65,36 +36,7 @@ class Sitemap_Frontend_Model extends Frontend_Model {
      * Функция возвращает хлебные крошки: путь от главной страницы до конкретного
      * элемента карты сайта
      */
-    public function getBreadcrumbs($capurl) {
-
-        /*
-         * если не включено кэширование данных, получаем данные с помощью
-         * запроса к базе данных
-         */
-        if ( ! $this->enableDataCache) {
-            return $this->breadcrumbs($capurl);
-        }
-
-        /*
-         * включено кэширование данных, получаем данные из кэша; если данные
-         * в кэше не актуальны, будет выполнен запрос к базе данных
-         */
-        // уникальный ключ доступа к кэшу
-        $key = __METHOD__ . '()-capurl-' . $capurl;
-        // имя этой функции (метода)
-        $function = __FUNCTION__;
-        // арументы, переданные этой функции
-        $arguments = func_get_args();
-        // получаем данные из кэша
-        return $this->getCachedData($key, $function, $arguments);
-
-    }
-
-    /**
-     * Функция возвращает хлебные крошки: путь от главной страницы до конкретного
-     * элемента карты сайта
-     */
-    protected function breadcrumbs($capurl) {
+    protected function getBreadcrumbs($capurl) {
 
         $query = "SELECT
                       `parent`
@@ -126,7 +68,7 @@ class Sitemap_Frontend_Model extends Frontend_Model {
         }
         $path[] = array('url' => $this->getURL('frontend/index/index'), 'name' => 'Главная');
         $path = array_reverse($path);
-        
+
         return $path;
 
     }

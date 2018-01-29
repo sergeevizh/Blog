@@ -8,8 +8,6 @@
  * $breadcrumbs - хлебные крошки
  * $categories - массив всех категорий
  * $addCtgUrl - URL ссылки на страницу с формой для добавления категории
- * $allPostsUrl - URL ссылки на страницу со списком всех постов блога
- * $allFilesUrl - URL ссылки на страницу со списком всех файлов
  */
 
 defined('ZCMS') or die('Access denied');
@@ -25,13 +23,7 @@ defined('ZCMS') or die('Access denied');
     </div>
 <?php endif; ?>
 
-<h1>Блог</h1>
-
-<ul id="tabs">
-    <li><a href="<?php echo $allPostsUrl; ?>">Посты</a></li>
-    <li class="current"><span>Категории</span></li>
-    <li><a href="<?php echo $allFilesUrl; ?>">Файлы</a></li>
-</ul>
+<h1>Категории блога</h1>
 
 <p><a href="<?php echo $addCtgUrl; ?>">Добавить категорию</a></p>
 

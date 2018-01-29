@@ -18,7 +18,7 @@ class Article_Backend_Model extends Backend_Model {
                       DATE_FORMAT(`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`added`, '%H:%i:%s') AS `time`
                   FROM
-                      `articles`
+                      `article_items`
                   WHERE
                       `category` = :id
                   ORDER BY
@@ -34,7 +34,7 @@ class Article_Backend_Model extends Backend_Model {
         $query = "SELECT
                       COUNT(*)
                   FROM
-                      `articles`
+                      `article_items`
                   WHERE
                       `category` = :id";
         return $this->database->fetchOne($query, array('id' => $id));
@@ -50,7 +50,7 @@ class Article_Backend_Model extends Backend_Model {
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
                   FROM
-                      `articles` `a` INNER JOIN `articles_categories` `b` ON `a`.`category` = `b`.`id`
+                      `article_items` `a` INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       1
                   ORDER BY
@@ -74,7 +74,7 @@ class Article_Backend_Model extends Backend_Model {
         $query = "SELECT
                       COUNT(*)
                   FROM
-                      `articles`
+                      `article_items`
                   WHERE
                       1";
         return $this->database->fetchOne($query);
@@ -92,14 +92,14 @@ class Article_Backend_Model extends Backend_Model {
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
                   FROM
-                      `articles` `a` INNER JOIN `articles_categories` `b` ON `a`.`category` = `b`.`id`
+                      `article_items` `a` INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       `a`.`id` = :id";
         return $this->database->fetch($query, array('id' => $id));
     }
 
     /**
-     * Функция добавляет статью (новую запись в таблицу `articles` базы данных)
+     * Функция добавляет статью (новую запись в таблицу `article_items` базы данных)
      */
     public function addArticle($data) {
 
@@ -107,7 +107,7 @@ class Article_Backend_Model extends Backend_Model {
         $data['added'] = $tmp[2].'-'.$tmp[1].'-'.$tmp[0].' '.$data['time']; // дата и время
         unset($data['date']);
         unset($data['time']);
-        $query = "INSERT INTO `articles`
+        $query = "INSERT INTO `article_items`
                   (
                       `category`,
                       `name`,
@@ -140,7 +140,7 @@ class Article_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Функция обновляет статью (запись в таблице `articles` базы данных)
+     * Функция обновляет статью (запись в таблице `article_items` базы данных)
      */
     public function updateArticle($data) {
 
@@ -149,7 +149,7 @@ class Article_Backend_Model extends Backend_Model {
         unset($data['date']);
         unset($data['time']);
         $query = "UPDATE
-                      `articles`
+                      `article_items`
                   SET
                       `category`    = :category,
                       `name`        = :name,
@@ -183,8 +183,8 @@ class Article_Backend_Model extends Backend_Model {
 
         // удаляем изображение, загруженное ранее
         if (isset($_POST['remove_image'])) {
-            if (is_file('files/article/' . $id . '/' . $id . '.jpg')) {
-                unlink('files/article/' . $id . '/' . $id . '.jpg');
+            if (is_file('files/article/thumb/' . $id . '.jpg')) {
+                unlink('files/article/thumb/' . $id . '.jpg');
             }
         }
 
@@ -198,7 +198,7 @@ class Article_Backend_Model extends Backend_Model {
                     // изменяем размер изображения
                     $this->resizeImage(
                         $_FILES['image']['tmp_name'],
-                        'files/article/' . $id . '/' . $id . '.jpg',
+                        'files/article/thumb/' . $id . '.jpg',
                         100,
                         100,
                         'jpg'
@@ -265,12 +265,16 @@ class Article_Backend_Model extends Backend_Model {
      * Функция удаляет статью с уникальным идентификатором $id
      */
     public function removeArticle($id) {
-        // удаляем запись в таблице `articles` БД
+        // удаляем запись в таблице `article_items` БД
         $query = "DELETE FROM
-                      `articles`
+                      `article_items`
                   WHERE
                       `id` = :id";
         $this->database->execute($query, array('id' => $id));
+        // удаляем изображение
+        if (is_file('files/article/thumb/' . $id . '.jpg')) {
+            unlink('files/article/thumb/' . $id . '.jpg');
+        }
         // удаляем файлы и директорию
         $dir = 'files/article/' . $id;
         if (is_dir($dir)) {
@@ -293,7 +297,7 @@ class Article_Backend_Model extends Backend_Model {
         $query = "SELECT
                       `id`, `name`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       1
                   ORDER BY
@@ -312,19 +316,41 @@ class Article_Backend_Model extends Backend_Model {
     }
 
     /**
+     * Возвращает массив категорий верхнего уровня, для контроллера,
+     * отвечающего за добавление/редактирование категорий
+     */
+    public function getRootCategories() {
+        $query = "SELECT
+                      `id`, `name`
+                  FROM
+                      `article_categories`
+                  WHERE
+                      `parent` = 0
+                  ORDER BY
+                      `sortorder`";
+        $data = $this->database->fetchAll($query);
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
+    }
+
+    /**
      * Возвращает массив категорий статей для контроллеров, отвечающих
      * за добавление и редактирование статей
      */
     public function getCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `parent`, `name`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       1
                   ORDER BY
                       `sortorder`";
-        return $this->database->fetchAll($query);
+        $data = $this->database->fetchAll($query);
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
     }
 
     /**
@@ -334,7 +360,7 @@ class Article_Backend_Model extends Backend_Model {
         $query = "SELECT
                       `name`, `keywords`, `description`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       `id` = :id";
         return $this->database->fetch($query, array('id' => $id));
@@ -345,8 +371,9 @@ class Article_Backend_Model extends Backend_Model {
      */
     public function addCategory($data) {
         // TODO: установить порядок сортировки
-        $query = "INSERT INTO `articles_categories`
+        $query = "INSERT INTO `article_categories`
                   (
+                      `parent`,
                       `name`,
                       `keywords`,
                       `description`,
@@ -354,6 +381,7 @@ class Article_Backend_Model extends Backend_Model {
                   )
                   VALUES
                   (
+                      :parent,
                       :name,
                       :keywords,
                       :description,
@@ -363,12 +391,13 @@ class Article_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Функция обновляет категорию (запись в таблице `articles_categories` базы данных)
+     * Функция обновляет категорию (запись в таблице `article_categories` базы данных)
      */
     public function updateCategory($data) {
         $query = "UPDATE
-                      `articles_categories`
+                      `article_categories`
                   SET
+                      `parent`      = :parent,
                       `name`        = :name,
                       `keywords`    = :keywords,
                       `description` = :description
@@ -386,16 +415,19 @@ class Article_Backend_Model extends Backend_Model {
         $query = "SELECT
                       `sortorder`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       `id` = :id_item_down";
-        $order_down = $this->database->fetchOne($query, array('id_item_down' => $id_item_down));
+        $order_down = $this->database->fetchOne(
+            $query,
+            array('id_item_down' => $id_item_down)
+        );
         // порядок следования и id категории, которая находится ниже и будет поднята вверх,
         // поменявшись местами с категорией, которая опускается вниз
         $query = "SELECT
                       `id`, `sortorder`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       `sortorder` > :order_down
                   ORDER BY
@@ -408,7 +440,7 @@ class Article_Backend_Model extends Backend_Model {
             $order_up = $res['sortorder'];
             // меняем местами категории
             $query = "UPDATE
-                          `articles_categories`
+                          `article_categories`
                       SET
                           `sortorder` = :order_down
                       WHERE
@@ -421,7 +453,7 @@ class Article_Backend_Model extends Backend_Model {
                 )
             );
             $query = "UPDATE
-                          `articles_categories`
+                          `article_categories`
                       SET
                           `sortorder` = :order_up
                       WHERE
@@ -445,16 +477,19 @@ class Article_Backend_Model extends Backend_Model {
         $query = "SELECT
                       `sortorder`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       `id` = :id_item_up";
-        $order_up = $this->database->fetchOne($query, array('id_item_up' => $id_item_up));
+        $order_up = $this->database->fetchOne(
+            $query,
+            array('id_item_up' => $id_item_up)
+        );
         // порядок следования и id категории, которая находится выше и будет опущена вниз,
         // поменявшись местами с категорией, которая поднимается вверх
         $query = "SELECT
                       `id`, `sortorder`
                   FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       `sortorder` < :order_up
                   ORDER BY
@@ -467,7 +502,7 @@ class Article_Backend_Model extends Backend_Model {
             $order_down = $res['sortorder'];
             // меняем местами категории
             $query = "UPDATE
-                          `articles_categories`
+                          `article_categories`
                       SET
                           `sortorder` = :order_down
                       WHERE
@@ -480,7 +515,7 @@ class Article_Backend_Model extends Backend_Model {
                 )
             );
             $query = "UPDATE
-                          `articles_categories`
+                          `article_categories`
                       SET
                           `sortorder` = :order_up
                       WHERE
@@ -496,14 +531,14 @@ class Article_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Функция удаляет категорию (запись в таблице `articles_categories` базы данных)
+     * Функция удаляет категорию (запись в таблице `article_categories` базы данных)
      */
     public function removeCategory($id) {
         // проверяем, что не существует статей этой категории
         $query = "SELECT
                       1
                   FROM
-                      `articles`
+                      `article_items`
                   WHERE
                       `category` = :id
                   LIMIT
@@ -512,9 +547,9 @@ class Article_Backend_Model extends Backend_Model {
         if ($res) {
             return false;
         }
-        // удаляем запись в таблице `articles_categories` БД
+        // удаляем запись в таблице `article_categories` БД
         $query = "DELETE FROM
-                      `articles_categories`
+                      `article_categories`
                   WHERE
                       `id` = :id";
         $this->database->execute($query, array('id' => $id));

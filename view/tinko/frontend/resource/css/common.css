@@ -424,6 +424,30 @@ div.attention {
         }
 
 /*
+ * ЛЕВАЯ И ПРАВАЯ КОЛОНКА
+ */
+#left *, #right * {
+    font-size: 13px;
+}
+    /* информационные блоки в левой и правой колонке */
+    #left > div, #right > div {
+        margin: 20px 0;
+        border: 1px solid #d1d1d1;
+        border-top: 5px solid #395985;
+        overflow: hidden;
+    }
+        #left > div > div:first-child, #right > div > div:first-child {
+            padding: 15px;
+            font-size: 16px;
+            line-height: 16px;
+            background: #f0f0f0;
+        }
+        #left > div div:last-child, #right > div > div:last-child {
+            border-top: 1px solid #d1d1d1;
+            padding: 15px;
+        }
+
+/*
  * ЛЕВАЯ КОЛОНКА
  */
 

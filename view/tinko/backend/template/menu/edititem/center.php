@@ -13,9 +13,8 @@
  * $parent - родитель пункта меню
  * $menuItems - массив всех пунктов меню для возможности выбора родителя
  * $pages - массив всех страниц сайта
- * $catalogCategories - массив категорий каталога верхнего уровня
  * $blogCategories - массив категорий блога
- * $solutionCategories - массив категорий типовых решений
+ * $articleCategories - массив категорий статей
  * $savedFormData - сохраненные данные формы. Если при заполнении формы были допущены ошибки, мы должны
  * снова предъявить форму, заполненную уже отредактированными данными и вывести сообщение об ошибках.
  * $errorMessage - массив сообщений об ошибках, допущенных при заполнении формы
@@ -101,7 +100,7 @@ defined('ZCMS') or die('Access denied');
                 <?php endif; ?>
 
                 <?php if ( ! empty($blogCategories)): ?>
-                    <optgroup label="blog">
+                    <optgroup label="Блог">
                         <option value="frontend/blog/index">Блог</option>
                         <?php foreach($blogCategories as $category) : ?>
                             <option value="frontend/blog/category/id/<?php echo $category['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?></option>
@@ -109,20 +108,14 @@ defined('ZCMS') or die('Access denied');
                     </optgroup>
                 <?php endif; ?>
 
-                <?php if ( ! empty($solutionCategories)): ?>
-                    <optgroup label="Типовые решения">
-                        <option value="frontend/solution/index">Типовые решения</option>
-                        <?php foreach($solutionsCategories as $category) : ?>
-                            <option value="frontend/solution/category/id/<?php echo $category['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?></option>
+                <?php if (!empty($articleCategories)): ?>
+                    <optgroup label="Статьи">
+                        <option value="frontend/article/index">Статьи</option>
+                        <?php foreach($articleCategories as $category) : ?>
+                            <option value="frontend/article/category/id/<?php echo $category['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?></option>
                         <?php endforeach; ?>
                     </optgroup>
                 <?php endif; ?>
-                
-                <optgroup label="Разное">
-                    <option value="frontend/sale/index">Распродажа</option>
-                    <option value="frontend/rating/index">Рейтинг</option>
-                    <option value="frontend/sitemap/index">Карта сайта</option>
-                </optgroup>
             </select>
         </div>
     </div>

@@ -9,9 +9,8 @@
  * $action - атрибут action тега form
  * $sitemapItems - массив всех элементов карты сайта для возможности выбора родителя
  * $pages - массив всех страниц сайта
- * $catalogCategories - массив категорий каталога верхнего уровня
  * $blogCategories - массив категорий блога
- * $solutionCategories - массив категорий типовых решений
+ * $articleCategories - массив категорий статей
  * 
  * $savedFormData - сохраненные данные формы. Если при заполнении формы были
  * допущены ошибки, мы должны снова предъявить форму, заполненную уже введенными
@@ -88,15 +87,6 @@ if (isset($savedFormData)) {
                     </optgroup>
                 <?php endif; ?>
 
-                <?php if ( ! empty($catalogCategories)): ?>
-                    <optgroup label="Каталог">
-                        <option value="frontend/catalog/index">Каталог</option>
-                        <?php foreach($catalogCategories as $category) : ?>
-                            <option value="frontend/catalog/category/id/<?php echo $category['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?></option>
-                        <?php endforeach; ?>
-                    </optgroup>
-                <?php endif; ?>
-
                 <?php if ( ! empty($blogCategories)): ?>
                     <optgroup label="Блог">
                         <option value="frontend/blog/index">Блог</option>
@@ -106,22 +96,14 @@ if (isset($savedFormData)) {
                     </optgroup>
                 <?php endif; ?>
 
-                <?php if ( ! empty($solutionCategories)): ?>
-                    <optgroup label="Типовые решения">
-                        <option value="frontend/solution/index">Типовые решения</option>
-                        <?php foreach($solutionCategories as $category) : ?>
-                            <option value="frontend/solution/category/id/<?php echo $category['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?></option>
+                <?php if ( ! empty($articleCategories)): ?>
+                    <optgroup label="Статьи">
+                        <option value="frontend/article/index">Статьи</option>
+                        <?php foreach($articleCategories as $category) : ?>
+                            <option value="frontend/article/category/id/<?php echo $category['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?></option>
                         <?php endforeach; ?>
                     </optgroup>
                 <?php endif; ?>
-
-                <optgroup label="Разное">
-                    <option value="frontend/sale/index">Распродажа</option>
-                    <option value="frontend/rating/index">Рейтинг продаж</option>
-                    <option value="frontend/partner/index">Партнеры</option>
-                    <option value="frontend/brand/index">Бренды</option>
-                    <option value="frontend/vacancy/index">Вакансии</option>
-                </optgroup>
             </select>
         </div>
     </div>

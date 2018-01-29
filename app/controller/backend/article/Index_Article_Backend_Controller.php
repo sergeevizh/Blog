@@ -73,8 +73,6 @@ class Index_Article_Backend_Controller extends Article_Backend_Controller {
             'pager'       => $pager,
             // URL ссылки на страницу с формой для добавления статьи
             'addItemURL'  => $this->articleBackendModel->getURL('backend/article/additem'),
-            // URL ссылки на страницу с формой для добавления категории
-            'addCtgURL'   => $this->articleBackendModel->getURL('backend/article/addctg'),
             // URL ссылки на страницу со списком всех категорий
             'allCtgsURL'  => $this->articleBackendModel->getURL('backend/article/allctgs')
         );

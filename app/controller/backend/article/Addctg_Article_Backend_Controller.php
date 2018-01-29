@@ -35,6 +35,10 @@ class Addctg_Article_Backend_Controller extends Article_Backend_Controller {
 
         $this->title = 'Новая категория. ' . $this->title;
 
+        // получаем от модели массив категорий верхнего уровня,
+        // для возможности выбора родителя
+        $parents = $this->articleBackendModel->getRootCategories();
+
         // формируем хлебные крошки
         $breadcrumbs = array(
             array(
@@ -59,6 +63,8 @@ class Addctg_Article_Backend_Controller extends Article_Backend_Controller {
             'breadcrumbs' => $breadcrumbs,
             // атрибут action тега form
             'action' => $this->articleBackendModel->getURL('backend/article/addctg'),
+            // массив категорий верхнего уровня
+            'parents'     => $parents,
         );
         // если были ошибки при заполнении формы, передаем в шаблон массив сообщений об ошибках
         if ($this->issetSessionData('addArticleCategoryForm')) {
@@ -87,6 +93,12 @@ class Addctg_Article_Backend_Controller extends Article_Backend_Controller {
 
         // порядок сортировки
         $data['sortorder'] = 1;
+
+        // родительская категория
+        $data['parent'] = 0;
+        if (ctype_digit($_POST['parent'])) {
+            $data['parent'] = $_POST['parent'];
+        }
 
         // были допущены ошибки при заполнении формы?
         if (empty($data['name'])) {

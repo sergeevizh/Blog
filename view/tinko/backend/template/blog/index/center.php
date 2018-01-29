@@ -7,9 +7,8 @@
  * Переменные, которые приходят в шаблон:
  * $breadcrumbs - хлебные крошки
  * $posts - массив всех постов
- * $addPostUrl - URL ссылки на страницу с формой для добавления поста
- * $allCtgsUrl - URL ссылки на страницу со списком всех категорий
- * $allFilesUrl - URL ссылки на страницу со списком всех файлов
+ * $addPostURL - URL ссылки на страницу с формой для добавления поста
+ * $allCtgsURL - URL ссылки на страницу со списком всех категорий
  * $pager - постраничная навигация
  */
 
@@ -18,7 +17,7 @@ defined('ZCMS') or die('Access denied');
 
 <!-- Начало шаблона view/example/backend/template/blog/index/center.php -->
 
-<?php if ( ! empty($breadcrumbs)): // хлебные крошки ?>
+<?php if (!empty($breadcrumbs)): // хлебные крошки ?>
     <div id="breadcrumbs">
         <?php foreach ($breadcrumbs as $item): ?>
             <a href="<?php echo $item['url']; ?>"><?php echo $item['name']; ?></a>&nbsp;&gt;
@@ -28,15 +27,12 @@ defined('ZCMS') or die('Access denied');
 
 <h1>Блог</h1>
 
-<ul id="tabs">
-    <li class="current"><span>Посты</span></li>
-    <li><a href="<?php echo $allCtgsUrl; ?>">Категории</a></li>
-    <li><a href="<?php echo $allFilesUrl; ?>">Файлы</a></li>
+<ul id="add-post-all-ctgs">
+    <li><a href="<?php echo $addPostURL; ?>">Добавить пост</a></li>
+    <li><a href="<?php echo $allCtgsURL; ?>">Все категории</a></li>
 </ul>
-    
-<p><a href="<?php echo $addPostUrl; ?>">Добавить пост</a></p>
 
-<?php if ( ! empty($posts)): ?>
+<?php if (!empty($posts)): ?>
     <div id="all-blog-posts">
         <ul>
             <?php foreach($posts as $item) : ?>
@@ -52,7 +48,7 @@ defined('ZCMS') or die('Access denied');
     </div>
 <?php endif; ?>
 
-<?php if ( ! empty($pager)): // постраничная навигация ?>
+<?php if (!empty($pager)): // постраничная навигация ?>
     <ul class="pager">
     <?php if (isset($pager['first'])): ?>
         <li>

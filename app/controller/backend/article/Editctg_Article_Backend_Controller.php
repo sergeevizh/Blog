@@ -69,6 +69,10 @@ class Editctg_Article_Backend_Controller extends Article_Backend_Controller {
             return;
         }
 
+        // получаем от модели массив категорий верхнего уровня,
+        // для возможности выбора родителя
+        $parents = $this->articleBackendModel->getRootCategories();
+
         /*
          * массив переменных, которые будут переданы в шаблон center.php
          */
@@ -79,12 +83,16 @@ class Editctg_Article_Backend_Controller extends Article_Backend_Controller {
             'action'      => $this->articleBackendModel->getURL('backend/article/editctg/id/' . $this->params['id']),
             // уникальный идентификатор категории
             'id'          => $this->params['id'],
+            // родительская категория
+            'parent'      => $category['parent'],
             // наименование категории
             'name'        => $category['name'],
             // мета-тег keywords
             'keywords'    => $category['keywords'],
             // мета-тег description
             'description' => $category['description'],
+            // массив категорий верхнего уровня
+            'parents'     => $parents,
         );
         // если были ошибки при заполнении формы, передаем в шаблон массив сообщений об ошибках
         if ($this->issetSessionData('editArticleCategoryForm')) {
@@ -110,6 +118,12 @@ class Editctg_Article_Backend_Controller extends Article_Backend_Controller {
         $data['keywords']    = str_replace('"', '', $data['keywords']);
         $data['description'] = trim(iconv_substr($_POST['description'], 0, 250)); // мета-тег description
         $data['description'] = str_replace('"', '', $data['description']);
+
+        // родительская категория
+        $data['parent'] = 0;
+        if (ctype_digit($_POST['parent'])) {
+            $data['parent'] = $_POST['parent'];
+        }
 
         // были допущены ошибки при заполнении формы?
         if (empty($data['name'])) {

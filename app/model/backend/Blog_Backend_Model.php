@@ -132,7 +132,7 @@ class Blog_Backend_Model extends Backend_Model {
 
         // загружаем файл изображения
         $this->uploadImage($id);
-        
+
         // загружаем файлы поста
         $this->uploadFiles($id);
 
@@ -312,19 +312,41 @@ class Blog_Backend_Model extends Backend_Model {
     }
 
     /**
+     * Возвращает массив категорий верхнего уровня, для контроллера,
+     * отвечающего за добавление/редактирование категорий
+     */
+    public function getRootCategories() {
+        $query = "SELECT
+                      `id`, `name`
+                  FROM
+                      `blog_categories`
+                  WHERE
+                      `parent` = 0
+                  ORDER BY
+                      `sortorder`";
+        $data = $this->database->fetchAll($query);
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
+    }
+
+    /**
      * Возвращает массив категорий для контроллеров, отвечающих за добавление
      * и редактирование записи (поста) блога, для возможности выбора родителя
      */
     public function getCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `parent`, `name`
                   FROM
                       `blog_categories`
                   WHERE
                       1
                   ORDER BY
                       `sortorder`";
-        return $this->database->fetchAll($query);
+        $data = $this->database->fetchAll($query);
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
     }
 
     /**
@@ -355,6 +377,7 @@ class Blog_Backend_Model extends Backend_Model {
         // добавляем новую категорию блога
         $query = "INSERT INTO `blog_categories`
                   (
+                      `parent`,
                       `name`,
                       `keywords`,
                       `description`,
@@ -362,6 +385,7 @@ class Blog_Backend_Model extends Backend_Model {
                   )
                   VALUES
                   (
+                      :parent,
                       :name,
                       :keywords,
                       :description,
@@ -377,6 +401,7 @@ class Blog_Backend_Model extends Backend_Model {
         $query = "UPDATE
                       `blog_categories`
                   SET
+                      `parent`      = :parent,
                       `name`        = :name,
                       `keywords`    = :keywords,
                       `description` = :description
