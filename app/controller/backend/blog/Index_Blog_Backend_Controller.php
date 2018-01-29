@@ -75,7 +75,7 @@ class Index_Blog_Backend_Controller extends Blog_Backend_Controller {
             // постраничная навигация
             'pager'       => $pager,
             // URL ссылки на страницу с формой для добавления поста
-            'addPostUrl'  => $this->blogBackendModel->getURL('backend/blog/addpost'),
+            'addPostURL'  => $this->blogBackendModel->getURL('backend/blog/addpost'),
             // URL ссылки на страницу со списком всех категорий
             'allCtgsURL'  => $this->blogBackendModel->getURL('backend/blog/allctgs')
         );

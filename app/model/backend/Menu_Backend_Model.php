@@ -103,7 +103,7 @@ class Menu_Backend_Model extends Backend_Model {
                   FROM
                       `blog_categories`
                   WHERE
-                      1
+                      `parent` = 0
                   ORDER BY
                       `sortorder`";
         return $this->database->fetchAll($query);
@@ -113,13 +113,13 @@ class Menu_Backend_Model extends Backend_Model {
      * Возвращает массив категорий статей, для контроллеров,
      * отвечающих за добавление/редактирование пункта меню
      */
-    public function getSolutionCategories() {
+    public function getArticleCategories() {
         $query = "SELECT
                       `id`, `name`
                   FROM
                       `article_categories`
                   WHERE
-                      1
+                      `parent` = 0
                   ORDER BY
                       `sortorder`";
         return $this->database->fetchAll($query);

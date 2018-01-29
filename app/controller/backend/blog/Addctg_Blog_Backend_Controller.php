@@ -104,9 +104,6 @@ class Addctg_Blog_Backend_Controller extends Blog_Backend_Controller {
             $data['parent'] = $_POST['parent'];
         }
 
-        // порядок сортировки
-        $data['sortorder'] = 1;
-
         // были допущены ошибки при заполнении формы?
         if (empty($data['name'])) {
             $errorMessage[] = 'Не заполнено обязательное поле «Наименование»';

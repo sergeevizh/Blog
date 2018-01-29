@@ -7,6 +7,7 @@
  * Переменные, которые приходят в шаблон:
  * $breadcrumbs - хлебные крошки
  * $action - атрибут action тега form
+ * $parents - массив категорий верхнего уровня для выбора родителя
  * $savedFormData - сохраненные данные формы. Если при заполнении формы были
  * допущены ошибки, мы должны снова предъявить форму, заполненную уже введенными
  * данными и вывести сообщение об ошибках
@@ -40,11 +41,13 @@ defined('ZCMS') or die('Access denied');
 
 <?php
     $name        = '';
+    $parent      = 0;
     $keywords    = '';
     $description = '';
 
     if (isset($savedFormData)) {
         $name        = htmlspecialchars($savedFormData['name']);
+        $parent      = $savedFormData['parent'];
         $keywords    = htmlspecialchars($savedFormData['keywords']);
         $description = htmlspecialchars($savedFormData['description']);
     }
@@ -54,6 +57,21 @@ defined('ZCMS') or die('Access denied');
     <div>
         <div>Наименование</div>
         <div><input type="text" name="name" maxlength="250" value="<?php echo $name; ?>" /></div>
+    </div>
+    <div>
+        <div>Родитель</div>
+        <div>
+            <select name="parent">
+            <option value="0">Выберите</option>
+            <?php if (!empty($parents)): ?>
+                <?php foreach ($parents as $item): ?>
+                    <option value="<?php echo $item['id']; ?>"<?php if ($item['id'] == $parent) echo 'selected="selected"'; ?>>
+                        <?php echo $item['name']; ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            </select>
+        </div>
     </div>
     <div>
         <div>Ключевые слова (meta)</div>

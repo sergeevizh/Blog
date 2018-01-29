@@ -8,6 +8,8 @@
  * $breadcrumbs - хлебные крошки
  * $action - атрибут action тега form
  * $name - наименование категории
+ * $parent - родительская категория
+ * $parents - массив категорий верхнего уровня для выбора родителя
  * $keywords - мета-тег keywords
  * $description - мета-тег description
  * $savedFormData - сохраненные данные формы. Если при заполнении формы были
@@ -48,6 +50,7 @@ defined('ZCMS') or die('Access denied');
 
     if (isset($savedFormData)) {
         $name        = htmlspecialchars($savedFormData['name']);
+        $parent      = $savedFormData['parent'];
         $keywords    = htmlspecialchars($savedFormData['keywords']);
         $description = htmlspecialchars($savedFormData['description']);
     }
@@ -58,6 +61,21 @@ defined('ZCMS') or die('Access denied');
     <div>
         <div>Наименование</div>
         <div><input type="text" name="name" maxlength="250" value="<?php echo $name; ?>" /></div>
+    </div>
+    <div>
+        <div>Родитель</div>
+        <div>
+            <select name="parent">
+            <option value="0">Выберите</option>
+            <?php if (!empty($parents)): ?>
+                <?php foreach ($parents as $item): ?>
+                    <option value="<?php echo $item['id']; ?>"<?php if ($item['id'] == $parent) echo 'selected="selected"'; ?>>
+                        <?php echo $item['name']; ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            </select>
+        </div>
     </div>
     <div>
         <div>Ключевые слова (meta)</div>

@@ -91,9 +91,6 @@ class Addctg_Article_Backend_Controller extends Article_Backend_Controller {
         $data['description'] = trim(iconv_substr($_POST['description'], 0, 250)); // мета-тег description
         $data['description'] = str_replace('"', '', $data['description']);
 
-        // порядок сортировки
-        $data['sortorder'] = 1;
-
         // родительская категория
         $data['parent'] = 0;
         if (ctype_digit($_POST['parent'])) {

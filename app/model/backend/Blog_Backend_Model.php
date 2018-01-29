@@ -372,8 +372,9 @@ class Blog_Backend_Model extends Backend_Model {
                   FROM
                       `blog_categories`
                   WHERE
-                      1";
-        $data['sortorder'] = $this->database->fetchOne($query) + 1;
+                      `parent` = :parent";
+        $data['sortorder'] = $this->database->fetchOne($query, array('parent' => $data['parent'])) + 1;
+
         // добавляем новую категорию блога
         $query = "INSERT INTO `blog_categories`
                   (
@@ -398,47 +399,98 @@ class Blog_Backend_Model extends Backend_Model {
      * Функция обновляет категорию блога
      */
     public function updateCategory($data) {
-        $query = "UPDATE
-                      `blog_categories`
-                  SET
-                      `parent`      = :parent,
-                      `name`        = :name,
-                      `keywords`    = :keywords,
-                      `description` = :description
-                  WHERE
-                      `id` = :id";
-        $this->database->execute($query, $data);
+        // получаем идентификатор родителя
+        $oldParent = $this->getCategoryParent($data['id']);
+        // если был изменен родитель категории
+        if ($oldParent != $data['parent']) {
+            // добавляем категорию в конец списка дочерних элементов нового родителя
+            $query = "SELECT
+                          IFNULL(MAX(`sortorder`), 0)
+                      FROM
+                          `blog_categories`
+                      WHERE
+                          `parent` = :parent";
+            $data['sortorder'] = $this->database->fetchOne($query, array('parent' => $data['parent'])) + 1;
+            $query = "UPDATE
+                          `blog_categories`
+                      SET
+                          `name`        = :name,
+                          `keywords`    = :keywords,
+                          `description` = :description,
+                          `sortorder`   = :sortorder
+                      WHERE
+                          `id` = :id";
+            $this->database->execute($query, $data);
+            // изменяем порядок сортировки категорий, которые были с обновленной
+            // категорией на одном уровне до того, как она поменял родителя
+            $query = "SELECT
+                          `id`
+                      FROM
+                          `blog_categories`
+                      WHERE
+                          `parent` = :parent
+                      ORDER BY
+                          `sortorder`";
+            $childs = $this->database->fetchAll($query, array('parent' => $oldParent));
+            $sortorder = 1;
+            foreach ($childs as $child) {
+                $query = "UPDATE
+                              `blog_categories`
+                          SET
+                              `sortorder` = :sortorder
+                          WHERE
+                              `id` = :id";
+                $this->database->execute($query, array('sortorder' => $sortorder, 'id' => $child['id']));
+                $sortorder++;
+            }
+        } else {
+            unset($data['parent']);
+            $query = "UPDATE
+                          `blog_categories`
+                      SET
+                          `name`        = :name,
+                          `keywords`    = :keywords,
+                          `description` = :description
+                      WHERE
+                          `id` = :id";
+            $this->database->execute($query, $data);
+        }
     }
 
     /**
-     * Функция опускает категорию блога вниз в списке
+     * Функция опускает категорию вниз в списке
      */
     public function moveCategoryDown($id) {
         $id_item_down = $id;
         // порядок следования категории, которая опускается вниз
         $query = "SELECT
-                      `sortorder`
+                      `sortorder`, `parent`
                   FROM
                       `blog_categories`
                   WHERE
                       `id` = :id_item_down";
-        $order_down = $this->database->fetchOne($query, array('id_item_down' => $id_item_down));
-        // порядок следования и id категории, которая находится ниже
-        // и будет поднята вверх, поменявшись местами с категорией,
-        // которая опускается вниз
+        $res = $this->database->fetch($query, array('id_item_down' => $id_item_down));
+        $order_down = $res['sortorder'];
+        $parent = $res['parent'];
+        // порядок следования и id категории, которая находится ниже и будет поднята
+        // вверх, поменявшись местами с категорией, которая опускается вниз
         $query = "SELECT
                       `id`, `sortorder`
                   FROM
                       `blog_categories`
                   WHERE
-                      `sortorder` > :order_down
+                      `parent` = :parent AND `sortorder` > :order_down
                   ORDER BY
                       `sortorder`
                   LIMIT
                       1";
-        $res = $this->database->fetch($query, array('order_down' => $order_down));
-        // если запрос вернул false, значит категория и так самая последняя
-        // в списке, ничего делать не надо
+        $res = $this->database->fetch(
+            $query,
+            array(
+                'parent' => $parent,
+                'order_down' => $order_down
+            )
+        );
         if (is_array($res)) {
             $id_item_up = $res['id'];
             $order_up = $res['sortorder'];
@@ -473,34 +525,39 @@ class Blog_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Функция поднимает категорию блога вверх в списке
+     * Функция поднимает категорию вверх в списке
      */
     public function moveCategoryUp($id) {
         $id_item_up = $id;
         // порядок следования категории, которая поднимается вверх
         $query = "SELECT
-                      `sortorder`
+                      `sortorder`, `parent`
                   FROM
                       `blog_categories`
                   WHERE
                       `id` = :id_item_up";
-        $order_up = $this->database->fetchOne($query, array('id_item_up' => $id_item_up));
-        // порядок следования и id категории, которая находится выше
-        // и будет опущена вниз, поменявшись местами с категорией,
-        // которая поднимается вверх
+        $res = $this->database->fetch($query, array('id_item_up' => $id_item_up));
+        $order_up = $res['sortorder'];
+        $parent = $res['parent'];
+        // порядок следования и id категории, которая находится выше и будет опущена
+        // вниз, поменявшись местами с категорией, которая поднимается вверх
         $query = "SELECT
                       `id`, `sortorder`
                   FROM
                       `blog_categories`
                   WHERE
-                      `sortorder` < :order_up
+                      `parent` = :parent AND `sortorder` < :order_up
                   ORDER BY
                       `sortorder` DESC
                   LIMIT
                       1";
-        $res = $this->database->fetch($query, array('order_up' => $order_up));
-        // если запрос вернул false, значит категория и так самая первая
-        // в списке, ничего делать не надо
+        $res = $this->database->fetch(
+            $query,
+            array(
+                'parent' => $parent,
+                'order_up' => $order_up
+            )
+        );
         if (is_array($res)) {
             $id_item_down = $res['id'];
             $order_down = $res['sortorder'];
@@ -538,6 +595,7 @@ class Blog_Backend_Model extends Backend_Model {
      * Функция удаляет категорию блога
      */
     public function removeCategory($id) {
+
         // проверяем, что не существует постов в этой категории
         $query = "SELECT
                       1
@@ -551,13 +609,42 @@ class Blog_Backend_Model extends Backend_Model {
         if ($res) {
             return false;
         }
+
         // удаляем запись в таблице `blog_categories` БД
+        $parent = $this->getCategoryParent($id);
         $query = "DELETE FROM
                       `blog_categories`
                   WHERE
                       `id` = :id";
         $this->database->execute($query, array('id' => $id));
-        // TODO: установить порядок сортировки
+
+        // изменяем порядок сортировки категорий, которые с удаленной на одном уровне
+        $query = "SELECT `id` FROM `blog_categories` WHERE `parent` = :parent ORDER BY `sortorder`";
+        $childs = $this->database->fetchAll($query, array('parent' => $parent));
+        if (count($childs) > 0) {
+            $sortorder = 1;
+            foreach ($childs as $child) {
+                $query = "UPDATE `blog_categories` SET `sortorder` = :sortorder WHERE `id` = :id";
+                $this->database->execute($query, array('sortorder' => $sortorder, 'id' => $child['id']));
+                $sortorder++;
+            }
+        }
+
         return true;
+
     }
+
+    /**
+     * Функция возвращает идентификатор родителя для категории $if
+     */
+    private function getCategoryParent($id) {
+        $query = "SELECT
+                      `parent`
+                  FROM
+                      `article_categories`
+                  WHERE
+                      `id` = :id";
+        return $this->database->fetchOne($query, array('id' => $id));
+    }
+
 }

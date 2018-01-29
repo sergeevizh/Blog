@@ -167,7 +167,8 @@
             float: left;
             width: 70%;
         }
-            #add-edit-category > div > div:last-child > input[type="text"] {
+            #add-edit-category > div > div:last-child > input[type="text"],
+            #add-edit-category > div > div:last-child > select {
                 width: 100%;
                 box-sizing: border-box;
                 padding: 3px;
