@@ -271,15 +271,30 @@ class Blog_Backend_Model extends Backend_Model {
                   WHERE
                       `id` = :id";
         $this->database->execute($query, array('id' => $id));
+        // удаляем изображение
+        if (is_file('files/blog/thumb/' . $id . '.jpg')) {
+            unlink('files/blog/thumb/' . $id . '.jpg');
+        }    
         // удаляем файлы и директорию
         $dir = 'files/blog/' . $id;
         if (is_dir($dir)) {
-            $files = scandir($dir);
-            foreach ($files as $file) {
-                if ($file == '.' || $file == '..') {
+            $items = scandir($dir);
+            foreach ($items as $item) {
+                if ($item == '.' || $item == '..') {
                     continue;
                 }
-                unlink($dir . '/' . $file);
+                if (is_dir($dir . '/' . $item)) {
+                    $files = scandir($dir . '/' . $item);
+                    foreach($files as $file) {
+                        if ($file == '.' || $file == '..') {
+                            continue;
+                        }
+                        unlink($dir . '/' . $item . '/' . $file);                        
+                    }
+                    rmdir($dir . '/' . $item);
+                } else {
+                    unlink($dir . '/' . $item);
+                }
             }
             rmdir($dir);
         }

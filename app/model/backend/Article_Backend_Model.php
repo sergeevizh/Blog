@@ -278,12 +278,23 @@ class Article_Backend_Model extends Backend_Model {
         // удаляем файлы и директорию
         $dir = 'files/article/' . $id;
         if (is_dir($dir)) {
-            $files = scandir($dir);
-            foreach ($files as $file) {
-                if ($file == '.' || $file == '..') {
+            $items = scandir($dir);
+            foreach ($items as $item) {
+                if ($item == '.' || $item == '..') {
                     continue;
                 }
-                unlink($dir . '/' . $file);
+                if (is_dir($dir . '/' . $item)) {
+                    $files = scandir($dir . '/' . $item);
+                    foreach($files as $file) {
+                        if ($file == '.' || $file == '..') {
+                            continue;
+                        }
+                        unlink($dir . '/' . $item . '/' . $file);                        
+                    }
+                    rmdir($dir . '/' . $item);
+                } else {
+                    unlink($dir . '/' . $item);
+                }
             }
             rmdir($dir);
         }

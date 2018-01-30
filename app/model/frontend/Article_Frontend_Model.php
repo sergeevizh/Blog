@@ -89,10 +89,10 @@ class Article_Frontend_Model extends Frontend_Model {
         // добавляем в массив статей информацию об URL статьи, картинки, категории
         foreach($articles as $key => $value) {
             $articles[$key]['url']['item'] = $this->getURL('frontend/article/item/id/' . $value['id']);
-            if (is_file('files/article/' . $value['id'] . '/' . $value['id'] . '.jpg')) {
-                $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/' . $value['id'] . '/' . $value['id'] . '.jpg';
+            if (is_file('files/article/thumb/' . $value['id'] . '.jpg')) {
+                $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/' . $value['id'] . '.jpg';
             } else {
-                $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/default.jpg';
+                $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/default.jpg';
             }
         }
 
