@@ -32,13 +32,32 @@ defined('ZCMS') or die('Access denied');
         <ul>
         <?php foreach($categories as $category) : ?>
             <li>
-                <div><?php echo $category['name']; ?></div>
                 <div>
-                    <a href="<?php echo $category['url']['up']; ?>" title="Вверх"><i class="fa fa-arrow-up"></i></a>
-                    <a href="<?php echo $category['url']['down']; ?>" title="Вниз"><i class="fa fa-arrow-down"></i></a>
-                    <a href="<?php echo $category['url']['edit']; ?>" title="Редактировать"><i class="fa fa-pencil-square-o"></i></a>
-                    <a href="<?php echo $category['url']['remove']; ?>" title="Удалить"><i class="fa fa-trash-o"></i></a>
+                    <div><?php echo $category['name']; ?></div>
+                    <div>
+                        <a href="<?php echo $category['url']['up']; ?>" title="Вверх"><i class="fa fa-arrow-up"></i></a>
+                        <a href="<?php echo $category['url']['down']; ?>" title="Вниз"><i class="fa fa-arrow-down"></i></a>
+                        <a href="<?php echo $category['url']['edit']; ?>" title="Редактировать"><i class="fa fa-pencil-square-o"></i></a>
+                        <a href="<?php echo $category['url']['remove']; ?>" title="Удалить"><i class="fa fa-trash-o"></i></a>
+                    </div>
                 </div>
+                <?php if (isset($category['childs'])): ?>
+                    <ul>
+                    <?php foreach($category['childs'] as $child): ?>
+                        <li>
+                            <div>
+                                <div><?php echo $child['name']; ?></div>
+                                <div>
+                                    <a href="<?php echo $child['url']['up']; ?>" title="Вверх"><i class="fa fa-arrow-up"></i></a>
+                                    <a href="<?php echo $child['url']['down']; ?>" title="Вниз"><i class="fa fa-arrow-down"></i></a>
+                                    <a href="<?php echo $child['url']['edit']; ?>" title="Редактировать"><i class="fa fa-pencil-square-o"></i></a>
+                                    <a href="<?php echo $child['url']['remove']; ?>" title="Удалить"><i class="fa fa-trash-o"></i></a>
+                                </div>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </li>
         <?php endforeach; ?>
         </ul>

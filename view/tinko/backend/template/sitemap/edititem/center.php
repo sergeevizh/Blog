@@ -77,10 +77,14 @@ defined('ZCMS') or die('Access denied');
                         <option value="frontend/page/index/id/<?php echo $page['id']; ?>"><?php echo $page['name']; ?></option>
                         <?php if (isset($page['childs'])): ?>
                             <?php foreach($page['childs'] as $child): ?>
-                                <option value="frontend/page/index/id/<?php echo $child['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $child['name']; ?></option>
+                                <option value="frontend/page/index/id/<?php echo $child['id']; ?>">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $child['name']; ?>
+                                </option>
                                 <?php if (isset($child['childs'])): ?>
                                     <?php foreach($child['childs'] as $item): ?>
-                                        <option value="frontend/page/index/id/<?php echo $item['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $item['name']; ?></option>
+                                        <option value="frontend/page/index/id/<?php echo $item['id']; ?>">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $item['name']; ?>
+                                        </option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
@@ -93,7 +97,16 @@ defined('ZCMS') or die('Access denied');
                     <optgroup label="Блог">
                         <option value="frontend/blog/index">Блог</option>
                         <?php foreach($blogCategories as $category) : ?>
-                            <option value="frontend/blog/category/id/<?php echo $category['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?></option>
+                            <option value="frontend/blog/category/id/<?php echo $category['id']; ?>">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?>
+                            </option>
+                            <?php if (isset($category['childs'])): ?>
+                                <?php foreach($category['childs'] as $child): ?>
+                                    <option value="frontend/blog/index/id/<?php echo $child['id']; ?>">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $child['name']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </optgroup>
                 <?php endif; ?>
@@ -101,8 +114,17 @@ defined('ZCMS') or die('Access denied');
                 <?php if ( ! empty($articleCategories)): ?>
                     <optgroup label="Статьи">
                         <option value="frontend/article/index">Статьи</option>
-                        <?php foreach($blogCategories as $category) : ?>
-                            <option value="frontend/article/category/id/<?php echo $category['id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?></option>
+                        <?php foreach($articleCategories as $category) : ?>
+                            <option value="frontend/article/category/id/<?php echo $category['id']; ?>">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category['name']; ?>
+                            </option>
+                            <?php if (isset($category['childs'])): ?>
+                                <?php foreach($category['childs'] as $child): ?>
+                                    <option value="frontend/article/index/id/<?php echo $child['id']; ?>">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $child['name']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </optgroup>
                 <?php endif; ?>

@@ -116,7 +116,7 @@ class Article_Frontend_Model extends Frontend_Model {
     /**
      * Возвращает информацию о статье с уникальным идентификатором $id
      */
-    protected function getArticle($id) {
+    public function getArticle($id) {
 
         $query = "SELECT
                       `a`.`name` AS `name`, `a`.`keywords` AS `keywords`, `a`.`description` AS `description`,

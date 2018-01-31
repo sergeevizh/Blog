@@ -289,7 +289,7 @@ class Article_Backend_Model extends Backend_Model {
                         if ($file == '.' || $file == '..') {
                             continue;
                         }
-                        unlink($dir . '/' . $item . '/' . $file);                        
+                        unlink($dir . '/' . $item . '/' . $file);
                     }
                     rmdir($dir . '/' . $item);
                 } else {
@@ -306,24 +306,26 @@ class Article_Backend_Model extends Backend_Model {
      */
     public function getAllCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `name`, `parent`
                   FROM
                       `article_categories`
                   WHERE
                       1
                   ORDER BY
                       `sortorder`";
-        $categories = $this->database->fetchAll($query);
+        $data = $this->database->fetchAll($query);
         // добавляем в массив URL ссылок для редактирования и удаления
-        foreach($categories as $key => $value) {
-            $categories[$key]['url'] = array(
+        foreach($data as $key => $value) {
+            $data[$key]['url'] = array(
                 'up'     => $this->getURL('backend/article/ctgup/id/' . $value['id']),
                 'down'   => $this->getURL('backend/article/ctgdown/id/' . $value['id']),
                 'edit'   => $this->getURL('backend/article/editctg/id/' . $value['id']),
                 'remove' => $this->getURL('backend/article/rmvctg/id/' . $value['id'])
             );
         }
-        return $categories;
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
     }
 
     /**
@@ -332,7 +334,7 @@ class Article_Backend_Model extends Backend_Model {
      */
     public function getRootCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `name`, `parent`
                   FROM
                       `article_categories`
                   WHERE
@@ -369,7 +371,7 @@ class Article_Backend_Model extends Backend_Model {
      */
     public function getCategory($id) {
         $query = "SELECT
-                      `name`, `keywords`, `description`
+                      `parent`, `name`, `keywords`, `description`
                   FROM
                       `article_categories`
                   WHERE
@@ -428,6 +430,7 @@ class Article_Backend_Model extends Backend_Model {
             $query = "UPDATE
                           `article_categories`
                       SET
+                          `parent`      = :parent.
                           `name`        = :name,
                           `keywords`    = :keywords,
                           `description` = :description,

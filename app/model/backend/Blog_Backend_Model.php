@@ -274,7 +274,7 @@ class Blog_Backend_Model extends Backend_Model {
         // удаляем изображение
         if (is_file('files/blog/thumb/' . $id . '.jpg')) {
             unlink('files/blog/thumb/' . $id . '.jpg');
-        }    
+        }
         // удаляем файлы и директорию
         $dir = 'files/blog/' . $id;
         if (is_dir($dir)) {
@@ -289,7 +289,7 @@ class Blog_Backend_Model extends Backend_Model {
                         if ($file == '.' || $file == '..') {
                             continue;
                         }
-                        unlink($dir . '/' . $item . '/' . $file);                        
+                        unlink($dir . '/' . $item . '/' . $file);
                     }
                     rmdir($dir . '/' . $item);
                 } else {
@@ -306,24 +306,26 @@ class Blog_Backend_Model extends Backend_Model {
      */
     public function getAllCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `name`, `parent`
                   FROM
                       `blog_categories`
                   WHERE
                       1
                   ORDER BY
                       `sortorder`";
-        $categories = $this->database->fetchAll($query);
+        $data = $this->database->fetchAll($query);
         // добавляем в массив URL ссылок для редактирования и удаления
-        foreach($categories as $key => $value) {
-            $categories[$key]['url'] = array(
+        foreach($data as $key => $value) {
+            $data[$key]['url'] = array(
                 'up'     => $this->getURL('backend/blog/ctgup/id/' . $value['id']),
                 'down'   => $this->getURL('backend/blog/ctgdown/id/' . $value['id']),
                 'edit'   => $this->getURL('backend/blog/editctg/id/' . $value['id']),
                 'remove' => $this->getURL('backend/blog/rmvctg/id/' . $value['id'])
             );
         }
-        return $categories;
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
     }
 
     /**
@@ -332,7 +334,7 @@ class Blog_Backend_Model extends Backend_Model {
      */
     public function getRootCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `name`, `parent`
                   FROM
                       `blog_categories`
                   WHERE
@@ -369,7 +371,7 @@ class Blog_Backend_Model extends Backend_Model {
      */
     public function getCategory($id) {
         $query = "SELECT
-                      `name`, `keywords`, `description`
+                      `parent`, `name`, `keywords`, `description`
                   FROM
                       `blog_categories`
                   WHERE
@@ -429,6 +431,7 @@ class Blog_Backend_Model extends Backend_Model {
             $query = "UPDATE
                           `blog_categories`
                       SET
+                          `parent`      = :parent,
                           `name`        = :name,
                           `keywords`    = :keywords,
                           `description` = :description,
@@ -656,7 +659,7 @@ class Blog_Backend_Model extends Backend_Model {
         $query = "SELECT
                       `parent`
                   FROM
-                      `article_categories`
+                      `blog_categories`
                   WHERE
                       `id` = :id";
         return $this->database->fetchOne($query, array('id' => $id));

@@ -2,26 +2,33 @@
 #all-categories {
     overflow: hidden;
 }
-    #all-categories > ul {
+    #all-categories ul, #all-categories li {
         list-style: none;
         margin: 0;
         padding: 0;
     }
-        #all-categories > ul > li {
+        #all-categories > ul > li > div {
+            padding-left: 0;
+        }
+            #all-categories > ul > li > ul > li > div {
+                padding-left: 25px;
+            }
+        #all-categories li > div {
             overflow: hidden;
-            padding: 4px 0;
+            padding-top: 2px;
+            padding-bottom: 2px;
             border-bottom: 1px solid #eee;
         }
-            #all-categories > ul > li > div:first-child {
+            #all-categories li > div > div:first-child {
                 float: left;
                 width: 70%;
             }
-            #all-categories > ul > li > div:last-child {
+            #all-categories li > div > div:last-child {
                 float: right;
                 width: 30%;
                 text-align: right;
             }
-                #all-categories > ul > li > div:last-child > a {
+                #all-categories li > div > div:last-child > a {
                     margin-left: 10px;
                 }
 

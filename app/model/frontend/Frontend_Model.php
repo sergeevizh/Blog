@@ -48,4 +48,18 @@ abstract class Frontend_Model extends Base_Model {
 
     }
 
+    protected function highlightCode($code, $lang) {
+        switch ($lang) {
+            case 'html'  : return highlightHTML($code);
+            case 'css'   : return highlightCSS($code);
+            case 'js'    : return highlightJS($code);
+            case 'php'   : return highlightPHP($code);
+            case 'mysql' : return highlightMysql($code);
+            case 'язык'  : return highlightERP($code);
+            case 'запрос': return highlightQuery($code);
+            case 'bash'  : return highlightBash($code);
+            case 'code'  : return highlightCode($code);
+        }
+    }
+
 }

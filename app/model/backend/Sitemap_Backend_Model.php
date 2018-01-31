@@ -96,14 +96,17 @@ class Sitemap_Backend_Model extends Backend_Model {
      */
     public function getBlogCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `name`, `parent`
                   FROM
                       `blog_categories`
                   WHERE
                       1
                   ORDER BY
                       `sortorder`";
-        return $this->database->fetchAll($query);
+        $data = $this->database->fetchAll($query);
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
     }
 
     /**
@@ -112,14 +115,17 @@ class Sitemap_Backend_Model extends Backend_Model {
      */
     public function getArticleCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `name`, `parent`
                   FROM
                       `article_categories`
                   WHERE
                       1
                   ORDER BY
                       `sortorder`";
-        return $this->database->fetchAll($query);
+        $data = $this->database->fetchAll($query);
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
     }
 
     /**

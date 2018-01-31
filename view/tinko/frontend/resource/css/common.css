@@ -242,6 +242,15 @@ body > .wrapper {
  * РАЗНЫЕ СТИЛИ, ИСПОЛЬЗУЮТСЯ ВЕЗДЕ
  */
 
+code {
+    color: #0000ff;
+}
+pre {
+    background: #f5f5f5;
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
 /* статичные страницы */
 .page h2, .page h3, .page h4 {
     margin: 15px 0;

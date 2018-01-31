@@ -47,12 +47,6 @@ abstract class Backend_Controller extends Base_Controller {
      */
     protected $sitemapBackendModel;
 
-    /**
-     * экземпляр класса модели для работы с главной страницей
-     * общедоступной части сайта
-     */
-    protected $startBackendModel;
-
 
     public function __construct($params = null) {
 
@@ -85,10 +79,6 @@ abstract class Backend_Controller extends Base_Controller {
         // экземпляр класса модели для работы с картой сайта
         $this->sitemapBackendModel =
             isset($this->register->sitemapBackendModel) ? $this->register->sitemapBackendModel : new Sitemap_Backend_Model();
-
-        // экземпляр класса модели для работы с главной страницей общедоступной части сайта
-        $this->startBackendModel =
-            isset($this->register->startBackendModel) ? $this->register->startBackendModel : new Start_Backend_Model();
 
         // администратор сайта авторизован?
         $this->authAdmin = $this->adminBackendModel->isAuthAdmin();
@@ -132,10 +122,6 @@ abstract class Backend_Controller extends Base_Controller {
                 'url'  => $this->indexBackendModel->getURL('backend/index/index')
             ),
             array(
-                'name' => 'Витрина',
-                'url'  => $this->startBackendModel->getURL('backend/start/index')
-            ),
-            array(
                 'name' => 'Меню',
                 'url'  => $this->menuBackendModel->getURL('backend/menu/index')
             ),
@@ -144,12 +130,12 @@ abstract class Backend_Controller extends Base_Controller {
                 'url'  => $this->blogBackendModel->getURL('backend/blog/index')
             ),
             array(
-                'name' => 'Страницы',
-                'url'  => $this->pageBackendModel->getURL('backend/page/index')
-            ),
-            array(
                 'name' => 'Статьи',
                 'url'  => $this->articleBackendModel->getURL('backend/article/index')
+            ),
+            array(
+                'name' => 'Страницы',
+                'url'  => $this->pageBackendModel->getURL('backend/page/index')
             ),
             array(
                 'name' => 'Карта',

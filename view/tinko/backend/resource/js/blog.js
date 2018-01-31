@@ -1,75 +1,33 @@
 $(document).ready(function() {
 
-    // загрузка файлов с использованием XmlHttpRequest, страница со списком всех
-    // файлов блога
-    $('#all-blog-files > div:first-child > form').on('submit', function(e) {
-        e.preventDefault();
-        var _this = $(this);
-        var uploadFormData = new FormData(_this.get(0));
-        $.ajax({
-            url: _this.attr('action'),
-            type: _this.attr('method'),
-            contentType: false,
-            processData: false,
-            data: uploadFormData,
-            dataType: 'html',
-            success: function(html) {
-                $('#all-blog-files > div:last-child > div:first-child > div').html(html);
-            },
-            error: function() {
-                alert('Ошибка при загрузке файлов');
-            }
-        });
-        // очищаем поле выбора файлов
-        var input = $(this).children('input[type="file"]');
-        input.replaceWith(input.clone());
+    /* Форма для добавления/редактирования поста блога */
+
+    // последняя пустая строка загрузки файла, которую будем клонировать для добавления полей загрузки файлов
+    var lastFilesRow = $('#add-edit-post #new-files > div:last-child > div:last-child');
+    // скрываем последнюю строку загрузки файла, она только для клонирования
+    lastFilesRow.hide();
+    // если есть только последняя скрытая строка загрузки файла, добавляем еще одну
+    if ($('#add-edit-post #new-files > div:last-child > div').size() == 1) {
+        lastFilesRow.clone(true).insertBefore(lastFilesRow).show();
+    }
+    // кнопка для добавления строки загрузки файла
+    $('#add-edit-post #new-files > div:last-child > div > span:first-of-type').click(function() {
+        lastFilesRow.clone(true).insertAfter($(this).parent()).show();
     });
-    
-    // показать/скрыть список файлов блога, страница формы для
-    // добавления/редактирования поста блога
-    $('#add-edit-post > div#blog-files > div:last-child').hide();
-    $('#add-edit-post > div#blog-files > div:first-child > div:last-child').hide();
-    $('#add-edit-post > div#blog-files > div:first-child > div:first-child > span').click(function() {
-        $(this).parent().next().toggle();
-        $(this).parent().parent().next().slideToggle();
-    });
-   
-    // загрузка файлов с использованием XmlHttpRequest, страница формы для
-    // добавления/редактирования поста блога
-    $('#add-edit-post').on('click', 'input[name="upload"]', null, function(e) {
-        e.preventDefault();
-        var form = $(this).closest('form');
-        var uploadFormData = new FormData(form.get(0));
-        $.ajax({
-            url: form.attr('action').replace(/(addpost|editpost)/i, 'upload'),
-            type: form.attr('method'),
-            contentType: false,
-            processData: false,
-            data: uploadFormData,
-            dataType: 'html',
-            success: function(html) {
-                $('#add-edit-post > #blog-files > div:last-child > div:first-child > div').html(html);
-            },
-            error: function() {
-                alert('Ошибка при загрузке файлов');
-            }
-        });
-        // очищаем поле выбора файлов
-        var input = $(this).siblings('input[type="file"]');
-        input.replaceWith(input.clone());
-    });
-    
-    // вставить ссылку на файл в текст записи (поста) блога, страница формы для
-    // добавления/редактирования поста блога
-    $('#add-edit-post #blog-files > div:last-child > div > div').on('click', 'ul > li > span', null, function() {
-        var fileUrl = $(this).data('url');
-        var fileType = $(this).data('type');
-        var fileName = $(this).children('span').text();
-        if (fileType == 'img') {
-            $('#add-edit-post textarea[name="body"]').insertAtCaret('<img src="' + fileUrl + '" alt="" />'); 
-        } else {
-            $('#add-edit-post textarea[name="body"]').insertAtCaret('<a href="' + fileUrl + '">' + fileName + '</a>');
+    // кнопка для удаления строки загрузки файла
+    $('#add-edit-post #new-files > div:last-child > div > span:last-of-type').click(function() {
+        $(this).parent().remove();
+        // если это была единственная видимая строка загрузки файла, добавляем новую строку
+        if ($('#add-edit-post #new-files > div:last-child > div').size() == 1) {
+            lastFilesRow.clone(true).insertBefore(lastFilesRow).show();
         }
+    });
+
+    // вставить ссылку на файл в текст новости
+    $('#add-edit-post #old-files > div:last-child > div > span').click(function() {
+        var fileUrl = $(this).prev().attr('href').substr(1);
+        var fileName = $(this).prev().text();
+        $('#add-edit-post textarea[name="body"]').insertAtCaret('<a href="' + fileUrl + '">' + fileName + '</a>');
     });
 
 });

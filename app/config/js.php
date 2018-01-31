@@ -62,5 +62,6 @@ $js = array(
             'insert-at-caret.js',
             'page.js',
         ),
+        'sitemap'   => 'sitemap.js',
     ),
 );

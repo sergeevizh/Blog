@@ -28,8 +28,14 @@ class Allctgs_Blog_Backend_Controller extends Blog_Backend_Controller {
 
         // формируем хлебные крошки
         $breadcrumbs = array(
-            array('url' => $this->blogBackendModel->getURL('backend/index/index'), 'name' => 'Главная'),
-            array('url' => $this->blogBackendModel->getURL('backend/blog/index'), 'name' => 'Блог'),
+            array(
+                'name' => 'Главная',
+                'url'  => $this->blogBackendModel->getURL('backend/index/index')
+            ),
+            array(
+                'name' => 'Блог',
+                'url'  => $this->blogBackendModel->getURL('backend/blog/index')
+            ),
         );
 
         // получаем от модели массив категорий
