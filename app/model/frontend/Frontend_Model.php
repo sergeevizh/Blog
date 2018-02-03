@@ -49,19 +49,35 @@ abstract class Frontend_Model extends Base_Model {
     }
 
     /*
+     * Функция «подсвечивает» блоки кода, которые встречаются в HTML-тексте
+     */
+    protected function highlightCodeBlocks($html) {
+        $langs = array('html', 'css', 'js', 'php', 'mysql', 'язык', 'запрос', 'bash', 'code');
+        if (preg_match_all('~\[('.implode('|', $langs).')\](.+)\[/\1\]~Us', $html, $matches)) {
+        //if (preg_match_all('~\[(html)\](.+)\[/\1\]~Us', $html, $matches)) {
+            foreach($matches[0] as $key => $value) {
+                $lang = $matches[1][$key];
+                $code = $this->highlightCodeBlock($matches[2][$key], $lang);
+                $html = str_replace($value, $code, $html);
+            }
+        }
+        return $html;
+    }
+
+    /*
      * Функция возвращает «подсвеченный» код на разных языках программирования
      */
-    protected function highlightCode($code, $lang) {
+    private function highlightCodeBlock($code, $lang) {
         switch ($lang) {
-            case 'html'  : return highlightHTML($code);
-            case 'css'   : return highlightCSS($code);
-            case 'js'    : return highlightJS($code);
-            case 'php'   : return highlightPHP($code);
-            case 'mysql' : return highlightMysql($code);
-            case 'язык'  : return highlightERP($code);
-            case 'запрос': return highlightQuery($code);
-            case 'bash'  : return highlightBash($code);
-            case 'code'  : return highlightCode($code);
+            case 'html'  : return $this->highlightHTML($code);
+            case 'css'   : return $this->highlightCSS($code);
+            case 'js'    : return $this->highlightJS($code);
+            case 'php'   : return $this->highlightPHP($code);
+            case 'mysql' : return $this->highlightMysql($code);
+            case 'язык'  : return $this->highlightERP($code);
+            case 'запрос': return $this->highlightQuery($code);
+            case 'bash'  : return $this->highlightBash($code);
+            case 'code'  : return $this->highlightCode($code);
         }
     }
 
@@ -69,17 +85,18 @@ abstract class Frontend_Model extends Base_Model {
 
         $colors = array(
             'default'   => '#000000',
+            'doctype'   => '#8B008B',
             'comment'   => '#888888',
             'string'    => '#0080FF',
             'command'   => '#008080',
-            'entity'    => '#8B008B',
+            'entity'    => '#8000FF',
             'attribute' => '#808000',
             'number'    => '#CCCCCC'
         );
 
         $code = trim($code);
         $code = str_replace("\r\n", "\n", $code);
-        $code = str_replace('    ', '    ', $code); // замена табуляции на 4 пробела
+        $code = str_replace("\t", '    ', $code); // замена табуляции на 4 пробела
 
         /*
          * заменяем html-сущности, чтобы безопасно раскрашивать код
@@ -132,6 +149,8 @@ abstract class Frontend_Model extends Base_Model {
             '<span style="color: '.$colors['comment'].'">&lt;$1&gt;</span>',
             $code
         );
+        // <!DOCTYPE html>
+        $code = preg_replace('~<(\!DOCTYPE[^>]*)>~', '<span style="color: '.$colors['doctype'].'">&lt;$1&gt;</span>', $code);
 
         /*
          * обратная замена сущностей после раскрашивания кода
@@ -188,7 +207,7 @@ abstract class Frontend_Model extends Base_Model {
 
         $code = trim($code);
         $code = str_replace("\r\n", "\n", $code);
-        $code = str_replace('    ', '    ', $code); // замена табуляции на 4 пробела
+        $code = str_replace("\t", '    ', $code); // замена табуляции на 4 пробела
 
         /*
          * Вырезаем все, что можно, и на это место вставляем уникальный идентификатор, чтобы потом выполнить замену
@@ -391,7 +410,7 @@ abstract class Frontend_Model extends Base_Model {
 
         $code = trim($code);
         $code = str_replace("\r\n", "\n", $code);
-        $code = str_replace('    ', '    ', $code); // замена табуляции на 4 пробела
+        $code = str_replace("\t", '    ', $code); // замена табуляции на 4 пробела
 
         /*
          * заменяем строки на некий уникальный идентификатор, потом раскрашиваем код,

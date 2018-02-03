@@ -77,8 +77,6 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
             'action'      => $this->blogBackendModel->getURL('backend/blog/editpost/id/' . $this->params['id']),
             // массив категорий новостей
             'categories'  => $categories,
-            // массив директорий и файлов
-            'folders'     => $folders,
             // уникальный идентификатор поста
             'id'          => $this->params['id'],
             // категория поста

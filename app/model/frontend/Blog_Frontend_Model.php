@@ -101,7 +101,7 @@ class Blog_Frontend_Model extends Frontend_Model {
     /**
      * Возвращает информацию о записи блога с уникальным идентификатором $id
      */
-    protected function getPost($id) {
+    public function getPost($id) {
         $query = "SELECT
                       `a`.`name` AS `name`, `a`.`keywords` AS `keywords`,
                       `a`.`description` AS `description`,
@@ -113,7 +113,10 @@ class Blog_Frontend_Model extends Frontend_Model {
                       `blog_posts` `a` INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       `a`.`id` = :id";
-        return $this->database->fetch($query, array('id' => $id));
+        $post = $this->database->fetch($query, array('id' => $id));
+        // подсвечиваем код
+        $post['body'] = $this->highlightCodeBlocks($post['body']);
+        return $post;
     }
 
     /**
