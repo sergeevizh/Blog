@@ -69,7 +69,7 @@ class Index_Frontend_Model extends Frontend_Model {
             // URL статьи
             $articles[$key]['url']['item'] = $this->getURL('frontend/article/item/id/' . $value['id']);
             // URL превьюшки
-            if (is_file('files/aricle/thumb/' . $value['id'] . '.jpg')) {
+            if (is_file('files/article/thumb/' . $value['id'] . '.jpg')) {
                 $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/' . $value['id'] . '.jpg';
             } else {
                 $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/default.jpg';

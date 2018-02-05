@@ -39,10 +39,10 @@ class Article_Frontend_Model extends Frontend_Model {
         // добавляем в массив статей информацию об URL статьи, картинки, категории
         foreach($articles as $key => $value) {
             $articles[$key]['url']['item'] = $this->getURL('frontend/article/item/id/' . $value['id']);
-            if (is_file('files/article/' . $value['id'] . '/' . $value['id'] . '.jpg')) {
-                $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/' . $value['id'] . '/' . $value['id'] . '.jpg';
+            if (is_file('files/article/thumb/' . $value['id'] . '.jpg')) {
+                $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/' . $value['id'] . '.jpg';
             } else {
-                $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/default.jpg';
+                $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/default.jpg';
             }
             $articles[$key]['url']['category'] = $this->getURL('frontend/article/category/id/' . $value['ctg_id']);
         }
@@ -128,7 +128,10 @@ class Article_Frontend_Model extends Frontend_Model {
                       `article_items` `a` INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       `a`.`id` = :id";
-        return $this->database->fetch($query, array('id' => $id));
+        $article = $this->database->fetch($query, array('id' => $id));
+        // подсвечиваем код
+        $article['body'] = $this->highlightCodeBlocks($article['body']);
+        return $article;
 
     }
 

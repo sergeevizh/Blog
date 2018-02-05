@@ -48,15 +48,21 @@
         }
             #all-articles > ul > li > div:first-child {
                 float: left;
-                width: 70%;
+                width: 60%;
             }
+                #all-articles > ul > li > div:first-child > span {
+                    color: #969696;
+                }
             #all-articles > ul > li > div:last-child {
                 float: right;
-                width: 30%;
+                width: 40%;
                 text-align: right;
             }
                 #all-articles > ul > li > div:last-child > a {
                     margin-left: 10px;
+                }
+                #all-articles > ul > li > div:last-child > span {
+                    color: #969696;
                 }
 
 /* форма для добавления/редактирования статьи */

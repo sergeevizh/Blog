@@ -47,7 +47,7 @@ class Additem_Article_Backend_Controller extends Article_Backend_Controller {
             ),
         );
 
-        // получаем от модели массив категорий статей, для возможности выбора
+        // получаем от модели массив категорий статей, для возможности выбора родителя
         $categories = $this->articleBackendModel->getCategories();
 
         /*

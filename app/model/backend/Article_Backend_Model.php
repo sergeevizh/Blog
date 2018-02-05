@@ -176,11 +176,6 @@ class Article_Backend_Model extends Backend_Model {
      */
     private function uploadImage($id) {
 
-        // создаем директорию для хранения файлов статьи
-        if ( ! is_dir('files/article/' . $id)) {
-            mkdir('files/article/' . $id);
-        }
-
         // удаляем изображение, загруженное ранее
         if (isset($_POST['remove_image'])) {
             if (is_file('files/article/thumb/' . $id . '.jpg')) {

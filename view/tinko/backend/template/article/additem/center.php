@@ -73,8 +73,17 @@ defined('ZCMS') or die('Access denied');
             <select name="category">
             <option value="0">Выберите</option>
             <?php if (!empty($categories)): ?>
-                <?php foreach ($categories as $ctg): ?>
-                    <option value="<?php echo $ctg['id']; ?>"<?php if ($ctg['id'] == $category) echo 'selected="selected"'; ?>><?php echo $ctg['name']; ?></option>
+                <?php foreach ($categories as $item): ?>
+                    <option value="<?php echo $ctg['id']; ?>"<?php if ($item['id'] == $category) echo 'selected="selected"'; ?>>
+                        <?php echo $item['name']; ?>
+                    </option>
+                    <?php if (isset($item['childs'])): ?>
+                        <?php foreach($item['childs'] as $child): ?>
+                            <option value="<?php echo $child['id']; ?>"<?php if ($child['id'] == $category) echo 'selected="selected"'; ?>>
+                                &nbsp;&nbsp;&nbsp;<?php echo $child['name']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             <?php endif; ?>
             </select>

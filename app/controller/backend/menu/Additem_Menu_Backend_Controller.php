@@ -70,7 +70,7 @@ class Additem_Menu_Backend_Controller extends Menu_Backend_Controller {
             // массив категорий блога
             'blogCategories'    => $blogCategories,
             // массив категорий статей
-            'articleCategories' => $solutionCategories,
+            'articleCategories' => $articleCategories,
         );
         // если были ошибки при заполнении формы, передаем в шаблон массив сообщений об ошибках
         if ($this->issetSessionData('addMenuItemForm')) {

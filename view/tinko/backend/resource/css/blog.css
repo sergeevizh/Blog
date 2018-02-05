@@ -50,6 +50,9 @@
                 float: left;
                 width: 70%;
             }
+                #all-blog-posts > ul > li > div:first-child > span {
+                    color: #969696;
+                }
             #all-blog-posts > ul > li > div:last-child {
                 float: right;
                 width: 30%;
@@ -57,6 +60,9 @@
             }
                 #all-blog-posts > ul > li > div:last-child > a {
                     margin-left: 10px;
+                }
+                #all-blog-posts > ul > li > div:last-child > span {
+                    color: #969696;
                 }
 
 /* форма для добавления/редактирования поста */

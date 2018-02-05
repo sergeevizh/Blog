@@ -93,13 +93,15 @@ abstract class Frontend_Controller extends Base_Controller {
          */
         $this->headerVars = array(
             // URL ссылки на главную страницу сайта
-            'indexUrl'     => $this->indexFrontendModel->getURL('frontend/index/index'),
+            'indexURL'     => $this->indexFrontendModel->getURL('frontend/index/index'),
         );
 
         /*
          * массив переменных, которые будут переданы в шаблон menu.php
          */
         $this->menuVars = array(
+            // URL ссылки на главную страницу сайта
+            'indexURL'     => $this->indexFrontendModel->getURL('frontend/index/index'),
             // главное меню сайта
             'menu' => $this->menuFrontendModel->getMenu()
         );

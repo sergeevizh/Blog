@@ -16,56 +16,61 @@ defined('ZCMS') or die('Access denied');
 
 <h1><?php echo $name; ?></h1>
 
-
-<div class="news-list" id="company-news">
-<?php foreach($posts as $item): ?>
-    <div>
+<?php if (!empty($posts)): ?>
+    <h2>Последние записи</h2>
+    <div class="news-list" id="company-news">
+    <?php foreach($posts as $item): ?>
         <div>
-            <a href="<?php echo $item['url']['item']; ?>">
-                <img src="<?php echo $item['url']['image']; ?>" alt="" />
-            </a>
+            <div>
+                <a href="<?php echo $item['url']['item']; ?>">
+                    <img src="<?php echo $item['url']['image']; ?>" alt="" />
+                </a>
+            </div>
+            <div>
+                <div class="news-date">
+                    <?php echo $item['date']; ?>
+                </div>
+                <div class="news-heading">
+                    <h3>
+                        <a href="<?php echo $item['url']['item']; ?>"><?php echo $item['name']; ?></a>
+                    </h3>
+                </div>
+                <div class="news-excerpt">
+                    <?php echo $item['excerpt']; ?>
+                </div>
+            </div>
         </div>
-        <div>
-            <div class="news-date">
-                <?php echo $item['date']; ?>
-            </div>
-            <div class="news-heading">
-                <h3>
-                    <a href="<?php echo $item['url']['item']; ?>"><?php echo $item['name']; ?></a>
-                </h3>
-            </div>
-            <div class="news-excerpt">
-                <?php echo $item['excerpt']; ?>
-            </div>
-        </div>
+    <?php endforeach; ?>
     </div>
-<?php endforeach; ?>
-</div>
+<?php endif; ?>
 
-<div class="news-list" id="general-news">
-<?php foreach($articles as $item): ?>
-    <div>
+<?php if (!empty($articles)): ?>
+    <h2>Последние статьи</h2>
+    <div class="news-list" id="general-news">
+    <?php foreach($articles as $item): ?>
         <div>
-            <a href="<?php echo $item['url']['item']; ?>">
-                <img src="<?php echo $item['url']['image']; ?>" alt="" />
-            </a>
+            <div>
+                <a href="<?php echo $item['url']['item']; ?>">
+                    <img src="<?php echo $item['url']['image']; ?>" alt="" />
+                </a>
+            </div>
+            <div>
+                <div class="news-date">
+                    <?php echo $item['date']; ?>
+                </div>
+                <div class="news-heading">
+                    <h3>
+                        <a href="<?php echo $item['url']['item']; ?>"><?php echo $item['name']; ?></a>
+                    </h3>
+                </div>
+                <div class="news-excerpt">
+                    <?php echo $item['excerpt']; ?>
+                </div>
+            </div>
         </div>
-        <div>
-            <div class="news-date">
-                <?php echo $item['date']; ?>
-            </div>
-            <div class="news-heading">
-                <h3>
-                    <a href="<?php echo $item['url']['item']; ?>"><?php echo $item['name']; ?></a>
-                </h3>
-            </div>
-            <div class="news-excerpt">
-                <?php echo $item['excerpt']; ?>
-            </div>
-        </div>
+    <?php endforeach; ?>
     </div>
-<?php endforeach; ?>
-</div>
+<?php endif; ?>
 
 <!-- Конец шаблона view/example/frontend/template/index/center.php -->
 

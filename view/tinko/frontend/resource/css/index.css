@@ -1,3 +1,9 @@
+h2 {
+    margin: 20px 0;
+    color: #395985;
+    font-weight: normal;
+    font-size: 19px;
+}
 /* список новостей */
 .news-list {
 

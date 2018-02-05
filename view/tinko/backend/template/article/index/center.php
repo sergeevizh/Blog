@@ -37,8 +37,9 @@ defined('ZCMS') or die('Access denied');
         <ul>
             <?php foreach($articles as $item) : ?>
                 <li>
-                    <div><?php echo $item['name']; ?></div>
+                    <div><span><?php echo $item['date']; ?></span>&nbsp;&nbsp;<?php echo $item['name']; ?></div>
                     <div>
+                        <span><?php echo $item['ctg_name']; ?></span>
                         <a href="<?php echo $item['url']['edit']; ?>" title="Редактировать"><i class="fa fa-pencil-square-o"></i></a>
                         <a href="<?php echo $item['url']['remove']; ?>" title="Удалить"><i class="fa fa-trash-o"></i></a>
                     </div>

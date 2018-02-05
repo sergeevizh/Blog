@@ -101,7 +101,7 @@ defined('ZCMS') or die('Access denied');
     </div>
 <?php endif; ?>
 
-<h1>Новости</h1>
+<h1>Блог</h1>
 
 <?php if (!empty($posts)): // список постов блога ?>
     <div id="posts-list">

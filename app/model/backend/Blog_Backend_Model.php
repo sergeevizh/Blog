@@ -47,9 +47,12 @@ class Blog_Backend_Model extends Backend_Model {
      */
     public function getAllPosts($start = 0) {
         $query = "SELECT
-                      `id`, `name`
+                      `a`.`id` AS `id`, `a`.`name` AS `name`,
+                      DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
+                      DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
                   FROM
-                      `blog_posts`
+                      `blog_posts` `a` INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       1
                   ORDER BY
@@ -172,20 +175,11 @@ class Blog_Backend_Model extends Backend_Model {
      */
     private function uploadImage($id) {
 
-        // директория, куда будет загружен файл изображения
-        $temp = (string)$id;
-        $folfer = $temp[0];
-
         // удаляем изображение, загруженное ранее
         if (isset($_POST['remove_image'])) {
-            if (is_file('files/blog/thumb/' . $folfer . '/' . $id . '.jpg')) {
-                unlink('files/blog/thumb/' . $folfer . '/' . $id . '.jpg');
+            if (is_file('files/blog/thumb/' . $id . '.jpg')) {
+                unlink('files/blog/thumb/' . $id . '.jpg');
             }
-        }
-
-        // создаем директорию, если она еще не существует
-        if ( ! is_dir('files/blog/thumb/' . $folfer)) {
-            mkdir('files/blog/thumb/' . $folfer);
         }
 
         // проверяем, пришел ли файл изображения
@@ -198,7 +192,7 @@ class Blog_Backend_Model extends Backend_Model {
                     // изменяем размер изображения
                     $this->resizeImage(
                         $_FILES['image']['tmp_name'],
-                        'files/blog/thumb/' . $folfer . '/' . $id . '.jpg',
+                        'files/blog/thumb/' . $id . '.jpg',
                         100,
                         100,
                         'jpg'

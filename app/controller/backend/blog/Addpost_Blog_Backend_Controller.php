@@ -48,7 +48,7 @@ class Addpost_Blog_Backend_Controller extends Blog_Backend_Controller {
             ),
         );
 
-        // получаем от модели массив категорий постов, для возможности выбора
+        // получаем от модели массив категорий постов, для возможности выбора родителя
         $categories = $this->blogBackendModel->getCategories();
 
         /*

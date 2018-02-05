@@ -58,7 +58,7 @@ class Post_Blog_Frontend_Controller extends Blog_Frontend_Controller {
                 'url'  => $this->blogFrontendModel->getURL('frontend/index/index')
             ),
             array(
-                'name' => 'Новости',
+                'name' => 'Блог',
                 'url'  => $this->blogFrontendModel->getURL('frontend/blog/index')
             ),
             array(
