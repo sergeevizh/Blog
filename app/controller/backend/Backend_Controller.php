@@ -122,12 +122,12 @@ abstract class Backend_Controller extends Base_Controller {
                 'url'  => $this->indexBackendModel->getURL('backend/index/index')
             ),
             array(
-                'name' => 'Меню',
-                'url'  => $this->menuBackendModel->getURL('backend/menu/index')
-            ),
-            array(
                 'name' => 'Блог',
                 'url'  => $this->blogBackendModel->getURL('backend/blog/index')
+            ),
+            array(
+                'name' => 'Теги',
+                'url'  => $this->tagBackendModel->getURL('backend/tag/index')
             ),
             array(
                 'name' => 'Статьи',
@@ -136,6 +136,10 @@ abstract class Backend_Controller extends Base_Controller {
             array(
                 'name' => 'Страницы',
                 'url'  => $this->pageBackendModel->getURL('backend/page/index')
+            ),
+            array(
+                'name' => 'Меню',
+                'url'  => $this->menuBackendModel->getURL('backend/menu/index')
             ),
             array(
                 'name' => 'Карта',

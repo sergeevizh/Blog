@@ -57,16 +57,18 @@ defined('ZCMS') or die('Access denied');
     $body        = htmlspecialchars($body);
     $date        = htmlspecialchars($date);
     $time        = htmlspecialchars($time);
+    $source      = htmlspecialchars($source);
 
     if (isset($savedFormData)) {
         $name        = htmlspecialchars($savedFormData['name']);
         $category    = $savedFormData['category'];
         $keywords    = htmlspecialchars($savedFormData['keywords']);
         $description = htmlspecialchars($savedFormData['description']);
-        $excerpt     = htmlspecialchars($excerpt);
+        $excerpt     = htmlspecialchars($savedFormData['excerpt']);
         $body        = htmlspecialchars($savedFormData['body']);
         $date        = htmlspecialchars($savedFormData['date']);
         $time        = htmlspecialchars($savedFormData['time']);
+        $source      = htmlspecialchars($savedFormData['source']);
     }
 ?>
 
@@ -130,6 +132,10 @@ defined('ZCMS') or die('Access denied');
             <input type="text" name="date" value="<?php echo $date; ?>" />
             <input type="text" name="time" value="<?php echo $time; ?>" />
         </div>
+    </div>
+    <div>
+        <div>Источник</div>
+        <div><input type="text" name="source" maxlength="250" value="<?php echo $source; ?>" /></div>
     </div>
     <div id="new-files">
         <div>Загрузить файл(ы)</div>

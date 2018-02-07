@@ -79,7 +79,9 @@ class Item_Article_Frontend_Controller extends Article_Frontend_Controller {
             // наименование категории
             'categoryName'    => $article['ctg_name'],
             // URL страницы категории
-            'categoryPageUrl' => $this->articleFrontendModel->getURL('frontend/article/category/id/' . $article['ctg_id'])
+            'categoryPageUrl' => $this->articleFrontendModel->getURL('frontend/article/category/id/' . $article['ctg_id']),
+            // источник статьи
+            'source'          => $article['source'],
         );
     }
 

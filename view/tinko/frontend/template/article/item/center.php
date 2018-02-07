@@ -10,6 +10,7 @@
  * date - дата публикации статьи
  * categoryName - наименование категории статьи
  * $categoryPageUrl - URL страницы категории
+ * $source - источник статьи
  */
 
 defined('ZCMS') or die('Access denied');
@@ -33,6 +34,9 @@ defined('ZCMS') or die('Access denied');
         <p>Категория: <a href="<?php echo $categoryPageUrl; ?>"><?php echo $categoryName; ?></a></p>
     </div>
     <?php echo $body; ?>
+    <?php if (!empty($source)): ?>
+        <p><em><a href="<?php echo $source; ?>" target="_blank">Источник</a></em></p>
+    <?php endif; ?>
 </div>
 
 <!-- Конец шаблона view/example/frontend/template/article/item/center.php -->

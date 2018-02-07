@@ -85,7 +85,8 @@ class Article_Backend_Model extends Backend_Model {
      */
     public function getArticle($id) {
         $query = "SELECT
-                      `a`.`name` AS `name`, `a`.`keywords` AS `keywords`,
+                      `a`.`name` AS `name`, `a`.`source` AS `source`,
+                      `a`.`keywords` AS `keywords`,
                       `a`.`description` AS `description`,
                       `a`.`excerpt` AS `excerpt`, `a`.`body` AS `body`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
@@ -111,6 +112,7 @@ class Article_Backend_Model extends Backend_Model {
                   (
                       `category`,
                       `name`,
+                      `source`,
                       `keywords`,
                       `description`,
                       `excerpt`,
@@ -121,6 +123,7 @@ class Article_Backend_Model extends Backend_Model {
                   (
                       :category,
                       :name,
+                      :source,
                       :keywords,
                       :description,
                       :excerpt,
@@ -153,6 +156,7 @@ class Article_Backend_Model extends Backend_Model {
                   SET
                       `category`    = :category,
                       `name`        = :name,
+                      `source`      = :source,
                       `keywords`    = :keywords,
                       `description` = :description,
                       `excerpt`     = :excerpt,

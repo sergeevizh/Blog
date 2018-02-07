@@ -93,6 +93,7 @@ class Additem_Article_Backend_Controller extends Article_Backend_Controller {
         $data['body']        = trim($_POST['body']); // содержание статьи
         $data['date']        = $_POST['date']; // дата публикации
         $data['time']        = $_POST['time']; // время публикации
+        $data['source']      = trim(iconv_substr($_POST['source'], 0, 250)); // источник статьи
 
         // категория статьи
         $data['category'] = 0;

@@ -48,6 +48,7 @@ defined('ZCMS') or die('Access denied');
     $description = '';
     $excerpt     = '';
     $body        = '';
+    $source      = '';
 
     if (isset($savedFormData)) {
         $name        = htmlspecialchars($savedFormData['name']);
@@ -58,6 +59,7 @@ defined('ZCMS') or die('Access denied');
         $body        = htmlspecialchars($savedFormData['body']);
         $date        = htmlspecialchars($savedFormData['date']);
         $time        = htmlspecialchars($savedFormData['time']);
+        $source      = htmlspecialchars($savedFormData['source']);
     }
 ?>
 
@@ -74,7 +76,7 @@ defined('ZCMS') or die('Access denied');
             <option value="0">Выберите</option>
             <?php if (!empty($categories)): ?>
                 <?php foreach ($categories as $item): ?>
-                    <option value="<?php echo $ctg['id']; ?>"<?php if ($item['id'] == $category) echo 'selected="selected"'; ?>>
+                    <option value="<?php echo $item['id']; ?>"<?php if ($item['id'] == $category) echo 'selected="selected"'; ?>>
                         <?php echo $item['name']; ?>
                     </option>
                     <?php if (isset($item['childs'])): ?>
@@ -115,6 +117,10 @@ defined('ZCMS') or die('Access denied');
             <input type="text" name="date" value="<?php echo $date; ?>" />
             <input type="text" name="time" value="<?php echo $time; ?>" />
         </div>
+    </div>
+    <div>
+        <div>Источник</div>
+        <div><input type="text" name="source" maxlength="250" value="<?php echo $source; ?>" /></div>
     </div>
     <div id="new-files">
         <div>Загрузить файл(ы)</div>

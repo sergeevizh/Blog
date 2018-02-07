@@ -119,7 +119,9 @@ class Article_Frontend_Model extends Frontend_Model {
     public function getArticle($id) {
 
         $query = "SELECT
-                      `a`.`name` AS `name`, `a`.`keywords` AS `keywords`, `a`.`description` AS `description`,
+                      `a`.`name` AS `name`, `a`.`source` AS `source`,
+                      `a`.`keywords` AS `keywords`,
+                      `a`.`description` AS `description`,
                       `a`.`excerpt` AS `excerpt`, `a`.`body` AS `body`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,

@@ -107,6 +107,8 @@ class Edititem_Article_Backend_Controller extends Article_Backend_Controller {
             'date'        => $article['date'],
             // время добавления
             'time'        => $article['time'],
+            // источник статьи
+            'source'      => $article['source'],
             // загруженные файлы
             'files'       => $files,
         );
@@ -138,6 +140,7 @@ class Edititem_Article_Backend_Controller extends Article_Backend_Controller {
         $data['body']        = trim($_POST['body']); // содержание статьи
         $data['date']        = $_POST['date']; // дата
         $data['time']        = $_POST['time']; // время
+        $data['source']      = trim(iconv_substr($_POST['source'], 0, 250)); // источник статьи
 
         // категория статьи
         $data['category'] = 0;
