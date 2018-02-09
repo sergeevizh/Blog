@@ -21,11 +21,9 @@
             #add-edit-page > div > div:last-child > textarea,
             #add-edit-page > div > div:last-child > select {
                 width: 100%;
-                box-sizing: border-box;
-                padding: 3px;
             }
             #add-edit-page > div > div:last-child > textarea {
-                height: 300px;
+                height: 200px;
             }
         #add-edit-page > #new-files > div,
         #add-edit-page > #old-files > div {

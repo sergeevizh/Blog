@@ -35,7 +35,7 @@ class Index_Tag_Backend_Controller extends Tag_Backend_Controller {
         );
 
         // получаем от модели массив всех тегов блога
-        $tags = $this->tagBackendModel->getAllTags();
+        $tags = $this->tagBackendModel->getTags();
 
         /*
          * массив переменных, которые будут переданы в шаблон center.php

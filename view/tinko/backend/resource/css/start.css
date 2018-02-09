@@ -18,11 +18,9 @@
             #edit-start-page > div > div:last-child > input[type="text"],
             #edit-start-page > div > div:last-child > textarea {
                 width: 100%;
-                box-sizing: border-box;
-                padding: 3px;
             }
             #edit-start-page > div > div:last-child > textarea {
-                height: 300px;
+                height: 200px;
             }
 
 /* список всех баннеров на витрине */
@@ -75,8 +73,6 @@
     }
         #add-edit-banner > div > div:last-child > input[type="text"] {
             width: 100%;
-            box-sizing: border-box;
-            padding: 3px;
         }
             #add-edit-banner > div > div:last-child > input[name="date"],
             #add-edit-banner > div > div:last-child > input[name="time"] {

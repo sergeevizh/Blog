@@ -19,11 +19,6 @@
             #add-edit-menu-item > div > div:last-child > textarea,
             #add-edit-menu-item > div > div:last-child > select {
                 width: 100%;
-                box-sizing: border-box;
-                padding: 3px;
-            }
-            #add-edit-menu-item > div > div:last-child > textarea {
-                height: 300px;
             }
 
 /* список всех пунктов меню */

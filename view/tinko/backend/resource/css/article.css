@@ -88,18 +88,16 @@
             #add-edit-article > div > div:last-child > textarea,
             #add-edit-article > div > div:last-child > select {
                 width: 100%;
-                box-sizing: border-box;
-                padding: 3px;
             }
                 #add-edit-article > div > div:last-child > input[name="date"],
                 #add-edit-article > div > div:last-child > input[name="time"] {
                     width: 80px;
                 }
             #add-edit-article > div > div:last-child > textarea {
-                height: 300px;
+                height: 200px;
             }
                 #add-edit-article > div > div:last-child > textarea[name="excerpt"] {
-                    height: 150px;
+                    height: 100px;
                 }
         #add-edit-article > #new-files > div,
         #add-edit-article > #old-files > div {

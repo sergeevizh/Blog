@@ -26,6 +26,11 @@ abstract class Backend_Controller extends Base_Controller {
     protected $blogBackendModel;
 
     /**
+     * экземпляр класса модели для работы с тегами блога
+     */
+    protected $tagBackendModel;
+
+    /**
      * экземпляр класса модели для работы с главной страницей
      * административной части сайта
      */
@@ -63,6 +68,10 @@ abstract class Backend_Controller extends Base_Controller {
         // экземпляр класса модели для работы с блогом
         $this->blogBackendModel =
             isset($this->register->blogBackendModel) ? $this->register->blogBackendModel : new Blog_Backend_Model();
+
+        // экземпляр класса модели для работы с тегами блога
+        $this->tagBackendModel =
+            isset($this->register->tagBackendModel) ? $this->register->tagBackendModel : new Tag_Backend_Model();
 
         // экземпляр класса модели для работы с главной страницей админки
         $this->indexBackendModel =

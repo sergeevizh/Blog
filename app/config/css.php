@@ -77,6 +77,7 @@ $css = array(
             'blog.css',
             'tabs.css',
         ),
+        'tag'       => 'tag.css',
         'menu'      => 'menu.css',
         'page'      => 'page.css',
         'sitemap'   => 'sitemap.css',
