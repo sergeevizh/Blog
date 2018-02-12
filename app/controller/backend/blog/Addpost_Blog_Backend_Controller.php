@@ -28,7 +28,7 @@ class Addpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         // если данные формы были отправлены
         if ($this->isPostMethod()) {
             if ( ! $this->validateForm()) { // если при заполнении формы были допущены ошибки
-                $this->redirect($this->blogBackendModel->getURL('backend/blog/additem'));
+                $this->redirect($this->blogBackendModel->getURL('backend/blog/addpost'));
             } else {
                 $this->redirect($this->blogBackendModel->getURL('backend/blog/index'));
             }
@@ -51,6 +51,9 @@ class Addpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         // получаем от модели массив категорий постов, для возможности выбора родителя
         $categories = $this->blogBackendModel->getCategories();
 
+        // получаем от модели массив всех тегов
+        $allTags = $this->blogBackendModel->getAllTags();
+
         /*
          * массив переменных, которые будут переданы в шаблон center.php
          */
@@ -61,6 +64,8 @@ class Addpost_Blog_Backend_Controller extends Blog_Backend_Controller {
             'action'      => $this->blogBackendModel->getURL('backend/blog/addpost'),
             // массив категорий для возможности выбора
             'categories'  => $categories,
+            // массив всех тегов
+            'allTags'     => $allTags,
             // дата добавления поста
             'date'        => date('d.m.Y'),
             // время добавления поста
@@ -109,6 +114,16 @@ class Addpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         $data['category'] = 0;
         if (ctype_digit($_POST['category'])) {
             $data['category'] = (int)$_POST['category'];
+        }
+
+        // теги блога
+        $data['tags'] = array();
+        if (isset($_POST['tags']) and is_array($_POST['tags'])) {
+            foreach($_POST['tags'] as $value) {
+                if (ctype_digit($value)) {
+                    $data['tags'][] = (int)$value;
+                }
+            }
         }
 
         // были допущены ошибки при заполнении формы?

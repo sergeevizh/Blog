@@ -79,7 +79,7 @@ defined('ZCMS') or die('Access denied');
             <option value="0">Выберите</option>
             <?php if (!empty($categories)): ?>
                 <?php foreach ($categories as $item): ?>
-                    <option value="<?php echo $ctg['id']; ?>"<?php if ($item['id'] == $category) echo 'selected="selected"'; ?>>
+                    <option value="<?php echo $item['id']; ?>"<?php if ($item['id'] == $category) echo 'selected="selected"'; ?>>
                         <?php echo $item['name']; ?>
                     </option>
                     <?php if (isset($item['childs'])): ?>

@@ -99,6 +99,14 @@
                 #add-edit-post > div > div:last-child > textarea[name="excerpt"] {
                     height: 100px;
                 }
+                #add-edit-post > div > div:last-child > ul { /* теги блога */
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    -webkit-column-count: 5;
+                    -moz-column-count: 5;
+                    column-count: 5;
+                }
         #add-edit-post > #new-files > div,
         #add-edit-post > #old-files > div {
             float: none;

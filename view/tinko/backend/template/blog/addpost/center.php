@@ -8,6 +8,7 @@
  * $breadcrumbs - хлебные крошки
  * $action - атрибут action тега form
  * $categories - массив всех категорий
+ * allTags - массив всех тегов
  * $date - текущая дата
  * $time - текущее время
  * $savedFormData - сохраненные данные формы. Если при заполнении формы были
@@ -48,6 +49,7 @@ defined('ZCMS') or die('Access denied');
     $description = '';
     $excerpt     = '';
     $body        = '';
+    $tags        = array();
 
     if (isset($savedFormData)) {
         $name        = htmlspecialchars($savedFormData['name']);
@@ -56,6 +58,7 @@ defined('ZCMS') or die('Access denied');
         $description = htmlspecialchars($savedFormData['description']);
         $excerpt     = htmlspecialchars($savedFormData['excerpt']);
         $body        = htmlspecialchars($savedFormData['body']);
+        $tags        = $savedFormData['tags'];
         $date        = htmlspecialchars($savedFormData['date']);
         $time        = htmlspecialchars($savedFormData['time']);
     }
@@ -73,7 +76,7 @@ defined('ZCMS') or die('Access denied');
             <option value="0">Выберите</option>
             <?php if (!empty($categories)): ?>
                 <?php foreach ($categories as $item): ?>
-                    <option value="<?php echo $ctg['id']; ?>"<?php if ($item['id'] == $category) echo 'selected="selected"'; ?>>
+                    <option value="<?php echo $item['id']; ?>"<?php if ($item['id'] == $category) echo 'selected="selected"'; ?>>
                         <?php echo $item['name']; ?>
                     </option>
                     <?php if (isset($item['childs'])): ?>
@@ -107,6 +110,18 @@ defined('ZCMS') or die('Access denied');
     <div>
         <div>Текст (содержание)</div>
         <div><textarea name="body"><?php echo $body; ?></textarea></div>
+    </div>
+    <div>
+        <div>Теги</div>
+        <div>
+        <?php if (!empty($allTags)): ?>
+            <ul>
+            <?php foreach ($allTags as $item): ?>
+                <li><input type="checkbox" name="tags[]" value="<?php echo $item['id']; ?>" <?php echo in_array($item['id'], $tags) ? 'checked="checked"' : ''; ?> /> <?php echo $item['name']; ?></li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+        </div>
     </div>
     <div>
         <div>Дата и время</div>

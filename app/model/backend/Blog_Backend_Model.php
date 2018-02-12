@@ -106,10 +106,17 @@ class Blog_Backend_Model extends Backend_Model {
      */
     public function addPost($data) {
 
+        // теги блога
+        $tags = $data['tags'];
+        unset($data['tags']);
+
+        // дата публикации
         $tmp           = explode( '.', $data['date'] );
         $data['added'] = $tmp[2].'-'.$tmp[1].'-'.$tmp[0].' '.$data['time']; // дата и время
         unset($data['date']);
         unset($data['time']);
+
+        // добавляем пост
         $query = "INSERT INTO `blog_posts`
                   (
                       `category`,
@@ -133,6 +140,29 @@ class Blog_Backend_Model extends Backend_Model {
         $this->database->execute($query, $data);
         $id = $this->database->lastInsertId();
 
+        // теги блога
+        if (!empty($tags)) {
+            foreach($tags as $tag) {
+                $query = "INSERT INTO `blog_post_tag`
+                          (
+                              `post_id`,
+                              `tag_id`
+                          )
+                          VALUES
+                          (
+                              :post_id,
+                              :tag_id
+                          )";
+                $this->database->execute(
+                    $query,
+                    array(
+                        'post_id' => $id,
+                        'tag_id'  => $tag
+                    )
+                );
+            }
+        }
+
         // загружаем файл изображения
         $this->uploadImage($id);
 
@@ -146,10 +176,17 @@ class Blog_Backend_Model extends Backend_Model {
      */
     public function updatePost($data) {
 
+        // теги блога
+        $tags = $data['tags'];
+        unset($data['tags']);
+
+        // дата публикации
         $tmp           = explode( '.', $data['date'] );
         $data['added'] = $tmp[2].'-'.$tmp[1].'-'.$tmp[0].' '.$data['time']; // дата и время
         unset($data['date']);
         unset($data['time']);
+
+        // обновляем пост
         $query = "UPDATE
                       `blog_posts`
                   SET
@@ -163,6 +200,31 @@ class Blog_Backend_Model extends Backend_Model {
                   WHERE
                       `id` = :id";
         $this->database->execute($query, $data);
+
+        // теги блога
+        $query = "DELETE FROM `blog_post_tag` WHERE `post_id` = :id";
+        $this->database->execute($query, array('id' => $data['id']));
+        if (!empty($tags)) {
+            foreach($tags as $tag) {
+                $query = "INSERT INTO `blog_post_tag`
+                          (
+                              `post_id`,
+                              `tag_id`
+                          )
+                          VALUES
+                          (
+                              :post_id,
+                              :tag_id
+                          )";
+                $this->database->execute(
+                    $query,
+                    array(
+                        'post_id' => $data['id'],
+                        'tag_id'  => $tag
+                    )
+                );
+            }
+        }
 
         // загружаем файл изображения
         $this->uploadImage($data['id']);
@@ -292,6 +354,40 @@ class Blog_Backend_Model extends Backend_Model {
             }
             rmdir($dir);
         }
+    }
+
+    /**
+     * Функция возвращает массив всех тегов блога; помечает те теги,
+     * которые привязаны к посту блога с идентификатором id
+     */
+    public function getAllTags($id = 0) {
+        $query = "SELECT
+                      `a`.`id` AS `id`, `a`.`name` AS `name`,
+                      IFNULL(`b`.`post_id`, 0) AS `checked`
+                  FROM
+                      `blog_tags` `a` LEFT JOIN `blog_post_tag` `b` ON
+                      `a`.`id` = `b`.`tag_id` AND `b`.`post_id` = :id
+                  WHERE
+                      1
+                  ORDER BY
+                      `a`.`name`";
+        return $this->database->fetchAll($query, array('id' => $id));
+    }
+
+    /**
+     * Функция возвращает массив тегов поста $id
+     */
+    public function getPostTags($id) {
+        $query = "SELECT
+                      `a`.`id`, `a`.`name`
+                  FROM
+                      `blog_tags` `a` INNER JOIN `blog_post_tag` `b`
+                      ON `a`.`id` = `b`.`tag_id`
+                  WHERE
+                      `b`.`post_id` = :id
+                  ORDER BY
+                      `a`.`name`";
+        return $this->database->fetchAll($query, array('id' => $id));
     }
 
     /**

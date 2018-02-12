@@ -52,7 +52,7 @@ abstract class Frontend_Model extends Base_Model {
      * Функция «подсвечивает» блоки кода, которые встречаются в HTML-тексте
      */
     protected function highlightCodeBlocks($html) {
-        $langs = array('html', 'css', 'js', 'php', 'mysql', 'язык', 'запрос', 'bash', 'code');
+        $langs = array('html', 'css', 'js', 'php', 'mysql', 'язык', 'запрос', 'python', 'bash', 'cli', 'code');
         if (preg_match_all('~\[('.implode('|', $langs).')\](.+)\[/\1\]~Us', $html, $matches)) {
         //if (preg_match_all('~\[(html)\](.+)\[/\1\]~Us', $html, $matches)) {
             foreach($matches[0] as $key => $value) {
@@ -76,7 +76,9 @@ abstract class Frontend_Model extends Base_Model {
             case 'mysql' : return $this->highlightMysql($code);
             case 'язык'  : return $this->highlightERP($code);
             case 'запрос': return $this->highlightQuery($code);
+            case 'python': return $this->highlightPython($code);
             case 'bash'  : return $this->highlightBash($code);
+            case 'cli'   : return $this->highlightCLI($code);
             case 'code'  : return $this->highlightCode($code);
         }
     }
@@ -517,12 +519,163 @@ abstract class Frontend_Model extends Base_Model {
         return '<pre style="color:#0000ff">'.htmlspecialchars($code).'</pre>';
     }
 
+    private function highlightPython($code) {
+        $colors = array(
+            'default'   => '#008080',
+            'comment'   => '#888888',
+            'string'    => '#0000FF',
+            'delimiter' => '#FF0000',
+            'digit'     => '#FF00FF',
+            'number'    => '#CCCCCC',
+            'keyword'   => '#8000FF',
+        );
+
+        $delimiters = array(',', ':', '[', ']', '(', ')', '=', '+', '{', '}');
+
+        $keywords = array(
+            'def', 'if', 'else', 'elif', 'for', 'in', 'not', 'del', 'try', 'except', 'True', 'False', 'from', 'import'
+        );
+        $code = trim($code);
+        $code = str_replace("\r\n", "\n", $code);
+        $code = str_replace("\t", '    ', $code); // замена табуляции на 4 пробела
+
+        /*
+         * заменяем комментарии, чтобы безопасно раскрашивать код
+         */
+        if (preg_match_all('~(#.*)$~m', $code, $matches)) {
+            foreach($matches[0] as $key => $item) {
+                $comment_source[$key] = '<span style="color:'.$colors['comment'].'">' . $item . '</span>';
+                $comment_replace[$key] = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+                $code = str_replace($item, $comment_replace[$key], $code);
+            }
+        }
+        /*
+         * заменяем строки, чтобы безопасно раскрашивать код
+         */
+        if (preg_match_all('~"[^"]*"~', $code, $matches)) {
+            foreach($matches[0] as $key => $item) {
+                $string_source[$key] = '<span style="color:'.$colors['string'].'">' . $item . '</span>';
+                $string_replace[$key] = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+                $code = str_replace($item, $string_replace[$key], $code);
+            }
+        }
+        /*
+         * заменяем разделители, чтобы безопасно раскрашивать код
+         */
+        $temp = array();
+        foreach($delimiters as $item) {
+            $temp[] = '\\'.$item;
+        }
+        $regexp = '~'.implode('|', $temp).'~';
+        if (preg_match_all($regexp, $code, $matches)) {
+            foreach($matches[0] as $key => $item) {
+                $delimiter_source[] = '<span style="color:'.$colors['delimiter'].'">' . $item . '</span>';
+                $delimiter_replace[$key] = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+                $code = str_replace($item, $delimiter_replace[$key], $code);
+            }
+        }
+
+        /*
+         * теперь в тексте можно безопасно раскрашивать код, не опасаясь ненужных замен внутри строк или комментариев
+         */
+        // числа
+        $code = preg_replace('~\b\d+\b~', '<span style="color:'.$colors['digit'].'">$0</span>', $code);
+        // ключевые слова
+        $code = preg_replace('~\b('.implode('|', $keywords).')\b~ui', '<span style="color:'.$colors['keyword'].'">$0</span>', $code);
+
+        /*
+         * обратная замена строк после раскрашивания кода
+         */
+        if (!empty($string_source)) {
+            $code = str_replace($string_replace, $string_source, $code);
+        }
+        /*
+         * обратная замена комментариев после раскрашивания кода
+         */
+        if (!empty($comment_source)) {
+            $code = str_replace($comment_replace, $comment_source, $code);
+        }
+        /*
+         * обратная замена разделитетей после раскрашивания кода
+         */
+        if (!empty($delimiter_source)) {
+            $code = str_replace($delimiter_replace, $delimiter_source, $code);
+        }
+
+        /*
+         * нумерация строк кода
+         */
+        $lines = explode("\n", $code);
+        $res = array();
+        $number = 1;
+        foreach($lines as $line) {
+            $num = $number;
+            if (strlen($number) == 1) {
+                $num = '  '.$number;
+            }
+            if (strlen($number) == 2) {
+                $num = ' '.$number;
+            }
+            $res[] = '<span style="color:'.$colors['number'].'">'.($num).'</span> '.$line;
+            $number++;
+        }
+        $result = implode("\r\n", $res);
+
+        return '<pre style="color:'.$colors['default'].'">'.$code.'</pre>';
+    }
+
     private function highlightBash($code) {
         return '<pre style="color:#0000ff">'.htmlspecialchars($code).'</pre>';
     }
 
+    private function highlightCLI($code) {
+        $colors = array(
+            'default' => '#0080FF',
+            'command' => '#008080',
+            'warning' => '#FF0000'
+        );
+        $code = trim($code);
+        $code = str_replace("\r\n", "\n", $code);
+        $code = str_replace("\t", '    ', $code); // замена табуляции на 4 пробела
+
+        $lines = explode("\n", $code);
+        $result = array();
+        foreach($lines as $line) {
+            $first = substr($line, 0, 1);
+            if (in_array($first, array('$', '>', '#'))) {
+                $result[] = '<span style="color:'.$colors['command'].'">'.htmlspecialchars($line).'</span>';
+            } elseif ($first == '#') {
+                $result[] = '<span style="color:'.$colors['warning'].'">'.htmlspecialchars($line).'</span>';
+            } else {
+                $result[] = htmlspecialchars($line);
+            }
+        }
+        return '<pre style="color:'.$colors['default'].'">'.implode("\r\n", $result).'</pre>';
+    }
+
     private function highlightCode($code) {
-        return '<pre style="color:#0000ff">'.htmlspecialchars($code).'</pre>';
+        $colors = array(
+            'default' => '#0000FF',
+            'green'   => '#008080',
+            'red'     => '#EE0000'
+        );
+        $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $code);
+        $code = str_replace(
+            array(
+                '[grn]',
+                '[red]',
+                '[/grn]',
+                '[/red]'
+            ),
+            array(
+                '<span style="color:'.$colors['green'].'">',
+                '<span style="color:'.$colors['red'].'">',
+                '</span>',
+                '</span>',
+            ),
+            $code
+        );
+        return '<pre style="color:'.$colors['default'].'">'.$code.'</pre>';
     }
 
 }

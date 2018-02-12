@@ -67,6 +67,10 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         // получаем от модели массив категорий, для возможности выбора
         $categories = $this->blogBackendModel->getCategories();
 
+        // получаем от модели массив всех тегов; теги, привязанные к этому
+        // посту отмечены флажком checked
+        $allTags = $this->blogBackendModel->getAllTags($this->params['id']);
+
         /*
          * массив переменных, которые будут переданы в шаблон center.php
          */
@@ -91,6 +95,8 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
             'excerpt'     => $post['excerpt'],
             // содержание поста
             'body'        => $post['body'],
+            // массив всех тегов
+            'allTags'     => $allTags,
             // дата добавления
             'date'        => $post['date'],
             // время добавления
@@ -138,6 +144,16 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         $data['category'] = 0;
         if (ctype_digit($_POST['category'])) {
             $data['category'] = (int)$_POST['category'];
+        }
+
+        // теги блога
+        $data['tags'] = array();
+        if (isset($_POST['tags']) and is_array($_POST['tags'])) {
+            foreach($_POST['tags'] as $value) {
+                if (ctype_digit($value)) {
+                    $data['tags'][] = (int)$value;
+                }
+            }
         }
 
         // были допущены ошибки при заполнении формы?
