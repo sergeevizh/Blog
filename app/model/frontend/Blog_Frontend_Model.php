@@ -14,14 +14,22 @@ class Blog_Frontend_Model extends Frontend_Model {
      */
     public function getAllPosts($start = 0) {
         $query = "SELECT
-                      `a`.`id` AS `id`, `a`.`name` AS `name`, `a`.`excerpt` AS `excerpt`,
-                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
-                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
-                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
+                      `a`.`id` AS `id`, `a`.`name` AS `name`,
+                      `a`.`excerpt` AS `excerpt`,
+                      DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
+                      DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
+                      GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`
                   FROM
-                      `blog_posts` `a` INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                      `blog_posts` `a`
+                      INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                      LEFT JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
+                      LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
                   WHERE
                       1
+                  GROUP BY
+                      1, 2, 3, 4, 5, 6, 7
                   ORDER BY
                       `a`.`added` DESC
                   LIMIT " . $start . ", " . $this->config->pager->frontend->blog->perpage;
@@ -39,6 +47,19 @@ class Blog_Frontend_Model extends Frontend_Model {
             }
             // URL категории записи (поста)
             $posts[$key]['url']['category'] = $this->getURL('frontend/blog/category/id/' . $value['ctg_id']);
+            // теги блога
+            $posts[$key]['tags'] = array();
+            if (!empty($posts[$key]['tag_ids'])) {
+                $ids = explode('¤', $posts[$key]['tag_ids']);
+                $names = explode('¤', $posts[$key]['tag_names']);
+                foreach ($ids as $k => $v) {
+                    $posts[$key]['tags'][] = array(
+                        'id'   => $v,
+                        'name' => $names[$k],
+                        'url'  => $this->getURL('frontend/blog/tag/id/' . $v)
+                    );
+                }
+            }
         }
         return $posts;
     }

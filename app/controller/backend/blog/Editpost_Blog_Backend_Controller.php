@@ -67,9 +67,11 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         // получаем от модели массив категорий, для возможности выбора
         $categories = $this->blogBackendModel->getCategories();
 
-        // получаем от модели массив всех тегов; теги, привязанные к этому
-        // посту отмечены флажком checked
-        $allTags = $this->blogBackendModel->getAllTags($this->params['id']);
+        // получаем от модели массив всех тегов
+        $allTags = $this->blogBackendModel->getAllTags();
+
+        // получаем от модели массив тегов этого поста
+        $tags = $this->blogBackendModel->getPostTags($this->params['id']);
 
         /*
          * массив переменных, которые будут переданы в шаблон center.php
@@ -97,6 +99,8 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
             'body'        => $post['body'],
             // массив всех тегов
             'allTags'     => $allTags,
+            // массив тегов этого поста
+            'tags'        => $tags,
             // дата добавления
             'date'        => $post['date'],
             // время добавления

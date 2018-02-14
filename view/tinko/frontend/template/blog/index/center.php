@@ -124,8 +124,18 @@ defined('ZCMS') or die('Access denied');
                 <div class="post-excerpt">
                     <?php echo $item['excerpt']; ?>
                 </div>
-                <div class="post-category">
-                    <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
+                <div class="post-ctg-tags">
+                    <div>
+                        Категория: <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
+                    </div>
+                    <div>
+                        <?php if (!empty($item['tags'])): ?>
+                            Теги:
+                            <?php foreach ($item['tags'] as $tag): ?>
+                                <a href="<?php echo $tag['url']; ?>"><?php echo $tag['name']; ?></a>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>

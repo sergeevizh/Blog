@@ -357,29 +357,26 @@ class Blog_Backend_Model extends Backend_Model {
     }
 
     /**
-     * Функция возвращает массив всех тегов блога; помечает те теги,
-     * которые привязаны к посту блога с идентификатором id
+     * Функция возвращает массив всех тегов блога
      */
-    public function getAllTags($id = 0) {
+    public function getAllTags() {
         $query = "SELECT
-                      `a`.`id` AS `id`, `a`.`name` AS `name`,
-                      IFNULL(`b`.`post_id`, 0) AS `checked`
+                      `id`, `name`
                   FROM
-                      `blog_tags` `a` LEFT JOIN `blog_post_tag` `b` ON
-                      `a`.`id` = `b`.`tag_id` AND `b`.`post_id` = :id
+                      `blog_tags`
                   WHERE
                       1
                   ORDER BY
-                      `a`.`name`";
-        return $this->database->fetchAll($query, array('id' => $id));
+                      `name`";
+        return $this->database->fetchAll($query);
     }
 
     /**
-     * Функция возвращает массив тегов поста $id
+     * Функция возвращает массив идентификаторов тегов поста $id
      */
     public function getPostTags($id) {
         $query = "SELECT
-                      `a`.`id`, `a`.`name`
+                      `a`.`id`
                   FROM
                       `blog_tags` `a` INNER JOIN `blog_post_tag` `b`
                       ON `a`.`id` = `b`.`tag_id`
@@ -387,7 +384,12 @@ class Blog_Backend_Model extends Backend_Model {
                       `b`.`post_id` = :id
                   ORDER BY
                       `a`.`name`";
-        return $this->database->fetchAll($query, array('id' => $id));
+        $items = $this->database->fetchAll($query, array('id' => $id));
+        $ids = array();
+        foreach ($items as $item) {
+            $ids[] = $item['id'];
+        }
+        return $ids;
     }
 
     /**

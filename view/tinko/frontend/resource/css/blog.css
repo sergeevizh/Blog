@@ -49,11 +49,19 @@
                         font-weight: bold;
                         color: #395985;
                     }
-            #posts-list > div > div:last-child .post-excerpt {
-                margin-bottom: 5px;
+            #posts-list > div > div:last-child > .post-excerpt {
+                margin-bottom: 10px;
             }
-                #posts-list > div > div:last-child .post-category a {
-                    font-size: 12px;
+            #posts-list > div > div:last-child > .post-ctg-tags {
+                font-size: 12px;
+                overflow: hidden;
+            }
+                #posts-list > div > div:last-child > .post-ctg-tags > div {
+                    width: 50%;
+                    float: left;
+                }
+                #posts-list > div > div:last-child > .post-ctg-tags > div:last-child {
+                    text-align: right;
                 }
 
 /* отдельный пост блога*/

@@ -52,7 +52,7 @@ abstract class Frontend_Model extends Base_Model {
      * Функция «подсвечивает» блоки кода, которые встречаются в HTML-тексте
      */
     protected function highlightCodeBlocks($html) {
-        $langs = array('html', 'css', 'js', 'php', 'mysql', 'язык', 'запрос', 'python', 'bash', 'cli', 'code');
+        $langs = array('html', 'css', 'js', 'php', 'mysql', 'язык', 'запрос', 'python', 'idle', 'bash', 'cli', 'code');
         if (preg_match_all('~\[('.implode('|', $langs).')\](.+)\[/\1\]~Us', $html, $matches)) {
         //if (preg_match_all('~\[(html)\](.+)\[/\1\]~Us', $html, $matches)) {
             foreach($matches[0] as $key => $value) {
@@ -77,6 +77,7 @@ abstract class Frontend_Model extends Base_Model {
             case 'язык'  : return $this->highlightERP($code);
             case 'запрос': return $this->highlightQuery($code);
             case 'python': return $this->highlightPython($code);
+            case 'idle'  : return $this->highlightIDLE($code);
             case 'bash'  : return $this->highlightBash($code);
             case 'cli'   : return $this->highlightCLI($code);
             case 'code'  : return $this->highlightCode($code);
@@ -631,8 +632,10 @@ abstract class Frontend_Model extends Base_Model {
     private function highlightCLI($code) {
         $colors = array(
             'default' => '#0080FF',
-            'command' => '#008080',
-            'warning' => '#FF0000'
+            'command' => '#8000FF',
+            'warning' => '#FF0000',
+            'green'   => '#008080',
+            'red'     => '#EE0000'
         );
         $code = trim($code);
         $code = str_replace("\r\n", "\n", $code);
@@ -642,7 +645,7 @@ abstract class Frontend_Model extends Base_Model {
         $result = array();
         foreach($lines as $line) {
             $first = substr($line, 0, 1);
-            if (in_array($first, array('$', '>', '#'))) {
+            if (in_array($first, array('$', '>'))) {
                 $result[] = '<span style="color:'.$colors['command'].'">'.htmlspecialchars($line).'</span>';
             } elseif ($first == '#') {
                 $result[] = '<span style="color:'.$colors['warning'].'">'.htmlspecialchars($line).'</span>';
@@ -650,7 +653,66 @@ abstract class Frontend_Model extends Base_Model {
                 $result[] = htmlspecialchars($line);
             }
         }
-        return '<pre style="color:'.$colors['default'].'">'.implode("\r\n", $result).'</pre>';
+
+        $code = implode("\r\n", $result);
+        $code = str_replace(
+            array(
+                '[grn]',
+                '[red]',
+                '[/grn]',
+                '[/red]'
+            ),
+            array(
+                '<span style="color:'.$colors['green'].'">',
+                '<span style="color:'.$colors['red'].'">',
+                '</span>',
+                '</span>',
+            ),
+            $code
+        );
+
+        return '<pre style="color:'.$colors['default'].'">'.$code.'</pre>';
+    }
+
+    private function highlightIDLE($code) {
+        $colors = array(
+            'default' => '#0080FF',
+            'command' => '#8000FF',
+            'green'   => '#008080',
+            'red'     => '#EE0000'
+        );
+        $code = trim($code);
+        $code = str_replace("\r\n", "\n", $code);
+        $code = str_replace("\t", '    ', $code); // замена табуляции на 4 пробела
+
+        $lines = explode("\n", $code);
+        $result = array();
+        foreach($lines as $line) {
+            $first = substr($line, 0, 3);
+            if (in_array($first, array('...', '>>>'))) {
+                $result[] = '<span style="color:'.$colors['command'].'">'.htmlspecialchars($line, ENT_NOQUOTES).'</span>';
+            } else {
+                $result[] = htmlspecialchars($line, ENT_NOQUOTES);
+            }
+        }
+
+        $code = implode("\r\n", $result);
+        $code = str_replace(
+            array(
+                '[grn]',
+                '[red]',
+                '[/grn]',
+                '[/red]'
+            ),
+            array(
+                '<span style="color:'.$colors['green'].'">',
+                '<span style="color:'.$colors['red'].'">',
+                '</span>',
+                '</span>',
+            ),
+            $code
+        );
+        return '<pre style="color:'.$colors['default'].'">'.$code.'</pre>';
     }
 
     private function highlightCode($code) {
@@ -659,7 +721,7 @@ abstract class Frontend_Model extends Base_Model {
             'green'   => '#008080',
             'red'     => '#EE0000'
         );
-        $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $code);
+        $code = htmlspecialchars($code, ENT_NOQUOTES);
         $code = str_replace(
             array(
                 '[grn]',
