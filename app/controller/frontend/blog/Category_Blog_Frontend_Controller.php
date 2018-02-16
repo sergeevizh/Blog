@@ -63,6 +63,12 @@ class Category_Blog_Frontend_Controller extends Blog_Frontend_Controller {
                 'url'  => $this->blogFrontendModel->getURL('frontend/blog/index')
             ),
         );
+        if (!empty($category['parent'])) {
+            $breadcrumbs[] = array(
+                'name' => $category['root_name'],
+                'url'  => $this->blogFrontendModel->getURL('frontend/blog/category/id/' . $category['root_id'])
+            );
+        }
 
         /*
          * постраничная навигация

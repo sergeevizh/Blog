@@ -10,7 +10,8 @@
  * body - текст поста блога в формате html
  * date - дата публикации
  * categoryName - наименование категории
- * $categoryPageUrl - URL страницы категории
+ * $categoryURL - URL страницы категории
+ * $tags - теги поста
  */
 
 defined('ZCMS') or die('Access denied');
@@ -31,7 +32,14 @@ defined('ZCMS') or die('Access denied');
 <div id="post-item">
     <div>
         <p><?php echo $date; ?></p>
-        <p>Категория: <a href="<?php echo $categoryPageUrl; ?>"><?php echo $categoryName; ?></a></p>
+        <?php if (!empty($tags)): ?>
+            <p>
+                Теги:
+                <?php foreach ($tags as $tag): ?>
+                    <a href="<?php echo $tag['url']; ?>"><?php echo $tag['name']; ?></a>
+                <?php endforeach; ?>
+            </p>
+        <?php endif; ?>
     </div>
     <?php echo $body; ?>
 </div>

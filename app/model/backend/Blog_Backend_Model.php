@@ -229,6 +229,9 @@ class Blog_Backend_Model extends Backend_Model {
         // загружаем файл изображения
         $this->uploadImage($data['id']);
 
+        // загружаем файлы поста
+        $this->uploadFiles($data['id']);
+
     }
 
     /**

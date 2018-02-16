@@ -61,10 +61,16 @@ class Post_Blog_Frontend_Controller extends Blog_Frontend_Controller {
                 'name' => 'Блог',
                 'url'  => $this->blogFrontendModel->getURL('frontend/blog/index')
             ),
-            array(
-                'name' => $post['ctg_name'],
-                'url'  => $this->blogFrontendModel->getURL('frontend/blog/category/id/' . $post['ctg_id'])
-            ),
+        );
+        if ($post['parent']) {
+            $breadcrumbs[] = array(
+                'name' => $post['root_name'],
+                'url'  => $this->blogFrontendModel->getURL('frontend/blog/category/id/' . $post['root_id'])
+            );
+        }
+        $breadcrumbs[] = array(
+            'name' => $post['ctg_name'],
+            'url'  => $this->blogFrontendModel->getURL('frontend/blog/category/id/' . $post['ctg_id'])
         );
 
         /*
@@ -82,8 +88,10 @@ class Post_Blog_Frontend_Controller extends Blog_Frontend_Controller {
             // наименование категории
             'categoryName'    => $post['ctg_name'],
             // URL страницы категории
-            'categoryPageUrl' =>
-                $this->blogFrontendModel->getURL('frontend/blog/category/id/' . $post['ctg_id'])
+            'categoryURL'     =>
+                $this->blogFrontendModel->getURL('frontend/blog/category/id/' . $post['ctg_id']),
+            // теги поста блога
+            'tags'            => $post['tags']
         );
     }
 

@@ -24,6 +24,9 @@
  *       [post] => http://www.host.ru/blog/post/7
  *       [image] => http://www.host.ru/files/blog/thumb/7.jpg
  *     )
+ *     [tags] => Array (
+ *       ..........
+ *     )
  *   )
  *   [1] => Array (
  *     [id] => 6
@@ -36,6 +39,9 @@
  *     [url] => Array (
  *       [post] => http://www.host.ru/blog/post/6
  *       [image] => http://www.host.ru/files/blog/thumb/6.jpg
+ *     )
+ *     [tags] => Array (
+ *       ..........
  *     )
  *   )
  *   [2] => Array (
@@ -123,6 +129,19 @@ defined('ZCMS') or die('Access denied');
                 </div>
                 <div class="post-excerpt">
                     <?php echo $item['excerpt']; ?>
+                </div>
+                <div class="post-ctg-tags">
+                    <div>
+                        Категория: <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
+                    </div>
+                    <div>
+                        <?php if (!empty($item['tags'])): ?>
+                            Теги:
+                            <?php foreach ($item['tags'] as $tag): ?>
+                                <a href="<?php echo $tag['url']; ?>"><?php echo $tag['name']; ?></a>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>

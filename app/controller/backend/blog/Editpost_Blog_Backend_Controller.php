@@ -73,6 +73,18 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         // получаем от модели массив тегов этого поста
         $tags = $this->blogBackendModel->getPostTags($this->params['id']);
 
+        // получаем информацию о файлах
+        $files = array();
+        if (is_dir('files/blog/' . $this->params['id'])) {
+            $temp = scandir('files/blog/' . $this->params['id']);
+            foreach ($temp as $file) {
+                if ($file == '.' || $file == '..') {
+                    continue;
+                }
+                $files[] = $file;
+            }
+        }
+
         /*
          * массив переменных, которые будут переданы в шаблон center.php
          */
@@ -105,6 +117,8 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
             'date'        => $post['date'],
             // время добавления
             'time'        => $post['time'],
+            // загруженные файлы
+            'files'       => $files,
         );
         // если были ошибки при заполнении формы, передаем в шаблон массив сообщений об ошибках
         if ($this->issetSessionData('editBlogPostForm')) {

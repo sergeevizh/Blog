@@ -47,7 +47,7 @@ class Blog_Frontend_Model extends Frontend_Model {
             }
             // URL категории записи (поста)
             $posts[$key]['url']['category'] = $this->getURL('frontend/blog/category/id/' . $value['ctg_id']);
-            // теги блога
+            // теги для каждого поста
             $posts[$key]['tags'] = array();
             if (!empty($posts[$key]['tag_ids'])) {
                 $ids = explode('¤', $posts[$key]['tag_ids']);
@@ -59,6 +59,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                         'url'  => $this->getURL('frontend/blog/tag/id/' . $v)
                     );
                 }
+                unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
             }
         }
         return $posts;
@@ -80,11 +81,19 @@ class Blog_Frontend_Model extends Frontend_Model {
                       `a`.`id` AS `id`, `a`.`name` AS `name`, `a`.`excerpt` AS `excerpt`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
-                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
+                      GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`
                   FROM
-                      `blog_posts` `a` INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                      `blog_posts` `a`
+                      INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                      LEFT JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
+                      LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
+
                   WHERE
                       `a`.`category` = :id
+                  GROUP BY
+                      1, 2, 3, 4, 5, 6, 7
                   ORDER BY
                       `a`.`added` DESC
                   LIMIT " . $start . ", " . $this->config->pager->frontend->blog->perpage;
@@ -101,6 +110,20 @@ class Blog_Frontend_Model extends Frontend_Model {
                 $posts[$key]['url']['image'] = $host . 'files/blog/thumb/' . $value['id'] . '.jpg';
             } else {
                 $posts[$key]['url']['image'] = $host . 'files/blog/thumb/default.jpg';
+            }
+            // теги для каждого поста
+            $posts[$key]['tags'] = array();
+            if (!empty($posts[$key]['tag_ids'])) {
+                $ids = explode('¤', $posts[$key]['tag_ids']);
+                $names = explode('¤', $posts[$key]['tag_names']);
+                foreach ($ids as $k => $v) {
+                    $posts[$key]['tags'][] = array(
+                        'id'   => $v,
+                        'name' => $names[$k],
+                        'url'  => $this->getURL('frontend/blog/tag/id/' . $v)
+                    );
+                }
+                unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
             }
         }
         return $posts;
@@ -129,12 +152,46 @@ class Blog_Frontend_Model extends Frontend_Model {
                       `a`.`excerpt` AS `excerpt`, `a`.`body` AS `body`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
-                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `b`.`parent` AS `parent`,
+                      GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
+                      GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`
                   FROM
-                      `blog_posts` `a` INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                      `blog_posts` `a`
+                      INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                      LEFT JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
+                      LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
                   WHERE
-                      `a`.`id` = :id";
+                      `a`.`id` = :id
+                  GROUP BY
+                      1, 2, 3, 4, 5, 6, 7, 8, 9, 10";
         $post = $this->database->fetch($query, array('id' => $id));
+        // получаем корневую категорию поста
+        if ($post['parent']) {
+            $query = "SELECT
+                          `id`, `name`
+                      FROM
+                          `blog_categories`
+                      WHERE
+                          `id` = :parent";
+            $parent = $this->database->fetch($query, array('parent' => $post['parent']));
+            $post['root_id'] = $parent['id'];
+            $post['root_name'] = $parent['name'];
+        }
+        // получаем теги поста
+        $post['tags'] = array();
+        if (!empty($post['tag_ids'])) {
+            $ids = explode('¤', $post['tag_ids']);
+            $names = explode('¤', $post['tag_names']);
+            foreach ($ids as $k => $v) {
+                $post['tags'][] = array(
+                    'id'   => $v,
+                    'name' => $names[$k],
+                    'url'  => $this->getURL('frontend/blog/tag/id/' . $v)
+                );
+            }
+            unset($post['tag_ids'], $post['tag_names']);
+        }
         // подсвечиваем код
         $post['body'] = $this->highlightCodeBlocks($post['body']);
         return $post;
@@ -165,12 +222,25 @@ class Blog_Frontend_Model extends Frontend_Model {
      */
     public function getCategory($id) {
         $query = "SELECT
-                      `name`, `description`, `keywords`
+                      `name`, `parent`, `description`, `keywords`
                   FROM
                       `blog_categories`
                   WHERE
                       `id` = :id";
-        return $this->database->fetch($query, array('id' => $id));
+        $category = $this->database->fetch($query, array('id' => $id));
+        // получаем родительскую категорию
+        if ($category['parent']) {
+            $query = "SELECT
+                          `id`, `name`
+                      FROM
+                          `blog_categories`
+                      WHERE
+                          `id` = :parent";
+            $parent = $this->database->fetch($query, array('parent' => $category['parent']));
+            $category['root_id'] = $parent['id'];
+            $category['root_name'] = $parent['name'];
+        }
+        return $category;
     }
 
 }

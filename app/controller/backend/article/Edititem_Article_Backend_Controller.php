@@ -69,7 +69,7 @@ class Edititem_Article_Backend_Controller extends Article_Backend_Controller {
         if (is_dir('files/article/' . $this->params['id'])) {
             $temp = scandir('files/article/' . $this->params['id']);
             foreach ($temp as $file) {
-                if ($file == '.' || $file == '..' || $file == $this->params['id'] . '.jpg') {
+                if ($file == '.' || $file == '..') {
                     continue;
                 }
                 $files[] = $file;
