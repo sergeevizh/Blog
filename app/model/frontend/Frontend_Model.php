@@ -633,7 +633,7 @@ abstract class Frontend_Model extends Base_Model {
         $colors = array(
             'default' => '#0080FF',
             'command' => '#8000FF',
-            'warning' => '#FF0000',
+            'warning' => '#808000',
             'green'   => '#008080',
             'red'     => '#EE0000'
         );
