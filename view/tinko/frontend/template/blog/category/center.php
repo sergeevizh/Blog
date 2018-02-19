@@ -18,11 +18,15 @@
  *     [excerpt] => Уважаемые покупатели! C 26 ноября вы сможете приобрести IP и HDcctv оборудование EverFocus...
  *     [date] => 29.11.2014
  *     [time] => 15:22:35
- *     [ctg_id] => 1
- *     [ctg_name] => Новости компании
+ *     [ctg_id] => 2
+ *     [ctg_name] => Команды
+ *     [root_id] => 1
+ *     [root_name] => Linux
  *     [url] => Array (
  *       [post] => http://www.host.ru/blog/post/7
  *       [image] => http://www.host.ru/files/blog/thumb/7.jpg
+ *       [category] => http://www.host.ru/blog/category/2
+ *       [root] => http://www.host.ru/blog/category/1
  *     )
  *     [tags] => Array (
  *       ..........
@@ -34,11 +38,15 @@
  *     [excerpt] => Представляем усовершенствованную модель моноблока речевого оповещения Соната-К-120М...
  *     [date] => 29.11.2014
  *     [time] => 15:10:28
- *     [ctg_id] => 1
- *     [ctg_name] => Новости компании
+ *     [ctg_id] => 2
+ *     [ctg_name] => Команды
+ *     [root_id] => 1
+ *     [root_name] => Linux
  *     [url] => Array (
  *       [post] => http://www.host.ru/blog/post/6
  *       [image] => http://www.host.ru/files/blog/thumb/6.jpg
+ *       [category] => http://www.host.ru/blog/category/2
+ *       [root] => http://www.host.ru/blog/category/1
  *     )
  *     [tags] => Array (
  *       ..........
@@ -132,12 +140,17 @@ defined('ZCMS') or die('Access denied');
                 </div>
                 <div class="post-ctg-tags">
                     <div>
-                        Категория: <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
+                        Категория:
+                        <?php if (!empty($item['url']['root'])): ?>
+                            <a href="<?php echo $item['url']['root']; ?>"><?php echo $item['root_name']; ?></a> •
+                        <?php endif; ?>
+                        <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
                     </div>
                     <div>
                         <?php if (!empty($item['tags'])): ?>
                             Теги:
-                            <?php foreach ($item['tags'] as $tag): ?>
+                            <?php foreach ($item['tags'] as $i => $tag): ?>
+                                <?php if ($i) echo '•'; ?>
                                 <a href="<?php echo $tag['url']; ?>"><?php echo $tag['name']; ?></a>
                             <?php endforeach; ?>
                         <?php endif; ?>

@@ -35,7 +35,8 @@ defined('ZCMS') or die('Access denied');
         <?php if (!empty($tags)): ?>
             <p>
                 Теги:
-                <?php foreach ($tags as $tag): ?>
+                <?php foreach ($tags as $i => $tag): ?>
+                    <?php if ($i) echo '•'; ?>
                     <a href="<?php echo $tag['url']; ?>"><?php echo $tag['name']; ?></a>
                 <?php endforeach; ?>
             </p>

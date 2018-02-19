@@ -126,12 +126,17 @@ defined('ZCMS') or die('Access denied');
                 </div>
                 <div class="post-ctg-tags">
                     <div>
-                        Категория: <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
+                        Категория:
+                        <?php if (!empty($item['url']['root'])): ?>
+                            <a href="<?php echo $item['url']['root']; ?>"><?php echo $item['root_name']; ?></a> •
+                        <?php endif; ?>
+                        <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
                     </div>
                     <div>
                         <?php if (!empty($item['tags'])): ?>
                             Теги:
-                            <?php foreach ($item['tags'] as $tag): ?>
+                            <?php foreach ($item['tags'] as $i => $tag): ?>
+                                <?php if ($i) echo '•'; ?>
                                 <a href="<?php echo $tag['url']; ?>"><?php echo $tag['name']; ?></a>
                             <?php endforeach; ?>
                         <?php endif; ?>

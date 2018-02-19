@@ -19,6 +19,9 @@ class Blog_Frontend_Model extends Frontend_Model {
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `b`.`parent` AS `parent`,
+                      IFNULL((SELECT `e`.`id` FROM `blog_categories` `e` WHERE `e`.`id` = `b`.`parent`), 0) AS `root_id`,
+                      IFNULL((SELECT `f`.`name` FROM `blog_categories` `f` WHERE `f`.`id` = `b`.`parent`), '') AS `root_name`,
                       GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
                       GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`
                   FROM
@@ -45,8 +48,15 @@ class Blog_Frontend_Model extends Frontend_Model {
             } else {
                 $posts[$key]['url']['image'] = $host . 'files/blog/thumb/default.jpg';
             }
-            // URL категории записи (поста)
+            // URL категории поста
             $posts[$key]['url']['category'] = $this->getURL('frontend/blog/category/id/' . $value['ctg_id']);
+            // URL корневой категории поста
+            if (!empty($posts[$key]['parent'])) {
+                $posts[$key]['url']['root'] = $this->getURL('frontend/blog/category/id/' . $value['root_id']);
+                unset($posts[$key]['parent']);
+            } else {
+                unset($posts[$key]['parent'], $posts[$key]['root_id'], $posts[$key]['root_name']);
+            }
             // теги для каждого поста
             $posts[$key]['tags'] = array();
             if (!empty($posts[$key]['tag_ids'])) {
@@ -82,6 +92,9 @@ class Blog_Frontend_Model extends Frontend_Model {
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `b`.`parent` AS `parent`,
+                      IFNULL((SELECT `e`.`id` FROM `blog_categories` `e` WHERE `e`.`id` = `b`.`parent`), 0) AS `root_id`,
+                      IFNULL((SELECT `f`.`name` FROM `blog_categories` `f` WHERE `f`.`id` = `b`.`parent`), '') AS `root_name`,
                       GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
                       GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`
                   FROM
@@ -99,7 +112,8 @@ class Blog_Frontend_Model extends Frontend_Model {
                   LIMIT " . $start . ", " . $this->config->pager->frontend->blog->perpage;
         $posts = $this->database->fetchAll($query, array('id' => $id));
         /*
-         * добавляем в массив постов блога информацию об URL записи (поста), картинки
+         * добавляем в массив постов блога информацию об URL записи (поста), картинки,
+         * категории и корнево категории
          */
         $host = $this->config->site->url;
         foreach($posts as $key => $value) {
@@ -110,6 +124,15 @@ class Blog_Frontend_Model extends Frontend_Model {
                 $posts[$key]['url']['image'] = $host . 'files/blog/thumb/' . $value['id'] . '.jpg';
             } else {
                 $posts[$key]['url']['image'] = $host . 'files/blog/thumb/default.jpg';
+            }
+            // URL категории поста
+            $posts[$key]['url']['category'] = $this->getURL('frontend/blog/category/id/' . $value['ctg_id']);
+            // URL корневой категории поста
+            if (!empty($posts[$key]['parent'])) {
+                $posts[$key]['url']['root'] = $this->getURL('frontend/blog/category/id/' . $value['root_id']);
+                unset($posts[$key]['parent']);
+            } else {
+                unset($posts[$key]['parent'], $posts[$key]['root_id'], $posts[$key]['root_name']);
             }
             // теги для каждого поста
             $posts[$key]['tags'] = array();
@@ -126,6 +149,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                 unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
             }
         }
+
         return $posts;
     }
 
