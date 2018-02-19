@@ -104,13 +104,14 @@ class Blog_Frontend_Model extends Frontend_Model {
                       LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
 
                   WHERE
-                      `a`.`category` = :id
+                      `a`.`category` = :id OR `a`.`category` IN
+                      (SELECT `g`.`id` FROM `blog_categories` `g` WHERE `g`.`parent` = :parent)
                   GROUP BY
                       1, 2, 3, 4, 5, 6, 7
                   ORDER BY
                       `a`.`added` DESC
                   LIMIT " . $start . ", " . $this->config->pager->frontend->blog->perpage;
-        $posts = $this->database->fetchAll($query, array('id' => $id));
+        $posts = $this->database->fetchAll($query, array('id' => $id, 'parent' => $id));
         /*
          * добавляем в массив постов блога информацию об URL записи (поста), картинки,
          * категории и корнево категории

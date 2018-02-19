@@ -16,12 +16,18 @@
  *     [excerpt] => Уважаемые покупатели! C 26 ноября вы сможете приобрести IP и HDcctv оборудование EverFocus...
  *     [date] => 29.11.2014
  *     [time] => 15:22:35
- *     [ctg_id] => 1
- *     [ctg_name] => Новости компании
+ *     [ctg_id] => 2
+ *     [ctg_name] => Команды
+ *     [root_id] => 1
+ *     [root_name] => Linux
  *     [url] => Array (
  *       [post] => http://www.host.ru/blog/post/7
  *       [image] => http://www.host.ru/files/blog/thumb/7.jpg
- *       [category] => http://www.host.ru/blog/category/1
+ *       [category] => http://www.host.ru/blog/category/2
+ *       [root] => http://www.host.ru/blog/category/1
+ *     )
+ *     [tags] => Array (
+ *       ..........
  *     )
  *   )
  *   [1] => Array (
@@ -31,11 +37,17 @@
  *     [date] => 29.11.2014
  *     [time] => 15:10:28
  *     [ctg_id] => 2
- *     [ctg_name] => События отрасли
+ *     [ctg_name] => Команды
+ *     [root_id] => 1
+ *     [root_name] => Linux
  *     [url] => Array (
  *       [post] => http://www.host.ru/blog/post/6
  *       [image] => http://www.host.ru/files/blog/thumb/6.jpg
  *       [category] => http://www.host.ru/blog/category/2
+ *       [root] => http://www.host.ru/blog/category/1
+ *     )
+ *     [tags] => Array (
+ *       ..........
  *     )
  *   )
  *   [2] => Array (
