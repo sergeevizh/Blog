@@ -29,9 +29,15 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         // список постов блога выбранной категории, постраничная навигация
         '~^frontend/blog/category/id/(\d+)/page/(\d+)$~i' =>
         'blog/category/$1/page/$2',
-        // список всех постов блога выбранного тега
-        '~^frontend/blog/tag/id/(\d+)$~i' =>
-        'blog/tag/$1',
+        // список постов блога для выбранных тегов
+        '~^frontend/blog/tags/ids/(\d+(?:-\d+)*)$~i' =>
+        'blog/tags/$1',
+        // список постов блога для выбранных тегов, постраничная навигация
+        '~^frontend/blog/tags/ids/(\d+(?:-\d+)*)/page/(\d+)$~i' =>
+        'blog/tags/$1/page/$2',
+        // список всех тегов блога
+        '~^frontend/blog/alltags$~i' =>
+        'blog/alltags',
 
         /*
          * статьи
@@ -84,10 +90,15 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         // список постов блога выбранной категории, постраничная навигация
         '~^blog/category/(\d+)/page/(\d+)$~i' =>
         'frontend/blog/category/id/$1/page/$2',
-        // список всех постов блога выбранного тега
-        '~^blog/tag/(\d+)$~i' =>
-        'frontend/blog/tag/id/$1',
-
+        // список постов блога для выбранных тегов
+        '~^blog/tags/(\d+(?:-\d+)*)$~i' =>
+        'frontend/blog/tags/ids/$1',
+        // список постов блога для выбранных тегов, постраничная навигация
+        '~^blog/tags/(\d+(?:-\d+)*)/page/(\d+)$$~i' =>
+        'frontend/blog/tags/ids/$1/page/$2',
+        // список всег тегов блога
+        '~^blog/alltags$~i' =>
+        'frontend/blog/alltags',
         /*
          * статьи
          */

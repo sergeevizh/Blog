@@ -1,13 +1,13 @@
 <?php
 /**
- * Список постов блога выбранной категории,
- * файл view/example/frontend/template/blog/category/center.php,
+ * Список постов блога для выбранных тегов (или тега),
+ * файл view/example/frontend/template/blog/ефпы/center.php,
  * общедоступная часть сайта
  *
  * Переменные, которые приходят в шаблон:
  * $breadcrumbs - хлебные крошки
  * $id - уникальный идентификатор категории
- * $name - наименование категории
+ * $tags - названия тегов (или тега)
  * $posts - массив постов блога выбранной категории
  * $pager - постраничная навигация
  *
@@ -115,7 +115,7 @@ defined('ZCMS') or die('Access denied');
     </div>
 <?php endif; ?>
 
-<h1><?php echo $name; ?></h1>
+<h1>Теги: <?php echo implode(', ', $tags); ?></h1>
 
 <?php if (!empty($posts)): // список постов блога ?>
     <div id="posts-list"> <!-- список постов блога -->

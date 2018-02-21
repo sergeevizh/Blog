@@ -20,8 +20,8 @@ class Blog_Frontend_Model extends Frontend_Model {
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
                       `b`.`parent` AS `parent`,
-                      IFNULL((SELECT `e`.`id` FROM `blog_categories` `e` WHERE `e`.`id` = `b`.`parent`), 0) AS `root_id`,
-                      IFNULL((SELECT `f`.`name` FROM `blog_categories` `f` WHERE `f`.`id` = `b`.`parent`), '') AS `root_name`,
+                      (SELECT `e`.`id` FROM `blog_categories` `e` WHERE `e`.`id` = `b`.`parent`) AS `root_id`,
+                      (SELECT `f`.`name` FROM `blog_categories` `f` WHERE `f`.`id` = `b`.`parent`) AS `root_name`,
                       GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
                       GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`
                   FROM
@@ -66,7 +66,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                     $posts[$key]['tags'][] = array(
                         'id'   => $v,
                         'name' => $names[$k],
-                        'url'  => $this->getURL('frontend/blog/tag/id/' . $v)
+                        'url'  => $this->getURL('frontend/blog/tags/ids/' . $v)
                     );
                 }
                 unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
@@ -93,8 +93,8 @@ class Blog_Frontend_Model extends Frontend_Model {
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
                       `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
                       `b`.`parent` AS `parent`,
-                      IFNULL((SELECT `e`.`id` FROM `blog_categories` `e` WHERE `e`.`id` = `b`.`parent`), 0) AS `root_id`,
-                      IFNULL((SELECT `f`.`name` FROM `blog_categories` `f` WHERE `f`.`id` = `b`.`parent`), '') AS `root_name`,
+                      (SELECT `e`.`id` FROM `blog_categories` `e` WHERE `e`.`id` = `b`.`parent`) AS `root_id`,
+                      (SELECT `f`.`name` FROM `blog_categories` `f` WHERE `f`.`id` = `b`.`parent`) AS `root_name`,
                       GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
                       GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`
                   FROM
@@ -107,7 +107,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                       `a`.`category` = :id OR `a`.`category` IN
                       (SELECT `g`.`id` FROM `blog_categories` `g` WHERE `g`.`parent` = :parent)
                   GROUP BY
-                      1, 2, 3, 4, 5, 6, 7
+                      1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                   ORDER BY
                       `a`.`added` DESC
                   LIMIT " . $start . ", " . $this->config->pager->frontend->blog->perpage;
@@ -144,7 +144,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                     $posts[$key]['tags'][] = array(
                         'id'   => $v,
                         'name' => $names[$k],
-                        'url'  => $this->getURL('frontend/blog/tag/id/' . $v)
+                        'url'  => $this->getURL('frontend/blog/tags/ids/' . $v)
                     );
                 }
                 unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
@@ -161,10 +161,11 @@ class Blog_Frontend_Model extends Frontend_Model {
         $query = "SELECT
                       COUNT(*)
                   FROM
-                      `blog_posts`
+                      `blog_posts` `a`
                   WHERE
-                      `category` = :id";
-        return $this->database->fetchOne($query, array('id' => $id));
+                      `a`.`category` = :id OR `a`.`category` IN
+                      (SELECT `b`.`id` FROM `blog_categories` `b` WHERE `b`.`parent` = :parent)";
+        return $this->database->fetchOne($query, array('id' => $id, 'parent' => $id));
     }
 
     /**
@@ -212,7 +213,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                 $post['tags'][] = array(
                     'id'   => $v,
                     'name' => $names[$k],
-                    'url'  => $this->getURL('frontend/blog/tag/id/' . $v)
+                    'url'  => $this->getURL('frontend/blog/tags/ids/' . $v)
                 );
             }
             unset($post['tag_ids'], $post['tag_names']);
@@ -266,6 +267,109 @@ class Blog_Frontend_Model extends Frontend_Model {
             $category['root_name'] = $parent['name'];
         }
         return $category;
+    }
+
+    /**
+     * Вызвращает массив постов (записей блога), связанных с тегами $ids
+     */
+    public function getPostsByTags($ids, $start) {
+        $ids = implode(',', $ids);
+        $query = "SELECT
+                      `a`.`id` AS `id`, `a`.`name` AS `name`, `a`.`excerpt` AS `excerpt`,
+                      DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
+                      DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `b`.`parent` AS `parent`,
+                      (SELECT `e`.`id` FROM `blog_categories` `e` WHERE `e`.`id` = `b`.`parent`) AS `root_id`,
+                      (SELECT `f`.`name` FROM `blog_categories` `f` WHERE `f`.`id` = `b`.`parent`) AS `root_name`,
+                      GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
+                      GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`
+                  FROM
+                      `blog_posts` `a`
+                      INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                      INNER JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
+                      INNER JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
+                  WHERE
+                      `a`.`id` IN
+                      (SELECT `g`.`post_id` FROM `blog_post_tag` `g` WHERE `g`.`tag_id` IN (" . $ids . "))
+                  GROUP BY
+                      1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+                  ORDER BY
+                      `a`.`added` DESC
+                  LIMIT " . $start . ", " . $this->config->pager->frontend->blog->perpage;
+        $posts = $this->database->fetchAll($query);
+        /*
+         * добавляем в массив постов блога информацию об URL записи (поста), картинки,
+         * категории и корнево категории
+         */
+        $host = $this->config->site->url;
+        foreach($posts as $key => $value) {
+            // URL записи (поста) блога
+            $posts[$key]['url']['post'] = $this->getURL('frontend/blog/post/id/' . $value['id']);
+            // URL превьюшки записи (поста) блога
+            if (is_file('files/blog/thumb/' . $value['id'] . '.jpg')) {
+                $posts[$key]['url']['image'] = $host . 'files/blog/thumb/' . $value['id'] . '.jpg';
+            } else {
+                $posts[$key]['url']['image'] = $host . 'files/blog/thumb/default.jpg';
+            }
+            // URL категории поста
+            $posts[$key]['url']['category'] = $this->getURL('frontend/blog/category/id/' . $value['ctg_id']);
+            // URL корневой категории поста
+            if (!empty($posts[$key]['parent'])) {
+                $posts[$key]['url']['root'] = $this->getURL('frontend/blog/category/id/' . $value['root_id']);
+                unset($posts[$key]['parent']);
+            } else {
+                unset($posts[$key]['parent'], $posts[$key]['root_id'], $posts[$key]['root_name']);
+            }
+            // теги для каждого поста
+            $posts[$key]['tags'] = array();
+            if (!empty($posts[$key]['tag_ids'])) {
+                $ids = explode('¤', $posts[$key]['tag_ids']);
+                $names = explode('¤', $posts[$key]['tag_names']);
+                foreach ($ids as $k => $v) {
+                    $posts[$key]['tags'][] = array(
+                        'id'   => $v,
+                        'name' => $names[$k],
+                        'url'  => $this->getURL('frontend/blog/tags/ids/' . $v)
+                    );
+                }
+                unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
+            }
+        }
+
+        return $posts;
+    }
+
+    /**
+     * Возвращает количество новостей в категории с уникальным идентификатором $id
+     */
+    public function getCountPostsByTags($ids) {
+        $ids = implode(',', $ids);
+        $query = "SELECT
+                      COUNT(*)
+                  FROM
+                      `blog_posts` `a`
+                      INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                      INNER JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
+                      INNER JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
+                  WHERE
+                      `d`.`id` IN (" . $ids . ")";
+        return $this->database->fetchOne($query);
+    }
+
+    /**
+     * Вызвращает массив всех тегов блога
+     */
+    public function getAllTags($ids) {
+
+    }
+
+    /**
+     * Вызвращает название тега $id
+     */
+    public function getTagName($id) {
+        $query = "SELECT `name` FROM `blog_tags` WHERE `id` = :id";
+        return $this->database->fetchOne($query, array('id' => $id));
     }
 
 }
