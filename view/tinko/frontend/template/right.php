@@ -4,6 +4,8 @@
  * общедоступная часть сайта
  *
  * Переменные, доступные в шаблоне:
+ * blogCategories - массив категорий блога
+ * articleCategories - массив категорий статей
  */
 
 defined('ZCMS') or die('Access denied');
@@ -12,16 +14,46 @@ defined('ZCMS') or die('Access denied');
 <!-- Начало шаблона view/example/frontend/template/right.php -->
 
 <div>
-    <div>Личный кабинет</div>
+    <div>Категории блога</div>
     <div>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    <?php if (!empty($blogCategories)): ?>
+        <ul>
+        <?php foreach($blogCategories as $item): ?>
+            <li>
+                <a href="<?php echo $item['url'] ?>"><?php echo $item['name']; ?></a>
+                <?php if (isset($item['childs'])): ?>
+                    <ul>
+                    <?php foreach($item['childs'] as $value): ?>
+                        <li><a href="<?php echo $value['url'] ?>"><?php echo $value['name']; ?></a></li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
     </div>
 </div>
 
 <div>
-    <div>Ваша корзина</div>
+    <div>Категории статей</div>
     <div>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    <?php if (!empty($articleCategories)): ?>
+        <ul>
+        <?php foreach($articleCategories as $item): ?>
+            <li>
+                <a href="<?php echo $item['url'] ?>"><?php echo $item['name']; ?></a>
+                <?php if (isset($item['childs'])): ?>
+                    <ul>
+                    <?php foreach($item['childs'] as $value): ?>
+                        <li><a href="<?php echo $value['url'] ?>"><?php echo $value['name']; ?></a></li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
     </div>
 </div>
 

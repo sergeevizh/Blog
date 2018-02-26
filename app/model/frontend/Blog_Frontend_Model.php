@@ -224,23 +224,25 @@ class Blog_Frontend_Model extends Frontend_Model {
     }
 
     /**
-     * Возвращает массив всех категорий блога
+     * Возвращает массив всех категорий блога в виде дерева
      */
     public function getCategories() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `name`, `parent`
                   FROM
                       `blog_categories`
                   WHERE
                       1
                   ORDER BY
                       `sortorder`";
-        $categories = $this->database->fetchAll($query);
+        $data = $this->database->fetchAll($query);
         // добавляем в массив информацию об URL категорий
-        foreach($categories as $key => $value) {
-            $categories[$key]['url'] = $this->getURL('frontend/blog/category/id/' . $value['id']);
+        foreach($data as $key => $value) {
+            $data[$key]['url'] = $this->getURL('frontend/blog/category/id/' . $value['id']);
         }
-        return $categories;
+        // строим дерево
+        $tree = $this->makeTree($data);
+        return $tree;
     }
 
     /**

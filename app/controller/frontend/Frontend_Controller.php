@@ -26,6 +26,16 @@ abstract class Frontend_Controller extends Base_Controller {
     protected $menuFrontendModel;
 
     /**
+     * экземпляр класса модели для работы с блогом
+     */
+    protected $blogFrontendModel;
+
+    /**
+     * экземпляр класса модели для работы со статьями
+     */
+    protected $articleFrontendModel;
+
+    /**
      * экземпляр класса модели для работы со страницами сайта
      */
     protected $pageFrontendModel;
@@ -47,6 +57,14 @@ abstract class Frontend_Controller extends Base_Controller {
         // экземпляр класса модели для работы с главным меню
         $this->menuFrontendModel =
             isset($this->register->menuFrontendModel) ? $this->register->menuFrontendModel : new Menu_Frontend_Model();
+
+        // экземпляр класса модели для работы с блогом
+        $this->blogFrontendModel =
+            isset($this->register->blogFrontendModel) ? $this->register->blogFrontendModel : new Blog_Frontend_Model();
+
+        // экземпляр класса модели для работы со статьями
+        $this->articleFrontendModel =
+            isset($this->register->articleFrontendModel) ? $this->register->articleFrontendModel : new Article_Frontend_Model();
 
         // экземпляр класса модели для работы со страницами сайта
         $this->pageFrontendModel =
@@ -115,7 +133,10 @@ abstract class Frontend_Controller extends Base_Controller {
         /*
          * массив переменных, которые будут переданы в шаблон right.php
          */
-        $this->rightVars = array();
+        $this->rightVars = array(
+            'blogCategories'    => $this->blogFrontendModel->getCategories(),
+            'articleCategories' => $this->articleFrontendModel->getCategories(),
+        );
 
         /*
          * массив переменных, которые будут переданы в шаблон footer.php

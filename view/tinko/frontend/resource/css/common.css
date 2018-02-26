@@ -454,10 +454,25 @@ div.attention {
             line-height: 16px;
             background: #f0f0f0;
         }
-        #left > div div:last-child, #right > div > div:last-child {
+        #left > div > div:last-child, #right > div > div:last-child {
             border-top: 1px solid #d1d1d1;
             padding: 15px;
         }
+            #left > div > div:last-child ul, #right > div > div:last-child ul {
+                list-style: none;
+            }
+                #left > div > div:last-child > ul > li, #right > div > div:last-child > ul > li {
+                    margin-bottom: 7px;
+                }
+                #left > div > div:last-child > ul > li:last-child, #right > div > div:last-child > ul > li:last-child {
+                    margin-bottom: 0;
+                }
+                #left > div > div:last-child > ul > li > a, #right > div > div:last-child > ul > li > a {
+                    font-size: 16px;
+                }
+                #left > div > div:last-child > ul ul, #right > div > div:last-child > ul ul {
+                    padding-left: 15px;
+                }
 
 /*
  * ЛЕВАЯ КОЛОНКА
