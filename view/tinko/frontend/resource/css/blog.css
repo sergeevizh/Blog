@@ -40,13 +40,10 @@
                 #posts-list > div > div:last-child .post-heading h3 {
                     margin: 0 0 5px 0;
                     font-size: 16px;
-                    line-height: 19px;
                 }
                     #posts-list > div > div:last-child .post-heading h2 a,
                     #posts-list > div > div:last-child .post-heading h3 a {
                         font-size: 16px;
-                        line-height: 19px;
-                        font-weight: bold;
                         color: #395985;
                     }
             #posts-list > div > div:last-child > .post-excerpt {
@@ -88,29 +85,6 @@
             #post-item > div:first-child > p:nth-child(2) > a {
                 font-size: 12px;
             }
-    #post-item h2, #post-item h3, #post-item h4 {
-        margin: 15px 0;
-        color: #395985;
-        font-weight: normal;
-    }
-    #post-item h2 {
-        font-size: 19px;
-    }
-    #post-item h3 {
-        font-size: 16px;
-    }
-    #post-item h4 {
-        font-size: 14px;
-    }
-    #post-item p {
-        margin: 15px 0;
-    }
-    #post-item ul, #post-item ol {
-        margin: 15px 0 15px 30px;
-    }
-    #post-item img {
-        max-width: 100%;
-    }
 
 @media screen and (max-width: 560px) {
     /* список постов блога */

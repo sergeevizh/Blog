@@ -233,9 +233,35 @@ body > .wrapper {
  * ЦЕНТРАЛЬНАЯ КОЛОНКА
  */
 
-#content > h1 {
-    margin-bottom: 20px;
-    font-size: 22px;
+#content h1, #content h2, #content h3, #content h4 {
+    margin: 15px 0;
+    color: #395985;
+    font-weight: normal;
+    text-shadow: 1px 1px 1px #5390cc;
+}
+#content h1 {
+    font-size: 24px;
+}
+#content h2 {
+    font-size: 19px;
+}
+#content h3 {
+    font-size: 16px;
+}
+#content h4 {
+    font-size: 14px;
+}
+#content p {
+    margin: 15px 0;
+}
+#content ul, #content ol {
+    margin: 15px 0 15px 20px;
+}
+    #content ul > li > ul, #content ol > li > ol, #content ol > li > ul, #content ul > li > ol {
+        margin: 5px 0 5px 20px;
+    }
+#content img {
+    max-width: 100%;
 }
 
 /*
@@ -252,34 +278,6 @@ pre {
     overflow: auto;
     max-height: 400px;
     margin: 15px 0;
-}
-
-/* статичные страницы */
-.page h2, .page h3, .page h4 {
-    margin: 15px 0;
-    color: #395985;
-    font-weight: normal;
-}
-.page h2 {
-    font-size: 19px;
-}
-.page h3 {
-    font-size: 16px;
-}
-.page h4 {
-    font-size: 14px;
-}
-.page p {
-    margin: 15px 0;
-}
-.page ul, .page ol {
-    margin: 15px 0 15px 20px;
-}
-    .page ul > li > ul, .page ol > li > ol, .page ol > li > ul, .page ul > li > ol {
-        margin: 5px 0 5px 20px;
-    }
-.page img {
-    max-width: 100%;
 }
 
 /* универсальная таблица */
