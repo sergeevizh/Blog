@@ -235,15 +235,15 @@ body > .wrapper {
 
 #content h1, #content h2, #content h3, #content h4 {
     margin: 15px 0;
-    color: #395985;
+    color: #5390cc;
     font-weight: normal;
-    text-shadow: 1px 1px 1px #5390cc;
+    text-shadow: 1px 1px 1px #ccc;
 }
 #content h1 {
     font-size: 24px;
 }
 #content h2 {
-    font-size: 19px;
+    font-size: 20px;
 }
 #content h3 {
     font-size: 16px;
@@ -262,6 +262,11 @@ body > .wrapper {
     }
 #content img {
     max-width: 100%;
+}
+#content strong {
+    color: #000000;
+    font-weight: normal;
+    text-shadow: 1px 1px 1px #ccc;
 }
 
 /*

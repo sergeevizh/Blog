@@ -42,7 +42,6 @@
                     #articles-list > div > div:last-child .article-heading h2 a,
                     #articles-list > div > div:last-child .article-heading h3 a {
                         font-size: 16px;
-                        color: #395985;
                     }
             #articles-list > div > div:last-child .article-excerpt {
                 margin-bottom: 5px;

@@ -44,7 +44,6 @@
                     #posts-list > div > div:last-child .post-heading h2 a,
                     #posts-list > div > div:last-child .post-heading h3 a {
                         font-size: 16px;
-                        color: #395985;
                     }
             #posts-list > div > div:last-child > .post-excerpt {
                 margin-bottom: 10px;

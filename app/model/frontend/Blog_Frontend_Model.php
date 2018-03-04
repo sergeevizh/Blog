@@ -362,8 +362,16 @@ class Blog_Frontend_Model extends Frontend_Model {
     /**
      * Вызвращает массив всех тегов блога
      */
-    public function getAllTags($ids) {
-
+    public function getAllTags() {
+        $query = "SELECT
+                      `id`, `name`
+                  FROM
+                      `blog_tags`
+                  WHERE
+                      1
+                  ORDER BY
+                      `name`";
+        return $this->database->fetchAll($query);
     }
 
     /**
