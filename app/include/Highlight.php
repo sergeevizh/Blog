@@ -17,50 +17,87 @@ class Highlight {
                 'digit'     => '#FF00FF',
                 'number'    => '#CCCCCC',
                 'keyword1'  => '#8B008B',
-                'keyword2'  => '#8000FF',
+                'keyword2'  => '#DF7000',
+                'keyword3'  => '#8000FF',
             ),
             'keyword1' => array(
-                'def', 'if', 'else', 'elif', 'for', 'while', 'break', 'continue', 'in', 'not', 'del', 'try', 'except', 'raise', 'finally', 'from', 'import', 'return', 'and', 'or', 'is', 'pass', 'lambda'
+                'def', 'if', 'else', 'elif', 'for', 'while', 'break', 'continue', 'del', 'try', 'except', 'raise', 'finally', 'from', 'import', 'return', 'pass', 'lambda'
             ),
             'keyword2' => array(
                 'True', 'False', 'None'
+            ),
+            'keyword3' => array(
+                'in', 'not', 'and', 'or', 'is'
             ),
             'delimiter' => array(
                 '.', ',', ':', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}'
             ),
         )
-    ); 
+    );
+
+    private $lang = 'code', $source = array(), $replace = array(), $pattern = array();
+
 
     public function highlightPython($code) {
 
-        $code = trim($code);
-        $code = str_replace("\r\n", "\n", $code);
-        $code = str_replace("\t", '    ', $code); // замена табуляции на 4 пробела
+        $this->init($code, 'python');
 
-        $source = array();
-        $replace = array();
-        
-        foreach ($this->settings['python']['delimiter'] as $value) {
+        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $pattern = array(
-            'comment'   => '~#.*$~m',     // комментарии
-            'string3'   => '~""".*"""~s', // строки в тройных кавычках
-            'string4'   => "~'''.*'''~s", // строки в тройных кавычках
-            'string1'   => '~"[^"]*"~',   // строки в двойных кавычках
-            'string2'   => "~'[^']*'~",   // строки в одинарных кавычках
-            'keyword1'  => '~ '.implode('|', $this->settings['python']['keyword1']).' ~i', // ключевые слова
-            'keyword2'  => '~ '.implode('|', $this->settings['python']['keyword2']).' ~i', // ключевые слова
-            'delimiter' => '~'.implode('|', $delimiter).'~',   // разделители
+        $this->pattern = array(
+            'comment'   => '~#.*$~m',       // комментарии
+            'string3'   => '~""".*"""~s',   // строки в тройных кавычках
+            'string4'   => "~'''.*'''~s",   // строки в тройных кавычках
+            'string1'   => '~r?"[^"]*"~',   // строки в двойных кавычках
+            'string2'   => "~r?'[^']*'~",   // строки в одинарных кавычках
+            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
+            'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
             'digit'     => '~\b\d+\b~', // цифры
+            'delimiter' => '~'.implode('|', $delimiter).'~',   // разделители
         );
-        
-        $this->replaceSourceWithString($code, $pattern, $source, $replace);
 
-        /*
-         * нумерация строк кода
-         */
-        $lines = explode("\n", $code);
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+    }
+
+
+    private function hl() {
+        foreach ($this->pattern as $color => $regexp) {
+            if (preg_match_all($regexp, $this->code, $matches)) {
+                foreach($matches[0] as $item) {
+                    $this->source[] = '<span style="color:'.$this->settings[$this->lang]['colors'][$color].'">' . $item . '</span>';
+                    $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+                    $this->replace[] = $rand;
+                    $this->code = preg_replace($regexp, $rand, $this->code, 1);
+                }
+            }
+        }
+
+        if (!empty($this->source)) {
+            $this->code = str_replace($this->replace, $this->source, $this->code);
+        }
+    }
+
+    private function init($code, $lang) {
+        $this->lang = $lang;
+
+        $this->code = trim($code);
+        $this->code = str_replace("\r\n", "\n", $this->code);
+        $this->code = str_replace("\t", '    ', $this->code);
+
+        $this->source = array();
+        $this->replace = array();
+        $this->pattern = array();
+    }
+
+    /**
+     * Нумерация строк кода
+     */
+    private function number() {
+        $lines = explode("\n", $this->code);
         $res = array();
         $number = 1;
         foreach($lines as $line) {
@@ -71,44 +108,9 @@ class Highlight {
             if (strlen($number) == 2) {
                 $num = ' '.$number;
             }
-            $res[] = '<span style="color:'.$this->settings['python']['colors']['number'].'">'.($num).'</span> '.$line;
+            $res[] = '<span style="color:'.$this->settings[$this->lang]['colors']['number'].'">'.($num).'</span> '.$line;
             $number++;
         }
-        $code = implode("\r\n", $res);
-
-        return '<pre style="color:'.$this->settings['python']['colors']['default'].'">'.$code.'</pre>';
-    }
-
-    
-    private function replaceSourceWithString(&$code, $pattern, &$source, &$replace) {
-        foreach ($pattern as $color => $regexp) {
-            if (preg_match_all($regexp, $code, $matches)) {
-                foreach($matches[0] as $item) {
-                    $source[] = '<span style="color:'.$this->settings['python']['colors'][$color].'">' . $item . '</span>';
-                    $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-                    $replace[] = $rand;
-                    // заменяем только первое вхождение
-                    $strpos = strpos($code, $item);
-                    $code = substr_replace($code, $rand, $strpos, strlen($item));
-                }
-            }
-        }
-        /*
-        $temp = array();
-        $delimiters = $this->settings['python']['delimiter'];
-        foreach ($delimiters as $delimiter) {
-            $source[] = '<span style="color:'.$this->settings['python']['colors']['delimiter'].'">' . $delimiter . '</span>';
-            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-            $replace[] = $rand;
-            $code = str_replace($delimiter, $rand, $code);
-        }
-        */
-        if (!empty($source)) {
-            $code = str_replace($replace, $source, $code);
-        }
-    }
-    
-    private function replaceStringWithSource($string, $replace) {
-    
+        $this->code = implode("\r\n", $res);
     }
 }

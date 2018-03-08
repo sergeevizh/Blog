@@ -31,7 +31,6 @@ def backupToZip(source, backup):
     print('Создание нового zip-файла %s...' % (backupFile))
     zipFile = zipfile.ZipFile(backupFile, 'w')
 
-    # Создание нового zip-файла
     # Обход всего дерева директории и сжатие файлов в каждой папке
     archDirName = ''
     for dir, subdirs, files in os.walk(source):
