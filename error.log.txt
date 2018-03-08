@@ -1,0 +1,27 @@
+06.03.2018 11:24:40
+Код: 0, текст: Не найдено правило преобразования CAP->SEF для frontend/blog/tags10-25
+Файл: C:\work\localhost12\www\app\model\frontend\Frontend_Model.php, строка: 47
+Стек вызовов: 
+#0 C:\work\localhost12\www\app\controller\frontend\blog\Alltags_Blog_Frontend_Controller.php(40): Frontend_Model->getURL('frontend/blog/t...')
+#1 C:\work\localhost12\www\app\controller\Base_Controller.php(146): Alltags_Blog_Frontend_Controller->input()
+#2 C:\work\localhost12\www\index.php(31): Base_Controller->request()
+#3 {main}
+
+06.03.2018 11:25:35
+Код: 0, текст: Не найдено правило преобразования CAP->SEF для frontend/blog/tags/10-25
+Файл: C:\work\localhost12\www\app\model\frontend\Frontend_Model.php, строка: 47
+Стек вызовов: 
+#0 C:\work\localhost12\www\app\controller\frontend\blog\Alltags_Blog_Frontend_Controller.php(40): Frontend_Model->getURL('frontend/blog/t...')
+#1 C:\work\localhost12\www\app\controller\Base_Controller.php(146): Alltags_Blog_Frontend_Controller->input()
+#2 C:\work\localhost12\www\index.php(31): Base_Controller->request()
+#3 {main}
+
+06.03.2018 11:29:34
+Код: 0, текст: Не найдено правило преобразования CAP->SEF для frontend/blog/tags/12-29
+Файл: C:\work\localhost12\www\app\model\frontend\Frontend_Model.php, строка: 47
+Стек вызовов: 
+#0 C:\work\localhost12\www\app\controller\frontend\blog\Alltags_Blog_Frontend_Controller.php(40): Frontend_Model->getURL('frontend/blog/t...')
+#1 C:\work\localhost12\www\app\controller\Base_Controller.php(146): Alltags_Blog_Frontend_Controller->input()
+#2 C:\work\localhost12\www\index.php(31): Base_Controller->request()
+#3 {main}
+

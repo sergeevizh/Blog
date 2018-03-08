@@ -44,7 +44,7 @@ a:hover {
 }
 body > .wrapper {
     overflow: hidden;
-    padding-bottom: 160px;
+    padding-bottom: 40px;
 }
 /* шапка */
 #header {
@@ -79,7 +79,7 @@ body > .wrapper {
 /* подвал */
 #footer {
     width: 100%;
-    height: 160px;
+    height: 40px;
     background: #2f3133;
     position: absolute;
     bottom: 0;
@@ -88,56 +88,13 @@ body > .wrapper {
 /*
  * ШАПКА САЙТА
  */
-#header > div {
-    position: relative;
+#header {
+    color: #5390cc;
+    font-weight: bold;
+    font-size: 50px;
+    line-height: 80px;
+    text-shadow: 1px 1px 1px #ccc;
 }
-    #header #top-logo {
-        position: absolute;
-        width: 255px;
-        height: 80px;
-        left: 5px;
-        top: 0;
-    }
-        #header #top-logo > a {
-            display: block;
-            position: absolute;
-            left: 0;
-            top: 10px;
-            width: 60px;
-            height: 60px;
-            text-decoration: none;
-            background: url(../img/logo.png) left center no-repeat;
-        }
-        #header #top-logo > div {
-            position: absolute;
-            overflow: hidden;
-            color: #fff;
-            left: 65px;
-            top: 10px;
-            width: 190px;
-            height: 60px;
-        }
-            #header #top-logo > div > strong {
-                position: absolute;
-                top: -8px;
-                width: 190px;
-                height: 60px;
-                font-size: 45px;
-                letter-spacing: 1px;
-                color: #f5f5f5;
-            }
-                #header #top-logo > div > strong > span {
-                    font-size: 70px;
-                    margin-right: -8px;
-                }
-            #header #top-logo > div > span {
-                position: absolute;
-                left: 50px;
-                top: 3px;
-                font-size: 14px;
-                text-align: right;
-                letter-spacing: 2px;
-            }
 
 /*
  * ГЛАВНОЕ МЕНЮ
@@ -186,8 +143,9 @@ body > .wrapper {
     #menu a {
         text-decoration: none;
         color: #fff;
-        padding: 10px 25px;
-        line-height: 1.2;
+        text-shadow: 1px 1px 1px #ccc;
+        padding: 8px 25px;
+        font-size: 18px;
     }
     #menu a:hover {
         background: #5390cc;
@@ -195,8 +153,8 @@ body > .wrapper {
         #menu > ul > li > a {
             border-right: 1px solid #4f5254;
         }
-        #menu > ul > li:last-child > a {
-            border-right: none;
+        #menu > ul > li:first-child > a {
+            border-left: 1px solid #4f5254;
         }
         #menu > ul > li > ul > li > a, #menu > ul > li > ul > li > ul > li > a {
             border-top: 1px solid #4f5254;
@@ -505,8 +463,8 @@ div.attention {
  * ПОДВАЛ САЙТА
  */
 #footer {
-    height: 160px;
-    overflow: hidden;
+    color: #5390cc;
+    line-height: 40px;
 }
 
 /*

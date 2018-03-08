@@ -371,7 +371,11 @@ class Blog_Frontend_Model extends Frontend_Model {
                       1
                   ORDER BY
                       `name`";
-        return $this->database->fetchAll($query);
+        $tags = $this->database->fetchAll($query);
+        foreach ($tags as $k => $v) {
+            $tags[$k]['url'] = $this->getURL('frontend/blog/tags/ids/' . $v['id']);
+        }
+        return $tags;
     }
 
     /**

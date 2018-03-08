@@ -14,7 +14,7 @@ defined('ZCMS') or die('Access denied');
 
 <!-- Начало шаблона view/example/frontend/template/index/center.php -->
 
-<h1><?php echo $name; ?></h1>
+<!-- <h1><?php echo $name; ?></h1> -->
 
 <?php if (!empty($posts)): ?>
     <h2>Последние записи</h2>

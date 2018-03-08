@@ -37,7 +37,7 @@ class Alltags_Blog_Frontend_Controller extends Blog_Frontend_Controller {
                     }
                 }
                 if (!empty($ids)) { // данные корректные, перенаправляем на страницу выбранных тегов
-                    $this->redirect($this->blogFrontendModel->getURL('frontend/blog/tags' . implode('-', $ids)));
+                    $this->redirect($this->blogFrontendModel->getURL('frontend/blog/tags/ids/' . implode('-', $ids)));
                 } else { // данные не корректные, перенаправляем на эту же страницу
                     $this->redirect($this->blogFrontendModel->getURL('frontend/blog/alltags'));
                 }

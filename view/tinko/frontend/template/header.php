@@ -13,11 +13,7 @@ defined('ZCMS') or die('Access denied');
 <!-- Начало шаблона view/example/frontend/template/header.php -->
 
 <div id="top-logo">
-    <a href="<?php echo $indexURL; ?>"></a>
-    <div>
-        <span>Торговый Дом</span>
-        <strong><span>Т</span>ИНКО</strong>
-    </div>
+    Узелки на память
 </div>
 
 <!-- Конец шаблона view/example/frontend/template/header.php -->

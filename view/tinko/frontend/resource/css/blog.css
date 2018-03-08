@@ -84,6 +84,18 @@
             #post-item > div:first-child > p:nth-child(2) > a {
                 font-size: 12px;
             }
+            
+#all-tags {
+    
+}
+    #all-tags > ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        -webkit-column-count: 5;
+        -moz-column-count: 5;
+        column-count: 5;
+    }
 
 @media screen and (max-width: 560px) {
     /* список постов блога */

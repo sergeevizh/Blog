@@ -1,0 +1,53 @@
+# Копирует директорию со всем ее содержимым в
+# zip-файл с инкрементным номером в имени файла
+
+import zipfile, os
+
+def backupToZip(source, backup):
+    """
+    Создание резервной копии всего
+    содержимого директории source
+    """
+
+    # Проверить, что обе директории существуют
+    if not (os.path.isabs(source) and os.path.isdir(source)):
+        print('Директория %s не существует' % (source))
+        return
+    if not (os.path.isabs(backup) and os.path.isdir(backup)):
+        print('Директория %s не существует' % (backup))
+        return
+
+    # Определить, какое имя файла будет у zip-архива,
+    # исходя из имен уже существующих файлов
+    number = 1
+    while True:
+        name = os.path.basename(source) + '-' + str(number) + '.zip'
+        backupFile = os.path.join(backup, name)
+        if not os.path.isfile(backupFile):
+            break
+        number = number + 1
+
+    # Создание нового zip-файла
+    print('Создание нового zip-файла %s...' % (backupFile))
+    zipFile = zipfile.ZipFile(backupFile, 'w')
+
+    # Создание нового zip-файла
+    # Обход всего дерева директории и сжатие файлов в каждой папке
+    archDirName = ''
+    for dir, subdirs, files in os.walk(source):
+        print('Добавление файлов из директории %s...' % (dir))
+        # Имя текущей директории в архиве
+        archDirName = '/'.join([archDirName, os.path.basename(dir)]).strip('/')
+        # Добавить в архив текущую директорию
+        zipFile.write(dir, archDirName)
+
+        # Добавить в архив все файлы из текущей директории
+        for file in files:
+            # Имя текущего файла в архиве
+            archFileName = archDirName + '/' + file
+            zipFile.write(os.path.join(dir, file), archFileName)
+
+    zipFile.close()
+    print('Готово')
+
+backupToZip("C:\\project", "C:\\backup")
