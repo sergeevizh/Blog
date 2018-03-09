@@ -68,6 +68,7 @@ abstract class Frontend_Model extends Base_Model {
      * Функция возвращает «подсвеченный» код на разных языках программирования
      */
     private function highlightCodeBlock($code, $lang) {
+        $hl = new Highlight();
         switch ($lang) {
             case 'html'  : return $this->highlightHTML($code);
             case 'css'   : return $this->highlightCSS($code);
@@ -76,7 +77,7 @@ abstract class Frontend_Model extends Base_Model {
             case 'mysql' : return $this->highlightMysql($code);
             case 'язык'  : return $this->highlightERP($code);
             case 'запрос': return $this->highlightQuery($code);
-            case 'python': return $this->highlightPython($code);
+            case 'python': return $hl->highlightPython($code);
             case 'idle'  : return $this->highlightIDLE($code);
             case 'bash'  : return $this->highlightBash($code);
             case 'cli'   : return $this->highlightCLI($code);
@@ -416,6 +417,33 @@ abstract class Frontend_Model extends Base_Model {
         $code = str_replace("\t", '    ', $code); // замена табуляции на 4 пробела
 
         /*
+         * выделение блоков кода
+         */
+        $lines = explode("\n", $code);
+        $res = array();
+        $codeblock = false;
+        $matchblock = '';
+        foreach($lines as $line) {
+            if ($codeblock && preg_match('~^ {4}(КонецЦикла|КонецЕсли)~', $line)) {
+                $codeblock = false;
+                $matchblock = '';
+            }
+            if ($codeblock) {
+                if (preg_match('~^ {4}~', $line)) {
+                    $line = preg_replace('~^ {4}~', '$0│', $line);
+                } elseif ($line == '') {
+                    $line = '    │';
+                }
+            }
+            if (preg_match('~^ {4}(Для|Пока|Если)~', $line, $matches)) {
+                $codeblock = true;
+                $matchblock = $matches[1];
+            }
+            $res[] = $line;
+        }
+        $code = implode("\n", $res);
+
+        /*
          * заменяем строки на некий уникальный идентификатор, потом раскрашиваем код,
          * потом опять заменяем идентификаторы на строки
          * ИСХОДНАЯ СТРОКА:              Сообщение = "Какая-то строка";
@@ -511,6 +539,8 @@ abstract class Frontend_Model extends Base_Model {
             $number++;
         }
         $result = implode("\r\n", $res);
+
+        $code = str_replace('│', '<span class="codeblock"></span>', $code);
 
         return '<pre style="color:'.$colors['default'].'">'.$code.'</pre>';
 
