@@ -50,17 +50,17 @@ class Highlight {
             $delimiter[] = '\\'.$value;
         }
         $this->pattern = array(
-            'comment'   => '~#.*$~m',       // комментарии
-            'string3'   => '~""".*?"""~s',  // строки в тройных кавычках
-            'string4'   => "~'''.*?'''~s",  // строки в тройных кавычках
-            'string1'   => '~r?"[^"]*"~',   // строки в двойных кавычках
-            'string2'   => "~r?'[^']*'~",   // строки в одинарных кавычках
+            'string3'   => '~""".*?"""~s',         // строки в тройных кавычках
+            'string4'   => "~'''.*?'''~s",         // строки в тройных кавычках
+            'string1'   => '~[ru]{0,2}"[^"]*"~',   // строки в двойных кавычках
+            'string2'   => "~[ru]{0,2}'[^']*'~",   // строки в одинарных кавычках
+            'comment'   => '~#.*$~m',              // комментарии
             'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
             'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\.)('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~i', // встроенные функции
             'digit'     => '~\b\d+\b~', // цифры
-            'delimiter' => '~'.implode('|', $delimiter).'~',   // разделители
+            'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
         $this->hl();
