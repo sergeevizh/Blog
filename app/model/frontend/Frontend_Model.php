@@ -70,16 +70,16 @@ abstract class Frontend_Model extends Base_Model {
     private function highlightCodeBlock($code, $lang) {
         $hl = new Highlight();
         switch ($lang) {
-            case 'html'  : return $this->highlightHTML($code);
+            case 'html'  : return $hl->highlightHTML($code);
             case 'css'   : return $this->highlightCSS($code);
             case 'js'    : return $this->highlightJS($code);
             case 'php'   : return $this->highlightPHP($code);
             case 'mysql' : return $this->highlightMysql($code);
-            case 'язык'  : return $this->highlightERP($code);
+            case 'язык'  : return $hl->highlightERP($code);
             case 'запрос': return $this->highlightQuery($code);
             case 'python': return $hl->highlightPython($code);
             case 'idle'  : return $this->highlightIDLE($code);
-            case 'bash'  : return $this->highlightBash($code);
+            case 'bash'  : return $hl->highlightBash($code);
             case 'cli'   : return $this->highlightCLI($code);
             case 'code'  : return $this->highlightCode($code);
         }
@@ -419,12 +419,14 @@ abstract class Frontend_Model extends Base_Model {
         /*
          * выделение блоков кода
          */
+        // первый уровень
         $lines = explode("\n", $code);
-        $res = array();
+        $result1 = array();
         $codeblock = false;
         $matchblock = '';
         foreach($lines as $line) {
-            if ($codeblock && preg_match('~^ {4}(КонецЦикла|КонецЕсли)~', $line)) {
+            $line = rtrim($line);
+            if ($codeblock && preg_match('~^ {4}(КонецЦикла|КонецЕсли|Иначе|Тогда)~', $line)) {
                 $codeblock = false;
                 $matchblock = '';
             }
@@ -435,13 +437,35 @@ abstract class Frontend_Model extends Base_Model {
                     $line = '    │';
                 }
             }
-            if (preg_match('~^ {4}(Для|Пока|Если)~', $line, $matches)) {
+            if (preg_match('~^ {4}(Для|Пока|Если|Иначе|Тогда)~', $line, $matches)) {
                 $codeblock = true;
                 $matchblock = $matches[1];
             }
-            $res[] = $line;
+            $result1[] = $line;
         }
-        $code = implode("\n", $res);
+        // второй уровень
+        $result2 = array();
+        $codeblock = false;
+        $matchblock = '';
+        foreach($result1 as $line) {
+            if ($codeblock && preg_match('~^ {4}│? {4}(КонецЦикла|КонецЕсли|Иначе|Тогда)~', $line)) {
+                $codeblock = false;
+                $matchblock = '';
+            }
+            if ($codeblock) {
+                if (preg_match('~^ {4}│? {4}~', $line)) {
+                    $line = preg_replace('~^ {4}│? {4}~', '$0│', $line);
+                } elseif ($line == '') {
+                    $line = '        │';
+                }
+            }
+            if (preg_match('~^ {4}│? {4}(Для|Пока|Если|Иначе|Тогда)~', $line, $matches)) {
+                $codeblock = true;
+                $matchblock = $matches[1];
+            }
+            $result2[] = $line;
+        }
+        $code = implode("\n", $result2);
 
         /*
          * заменяем строки на некий уникальный идентификатор, потом раскрашиваем код,
@@ -458,10 +482,12 @@ abstract class Frontend_Model extends Base_Model {
         if (preg_match_all('~(\/\/.*)$~m', $code, $matches)) {
             foreach($matches[0] as $key => $item) {
                 $comment_source[$key] = '<span style="color:'.$colors['comment'].'">' . $item . '</span>';
-                $comment_replace[$key] = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-                $code = str_replace($item, $comment_replace[$key], $code);
+                $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+                $comment_replace[$key] = $rand;
+                $code = preg_replace('~(\/\/.*)$~m', $rand, $code, 1);
             }
         }
+
         /*
          * заменяем строки, чтобы безопасно раскрашивать код
          */

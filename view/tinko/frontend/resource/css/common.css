@@ -245,7 +245,7 @@ code {
 }
 pre {
     background: #f5f5f5;
-    border: 1px solid #eee;
+    border: 0.5px solid #d1d1d1;
     padding: 5px;
     overflow: auto;
     max-height: 400px;
@@ -253,7 +253,7 @@ pre {
 }
 
     pre .codeblock {
-        border-left: 1px solid #f0f0f0;
+        border-left: 0.5px solid #dddddd;
     }
 
 /* универсальная таблица */
