@@ -700,10 +700,10 @@ abstract class Frontend_Model extends Base_Model {
         $lines = explode("\n", $code);
         $result = array();
         foreach($lines as $line) {
-            $first = substr($line, 0, 1);
-            if (in_array($first, array('$', '>'))) {
+            $first = substr($line, 0, 2);
+            if (in_array($first, array('$ ', '> '))) {
                 $result[] = '<span style="color:'.$colors['command'].'">'.htmlspecialchars($line).'</span>';
-            } elseif ($first == '#') {
+            } elseif ($first == '# ') {
                 $result[] = '<span style="color:'.$colors['warning'].'">'.htmlspecialchars($line).'</span>';
             } else {
                 $result[] = htmlspecialchars($line);
