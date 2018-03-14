@@ -24,6 +24,26 @@ class Highlight {
                 '.', ',', ':', ';', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!'
             ),
         ),
+        'css' => array(
+            'colors' => array(
+                'default'     => '#008080',
+                'comment'     => '#888888',
+                'string'      => '#0000FF',
+                'import'      => '#EE00EE',
+                'media'       => '#EE00EE',
+                'prop-name'   => '#8000FF',
+                'prop-value'  => '#0080FF',
+                'css-uniq'    => '#8B008B',
+                'css-class'   => '#0000EE',
+                'pseudo-el'   => '#FF8000',
+                'pseudo-cl'   => '#FF8000',
+                'pseudo-cl-n' => '#FF8000',
+                'delimiter'   => '#FF0000',
+                'number'      => '#CCCCCC',
+            ),
+            'function' => array('url', 'attr', 'calc', 'rgb'),
+            'delimiter' => array('+', '~', ',', '>', ':', ';', '[', ']', '(', ')', '{', '}', '='),
+        ),
         'erp' => array(
             'colors' => array(
                 'default'   => '#008080',
@@ -53,6 +73,41 @@ class Highlight {
             'directive' => array(
                 '&НаКлиенте', '&НаСервере', '&НаСервереБезКонтекста', '&НаСервереНаКлиенте', '&НаКлиентеНаСервереБезКонтекста'
             )
+        ),
+        'php' => array(
+            'colors' => array(
+                'default'   => '#008080',
+                'comment1'  => '#888888',
+                'comment2'  => '#888888',
+                'string1'   => '#0000EE',
+                'string2'   => '#0000FF',
+                'keyword1'  => '#8000FF',
+                'keyword2'  => '#808000',
+                'keyword3'  => '#FF00FF',
+                'function'  => '#0080FF',
+                'constant'  => '#FF5500',
+                'digit'     => '#FF00FF',
+                'delimiter' => '#FF0000',
+                'number'    => '#CCCCCC',
+            ),
+            'keyword1' => array(
+                'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case'
+            ),
+            'keyword2' => array(
+                'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new', 'echo',  'array', 'list'
+            ),
+            'keyword3' => array(
+                'true', 'false', 'null', 'int', 'float', 'bool'
+            ),
+            'function' => array(
+                'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'exit', 'die', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents'
+            ),
+            'constant' => array(
+                '__FUNCTION__', '__CLASS__', '__METHOD__'
+            ),
+            'delimiter' => array(
+                '.', ',', ':', ';', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!', '?', '&', '@'
+            ),
         ),
         'python' => array(
             'colors' => array(
@@ -126,6 +181,34 @@ class Highlight {
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
 
     }
+    
+    public function highlightCSS($code) {
+
+        $this->init($code, 'css');
+
+        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+        $this->pattern = array(
+            'comment'     => '~/\*.*\*/~sU',                     // комментарии
+            'prop-name'   => '~^\s*[-a-z]+\s*(?=:)~m',           // свойство
+            'prop-value'  => '~(?<=¤:)\s*[^;¤{]+\s*(?=;)~',      // значение свойства
+            'string'      => '~"[^"]*"|\'[^\']*\'~',             // строка
+            'import'      => '~@import~',                        // @import
+            'media'       => '~@media~',                         // @media
+            'css-uniq'    => '~#[-_a-z]+~',                      // селектор, идентификатор
+            'css-class'   => '~\.[-_a-z]+~',                     // селектор, класс
+            'pseudo-el'   => '~::[-a-z]+~',                      // псевдо-элементы ::first-letter или ::before
+            'pseudo-cl-n' => '~:[-a-z]+\([^)]*\)~',              // псевдо-классы :not(:first-child) или :nth-child(even)
+            'pseudo-cl'   => '~:[-a-z]+~',                       // псевдо-классы :first-letter или :first-line
+            'delimiter'   => '~'.implode('|', $delimiter).'~',   // разделители
+        );
+
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+
+    }
 
     function highlightERP($code) {
 
@@ -169,6 +252,33 @@ class Highlight {
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
     }
+    
+    public function highlightPHP($code) {
+
+        $this->init($code, 'php');
+
+        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+        $this->pattern = array(
+            'string1'   => '~"[^"]*"~',   // строки в двойных кавычках
+            'string2'   => "~'[^']*'~",   // строки в одинарных кавычках
+            'comment1'  => '~\/\/.*$~m', // комментарии
+            'comment2'  => '~/\*.*\*/~sU', // комментарии
+            'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
+            'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
+            'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
+            'function'  => '~(?<!\->)\b('.implode('|', $this->settings[$this->lang]['function']).')\b\s?(?=\()~i', // встроенные функции
+            'constant'  => '~\b('.implode('|', $this->settings[$this->lang]['constant']).')\b~i', // встроенные контстанты
+            'digit'     => '~\b\d+\b~', // цифры
+            'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
+        );
+
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+
+    }
 
     public function highlightPython($code) {
 
@@ -201,22 +311,20 @@ class Highlight {
 
         foreach ($this->pattern as $color => $regexp) {
             if (preg_match_all($regexp, $this->code, $matches)) {
-            // if ($color == 'attrname' || $color == 'attrvalue') print_r($matches);
+//if ($color == 'prop-value') print_r($matches);
                 foreach($matches[0] as $item) {
-                    $item = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $item);
-                    /*
-                    if ($item == '>') {
-                        $item = '&gt;';
-                    }
-                    if ($item == '<') {
-                        $item = '&lt;';
-                    }
-                    */
-                    $this->source[] = '<span style="color:'.$this->settings[$this->lang]['colors'][$color].'">' . $item . '</span>';
+                    $tmp = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $item);
+                    $this->source[] = '<span style="color:'.$this->settings[$this->lang]['colors'][$color].'">' . $tmp . '</span>';
                     $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
                     $this->replace[] = $rand;
                     $this->code = preg_replace($regexp, $rand, $this->code, 1);
+                    
+                    
+                    ///////////////////
+                    //$strpos = strpos($this->code, $item);
+                    //$this->code = substr_replace($this->code, $rand, $strpos, strlen($item));
                 }
+//echo '<pre>'.$this->code.'<pre><hr>';
             }
         }
 
