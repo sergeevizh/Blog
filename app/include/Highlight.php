@@ -75,6 +75,33 @@ class Highlight {
                 '&НаКлиенте', '&НаСервере', '&НаСервереБезКонтекста', '&НаСервереНаКлиенте', '&НаКлиентеНаСервереБезКонтекста'
             )
         ),
+        'js' => array(
+            'colors' => array(
+                'default'   => '#008080',
+                'comment1'  => '#888888',
+                'comment2'  => '#888888',
+                'string1'   => '#0080FF',
+                'string2'   => '#0080FF',
+                'keyword1'  => '#8000FF',
+                'keyword2'  => '#DD00DD',
+                'function'  => '#990099',
+                'digit'     => '#DD00DD',
+                'delimiter' => '#FF5555',
+                'number'    => '#CCCCCC',
+            ),
+            'keyword1' => array(
+                'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'return', 'switch', 'case', 'default', 'delete', 'do', 'with', 'in', 'abstract', 'class', 'extends', 'function', 'final', 'public', 'protected', 'private', 'static', 'self', 'new', 'instanceof', 'interface', 'this', 'try', 'throw', 'throws', 'finally', 'implements', 'super', 'var',  'typeof', 'void'
+            ),
+            'keyword2' => array(
+                'true', 'false', 'boolean', 'int', 'float', 'undefined', 'null'
+            ),
+            'function' => array(
+                'alert', 'prompt', 'confirm', 'setTimeout', 'setInterval'
+            ),
+            'delimiter' => array(
+                '.', ',', ':', ';', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!', '?', '&'
+            ),
+        ),
         'php' => array(
             'colors' => array(
                 'default'   => '#008080',
@@ -253,6 +280,31 @@ class Highlight {
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
     }
+    
+    public function highlightJS($code) {
+
+        $this->init($code, 'js');
+
+        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+        $this->pattern = array(
+            'string1'   => '~"[^"]*"~',   // строки в двойных кавычках
+            'string2'   => "~'[^']*'~",   // строки в одинарных кавычках
+            'comment1'  => '~\/\/.*$~m', // комментарии
+            'comment2'  => '~/\*.*\*/~sU', // комментарии
+            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
+            'function'  => '~\b('.implode('|', $this->settings[$this->lang]['function']).')\b\s?(?=\()~i', // встроенные функции
+            'digit'     => '~\b\d+\b~', // цифры
+            'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
+        );
+
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+
+    }
 
     public function highlightPHP($code) {
 
@@ -271,7 +323,7 @@ class Highlight {
             'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings[$this->lang]['function']).')\b\s?(?=\()~i', // встроенные функции
             'constant'  => '~\b('.implode('|', $this->settings[$this->lang]['constant']).')\b~i', // встроенные контстанты
-            'digit'     => '~\b\d+\b~', // цифры
+            'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 

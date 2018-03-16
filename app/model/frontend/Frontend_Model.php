@@ -72,7 +72,7 @@ abstract class Frontend_Model extends Base_Model {
         switch ($lang) {
             case 'html'  : return $hl->highlightHTML($code);
             case 'css'   : return $hl->highlightCSS($code);
-            case 'js'    : return $this->highlightJS($code);
+            case 'js'    : return $hl->highlightJS($code);
             case 'php'   : return $hl->highlightPHP($code);
             case 'mysql' : return $this->highlightMysql($code);
             case 'язык'  : return $hl->highlightERP($code);
