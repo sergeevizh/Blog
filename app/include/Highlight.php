@@ -7,57 +7,67 @@ class Highlight {
     private $settings = array(
         'bash' => array(
             'colors' => array(
-                'default'   => '#008080',
-                'comment1'  => '#888888',
-                'comment2'  => '#888888',
-                'string1'   => '#0080FF',
-                'string2'   => '#0000DD',
-                'variable1' => '#808000',
-                'variable2' => '#808000',
-                'spec-var'  => '#808000',
-                'execute'   => '#008080',
-                'exec-str'  => '#0080FF',
-                'keyword'   => '#8000FF',
-                'digit'     => '#FF00FF',
-                'number'    => '#CCCCCC',
+                'default'     => array('f' => '#008080'),
+                'bin-bash'    => array('f' => '#888888', 'b' => '#FFFFFF'),
+                'here-doc'    => array('f' => '#0080FF', 'b' => '#FFFFFF'),
+                'comment1'    => array('f' => '#888888'),
+                'comment2'    => array('f' => '#888888'),
+                'comment3'    => array('f' => '#888888'),
+                'string1'     => array('f' => '#0080FF'),
+                'string2'     => array('f' => '#0000DD'),
+                'variable1'   => array('f' => '#808000'),
+                'variable2'   => array('f' => '#808000'),
+                'spec-var'    => array('f' => '#808000'),
+                'expression1' => array('b' => '#FFEEEE'),
+                'expression2' => array('b' => '#FFEEEE'),
+                'execute1'    => array('b' => '#FFFFEE'),
+                'execute2'    => array('b' => '#FFFFEE'),
+                'execute3'    => array('b' => '#FFFFEE'),
+                'keyword'     => array('f' => '#8000FF'),
+                'digit'       => array('f' => '#DD00DD'),
+                'delimiter'   => array('f' => '#FF0000'),
+                'number'      => array('f' => '#CCCCCC'),
             ),
             'keyword' => array(
                 'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'exit', 'function'
             ),
+            'delimiter' => array(
+                ';', '&&', '\|\|', '\[', '\]', '\(\(', '\)\)'
+            ),
         ),
         'css' => array(
             'colors' => array(
-                'default'     => '#008080',
-                'comment'     => '#888888',
-                'string'      => '#0000FF',
-                'import'      => '#EE00EE',
-                'media'       => '#EE00EE',
-                'prop-name'   => '#8000FF',
-                'prop-value'  => '#0080FF',
-                'css-uniq'    => '#8B008B',
-                'css-class'   => '#0000EE',
-                'pseudo-el'   => '#FF8000',
-                'pseudo-cl'   => '#FF8000',
-                'pseudo-cl-n' => '#FF8000',
-                'delimiter'   => '#FF0000',
-                'number'      => '#CCCCCC',
+                'default'     => array('f' => '#008080'),
+                'comment'     => array('f' => '#888888'),
+                'string'      => array('f' => '#0000FF'),
+                'import'      => array('f' => '#EE00EE'),
+                'media'       => array('f' => '#EE00EE'),
+                'prop-name'   => array('f' => '#8000FF'),
+                'prop-value'  => array('f' => '#0080FF'),
+                'css-uniq'    => array('f' => '#8B008B'),
+                'css-class'   => array('f' => '#0000EE'),
+                'pseudo-el'   => array('f' => '#FF8000'),
+                'pseudo-cl'   => array('f' => '#FF8000'),
+                'pseudo-cl-n' => array('f' => '#FF8000'),
+                'delimiter'   => array('f' => '#FF0000'),
+                'number'      => array('f' => '#CCCCCC'),
             ),
             'function' => array('url', 'attr', 'calc', 'rgb'),
             'delimiter' => array('+', '~', ',', '>', ':', ';', '[', ']', '(', ')', '{', '}', '='),
         ),
         'erp' => array(
             'colors' => array(
-                'default'   => '#008080',
-                'comment'   => '#888888',
-                'string'    => '#0000FF',
-                'keyword1'  => '#8B008B',
-                'keyword2'  => '#CD3700',
-                'keyword3'  => '#8000FF',
-                'directive' => '#808000',
-                'digit'     => '#FF00FF',
-                'delimiter' => '#FF0000',
-                'object'    => '#0080FF',
-                'number'    => '#CCCCCC'
+                'default'   => array('f' => '#008080'),
+                'comment'   => array('f' => '#888888'),
+                'string'    => array('f' => '#0000FF'),
+                'keyword1'  => array('f' => '#8B008B'),
+                'keyword2'  => array('f' => '#8000FF'),
+                'keyword3'  => array('f' => '#EE00EE'),
+                'directive' => array('f' => '#808000'),
+                'digit'     => array('f' => '#FF00FF'),
+                'delimiter' => array('f' => '#FF0000'),
+                'object'    => array('f' => '#0080FF'),
+                'number'    => array('f' => '#CCCCCC'),
             ),
             'keyword1' => array(
                 'Процедура', 'КонецПроцедуры', 'Функция', 'КонецФункции', 'Возврат', 'Экспорт', 'Знач', 'Перем', 'Новый'
@@ -68,26 +78,26 @@ class Highlight {
             'keyword3' => array(
                 'Истина', 'Ложь', 'НЕ', 'И', 'ИЛИ'
             ),
+            'directive' => array(
+                '&НаКлиенте', '&НаСервере', '&НаСервереБезКонтекста', '&НаСервереНаКлиенте', '&НаКлиентеНаСервереБезКонтекста'
+            ),
             'delimiter' => array(
                 '=', ';', '.', '(', ')', '[', ']', ',', '+', '*', '-', '/', '!', '>', '<', '%'
             ),
-            'directive' => array(
-                '&НаКлиенте', '&НаСервере', '&НаСервереБезКонтекста', '&НаСервереНаКлиенте', '&НаКлиентеНаСервереБезКонтекста'
-            )
         ),
         'js' => array(
             'colors' => array(
-                'default'   => '#008080',
-                'comment1'  => '#888888',
-                'comment2'  => '#888888',
-                'string1'   => '#0080FF',
-                'string2'   => '#0080FF',
-                'keyword1'  => '#8000FF',
-                'keyword2'  => '#DD00DD',
-                'function'  => '#990099',
-                'digit'     => '#DD00DD',
-                'delimiter' => '#FF5555',
-                'number'    => '#CCCCCC',
+                'default'   => array('f' => '#008080'),
+                'comment1'  => array('f' => '#888888'),
+                'comment2'  => array('f' => '#888888'),
+                'string1'   => array('f' => '#0080FF'),
+                'string2'   => array('f' => '#0080FF'),
+                'keyword1'  => array('f' => '#8000FF'),
+                'keyword2'  => array('f' => '#DD00DD'),
+                'function'  => array('f' => '#990099'),
+                'digit'     => array('f' => '#DD00DD'),
+                'delimiter' => array('f' => '#FF5555'),
+                'number'    => array('f' => '#CCCCCC'),
             ),
             'keyword1' => array(
                 'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'return', 'switch', 'case', 'default', 'delete', 'do', 'with', 'in', 'abstract', 'class', 'extends', 'function', 'final', 'public', 'protected', 'private', 'static', 'self', 'new', 'instanceof', 'interface', 'this', 'try', 'throw', 'throws', 'finally', 'implements', 'super', 'var',  'typeof', 'void'
@@ -104,19 +114,19 @@ class Highlight {
         ),
         'php' => array(
             'colors' => array(
-                'default'   => '#008080',
-                'comment1'  => '#888888',
-                'comment2'  => '#888888',
-                'string1'   => '#0000EE',
-                'string2'   => '#0000FF',
-                'keyword1'  => '#8000FF',
-                'keyword2'  => '#808000',
-                'keyword3'  => '#FF00FF',
-                'function'  => '#0080FF',
-                'constant'  => '#FF5500',
-                'digit'     => '#FF00FF',
-                'delimiter' => '#FF0000',
-                'number'    => '#CCCCCC',
+                'default'   => array('f' => '#008080'),
+                'comment1'  => array('f' => '#888888'),
+                'comment2'  => array('f' => '#888888'),
+                'string1'   => array('f' => '#0000EE'),
+                'string2'   => array('f' => '#0000FF'),
+                'keyword1'  => array('f' => '#8000FF'),
+                'keyword2'  => array('f' => '#808000'),
+                'keyword3'  => array('f' => '#FF00FF'),
+                'function'  => array('f' => '#0080FF'),
+                'constant'  => array('f' => '#FF5500'),
+                'digit'     => array('f' => '#FF00FF'),
+                'delimiter' => array('f' => '#FF0000'),
+                'number'    => array('f' => '#CCCCCC'),
             ),
             'keyword1' => array(
                 'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case', 'default'
@@ -139,19 +149,19 @@ class Highlight {
         ),
         'python' => array(
             'colors' => array(
-                'default'   => '#008080',
-                'comment'   => '#888888',
-                'string1'   => '#0000FF',
-                'string2'   => '#0000FF',
-                'string3'   => '#0080FF',
-                'string4'   => '#0080FF',
-                'keyword1'  => '#DD0000',
-                'keyword2'  => '#808000',
-                'keyword3'  => '#8000FF',
-                'function'  => '#0080FF',
-                'digit'     => '#FF00FF',
-                'delimiter' => '#FF0000',
-                'number'    => '#CCCCCC',
+                'default'   => array('f' => '#008080'),
+                'comment'   => array('f' => '#888888'),
+                'string1'   => array('f' => '#0000FF'),
+                'string2'   => array('f' => '#0000FF'),
+                'string3'   => array('f' => '#0080FF'),
+                'string4'   => array('f' => '#0080FF'),
+                'keyword1'  => array('f' => '#DD0000'),
+                'keyword2'  => array('f' => '#808000'),
+                'keyword3'  => array('f' => '#8000FF'),
+                'function'  => array('f' => '#0080FF'),
+                'digit'     => array('f' => '#FF00FF'),
+                'delimiter' => array('f' => '#FF0000'),
+                'number'    => array('f' => '#CCCCCC'),
             ),
             'keyword1' => array(
                 'def', 'if', 'else', 'elif', 'for', 'in', 'while', 'break', 'continue', 'del', 'try', 'except', 'raise', 'finally', 'from', 'import', 'return', 'pass', 'lambda', 'with', 'as'
@@ -171,16 +181,16 @@ class Highlight {
         ),
         'html' => array(
             'colors' => array(
-                'default'   => '#222222',
-                'doctype'   => '#8B008B',
-                'comment'   => '#888888',
-                'string'    => '#0080FF',
-                'element'   => '#008080',
-                'entity'    => '#8000FF',
-                'attrname'  => '#808000',
-                'attrvalue' => '#0080FF',
-                'equal'     => '#EE0000',
-                'number'    => '#CCCCCC',
+                'default'   => array('f' => '#222222'),
+                'doctype'   => array('f' => '#8B008B'),
+                'comment'   => array('f' => '#888888'),
+                'string'    => array('f' => '#0080FF'),
+                'element'   => array('f' => '#008080'),
+                'entity'    => array('f' => '#8000FF'),
+                'attrname'  => array('f' => '#808000'),
+                'attrvalue' => array('f' => '#0080FF'),
+                'equal'     => array('f' => '#EE0000'),
+                'number'    => array('f' => '#CCCCCC'),
             ),
         )
     );
@@ -192,21 +202,29 @@ class Highlight {
         $this->init($code, 'bash');
 
         $this->pattern = array(
-            'comment1'  => '~^ *#.*$~m',        // комментарии от начала строки
-            'comment2'  => '~(?<= )#.*$~m',     // комментарии в конце строки
-            'spec-var'  => '~\$([0-9]|#|!|\*|@)~i', // специальные переменные
-            'variable1'  => '~\$[a-z][a-z0-9]+~i', // переменные
-            'variable2'  => '~\$\{[^}]+\}?~i', // переменные
-            'exec-str'  => '~"\$\(.+\)"~i', // подстановка результата выполнения
-            'string1'   => '~"[^"]*"~',   // строки в двойных кавычках
-            'string2'   => "~'[^']*'~",   // строки в одинарных кавычках
-            'keyword'   => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~i', // ключевые слова
-            'digit'     => '~(?<!&)\b\d+\b(?!\>)~', // цифры (просмотр вперед и назад для потоков)
+            'here-doc'     => '~\<\<-? ([_A-Z]+).*\1~s',
+            'comment1'    => '~^ *#+$~m',            // пустой комментарий
+            'comment2'    => '~^ *#+ .*$~m',         // комментарии от начала строки
+            'comment3'    => '~(?<= )#+ .*~',         // комментарии в конце строки
+            'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|!)~i',// специальные переменные
+            'variable1'   => '~\$[a-z_][a-z0-9_]*~i',  // переменные
+            'variable2'   => '~\$\{[^}]+\}?~i',      // переменные
+            'expression1' => '~\$\(\([^)(]+\)\)~',       // вычисление арифметического выражения
+            'execute1'    => '~\$\([^)(]+\)~',    // подстановка результата выполнения
+            'execute3'    => '~\`[^`]+`~',        // подстановка результата выполнения
+            'expression2' => '~\$\(\([^)(]+\)\)~',       // вычисление арифметического выражения
+            'execute2'    => '~\$\(\(?[^)(]+\)?\)~',     // подстановка результата выполнения
+            'string1'     => '~"[^"]*"~',            // строки в двойных кавычках
+            'string2'     => "~'[^']*'~",            // строки в одинарных кавычках
+            'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~i', // ключевые слова
+            //'digit'     => '~(?<!&)\b\d+\b(?!\>)~', // цифры (просмотр вперед и назад для потоков)
+            //'delimiter' => '~'.implode('|', $this->settings[$this->lang]['delimiter']).'~',   // разделители
+            'bin-bash'    => "~^#!/[-/a-z]+~",            // что-то типа #!/bin/bash
         );
 
         $this->hl();
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['f'].'">' . $this->code . '</pre>';
 
     }
 
@@ -234,7 +252,7 @@ class Highlight {
 
         $this->hl();
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['f'].'">' . $this->code . '</pre>';
 
     }
 
@@ -252,14 +270,14 @@ class Highlight {
             'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~ui',  // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~ui',  // ключевые слова
             'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~ui',  // ключевые слова
-            'directive' => '~\b('.implode('|', $this->settings[$this->lang]['directive']).')\b~ui', // директивы компиляции
+            'directive' => '~('.implode('|', $this->settings[$this->lang]['directive']).')~ui', // директивы компиляции
             'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
         $this->hl();
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['f'].'">' . $this->code . '</pre>';
     }
 
     public function highlightHTML($code) {
@@ -278,9 +296,9 @@ class Highlight {
 
         $this->hl();
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['f'].'">' . $this->code . '</pre>';
     }
-    
+
     public function highlightJS($code) {
 
         $this->init($code, 'js');
@@ -302,7 +320,7 @@ class Highlight {
 
         $this->hl();
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['f'].'">' . $this->code . '</pre>';
 
     }
 
@@ -329,7 +347,7 @@ class Highlight {
 
         $this->hl();
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['f'].'">' . $this->code . '</pre>';
 
     }
 
@@ -350,34 +368,44 @@ class Highlight {
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
             'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\.)('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~i', // встроенные функции
-            'digit'     => '~\b\d+\b~', // цифры
+            //'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
         $this->hl();
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['f'].'">' . $this->code . '</pre>';
 
     }
 
     private function hl() {
 
         foreach ($this->pattern as $color => $regexp) {
-            if (preg_match_all($regexp, $this->code, $matches)) {
-//if ($color == 'prop-value') print_r($matches);
-                foreach($matches[0] as $item) {
-                    $tmp = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $item);
-                    $this->source[] = '<span style="color:'.$this->settings[$this->lang]['colors'][$color].'">' . $tmp . '</span>';
-                    $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-                    $this->replace[] = $rand;
-                    $this->code = preg_replace($regexp, $rand, $this->code, 1);
+            $offset = 0;
+            while (preg_match($regexp, $this->code, $match, PREG_OFFSET_CAPTURE, $offset)) {
 
-
-                    ///////////////////
-                    //$strpos = strpos($this->code, $item);
-                    //$this->code = substr_replace($this->code, $rand, $strpos, strlen($item));
+                $item = $match[0][0];
+                $offset = $match[0][1];
+                $length = strlen($match[0][0]);
+                $tmp = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $match[0][0]);
+                $style = '';
+                if (isset($this->settings[$this->lang]['colors'][$color]['f'], $this->settings[$this->lang]['colors'][$color]['b'])) {
+                    $style = 'color:'.$this->settings[$this->lang]['colors'][$color]['f'] . '; background:' . $this->settings[$this->lang]['colors'][$color]['b'];
+                } elseif (isset($this->settings[$this->lang]['colors'][$color]['f'])) {
+                    $style = 'color:' . $this->settings[$this->lang]['colors'][$color]['f'];
+                } elseif (isset($this->settings[$this->lang]['colors'][$color]['b'])) {
+                    $style = 'background:' . $this->settings[$this->lang]['colors'][$color]['b'];
                 }
-//echo '<pre>'.$this->code.'<pre><hr>';
+                if (!empty($style)) {
+                    $this->source[] = '<span style="' . $style . '">' . $tmp . '</span>';
+                } else {
+                    $this->source[] = $tmp;
+                }
+                $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+                $this->replace[] = $rand;
+                $this->code = substr_replace($this->code, $rand, $offset, $length);
+                $offset = $offset + strlen($rand);
+
             }
         }
 

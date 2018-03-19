@@ -21,11 +21,11 @@ $(document).ready(function() {
                         top : $('#side-basket > .side-content').offset().top,
                         left : $('#side-basket > .side-content').offset().left
                     });
-                // определаем координаты изображения товара, который добавляется в корзину
+                // определяем координаты изображения товара, который добавляется в корзину
                 var image = jqForm.parent().prevAll('div:has(img)');
                 var imageTop = Math.round(image.offset().top);
                 var imageLeft = Math.round(image.offset().left);
-                // определаем размеры изображения товара, который добавляется в корзину
+                // определяем размеры изображения товара, который добавляется в корзину
                 var imageWidth = Math.round(image.width());
                 var imageHeight = Math.round(image.height());
                 // определяем координаты корзины: либо в правой колонке, либо в шапке сайта
