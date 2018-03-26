@@ -773,7 +773,7 @@ abstract class Frontend_Model extends Base_Model {
 
     private function highlightCode($code) {
         $colors = array(
-            'default' => '#0000FF',
+            'default' => '#0080FF',
             'green'   => '#008080',
             'red'     => '#EE0000'
         );

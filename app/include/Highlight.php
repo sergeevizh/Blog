@@ -71,10 +71,10 @@ class Highlight {
                 'number'    => array('f' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'Процедура', 'КонецПроцедуры', 'Функция', 'КонецФункции', 'Возврат', 'Экспорт', 'Знач', 'Перем', 'Новый'
+                'Процедура', 'КонецПроцедуры', 'Функция', 'КонецФункции', 'Возврат', 'Экспорт', 'Знач', 'Перем',
             ),
             'keyword2' => array(
-                'Пока', 'Для', 'Каждого', 'Из', 'Цикл', 'КонецЦикла', 'Прервать', 'Продолжить', 'Если', 'Тогда', 'Иначе', 'ИначеЕсли', 'КонецЕсли', 'Попытка', 'Исключение', 'КонецПопытки'
+                'Пока', 'Для', 'Каждого', 'Из', 'Цикл', 'КонецЦикла', 'Прервать', 'Продолжить', 'Если', 'Тогда', 'Иначе', 'ИначеЕсли', 'КонецЕсли', 'Попытка', 'Исключение', 'КонецПопытки', 'Новый'
             ),
             'keyword3' => array(
                 'Истина', 'Ложь', 'НЕ', 'И', 'ИЛИ'
@@ -133,13 +133,13 @@ class Highlight {
                 'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case', 'default'
             ),
             'keyword2' => array(
-                'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new', 'echo',  'array', 'list'
+                'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new',  'array', 'list', 'echo', 'exit', 'die'
             ),
             'keyword3' => array(
                 'true', 'false', 'null', 'int', 'float', 'bool'
             ),
             'function' => array(
-                'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'exit', 'die', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents'
+                'echo', 'exit', 'die', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents'
             ),
             'constant' => array(
                 '__FUNCTION__', '__CLASS__', '__METHOD__'
@@ -156,22 +156,18 @@ class Highlight {
                 'string2'   => array('f' => '#0000FF'),
                 'string3'   => array('f' => '#0080FF'),
                 'string4'   => array('f' => '#0080FF'),
-                'keyword1'  => array('f' => '#DD0000'),
-                'keyword2'  => array('f' => '#808000'),
-                'keyword3'  => array('f' => '#8000FF'),
+                'keyword1'  => array('f' => '#8000FF'),
+                'keyword2'  => array('f' => '#DD00DD'),
                 'function'  => array('f' => '#0080FF'),
                 'digit'     => array('f' => '#FF00FF'),
                 'delimiter' => array('f' => '#FF0000'),
                 'number'    => array('f' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'def', 'if', 'else', 'elif', 'for', 'in', 'while', 'break', 'continue', 'del', 'try', 'except', 'raise', 'finally', 'from', 'import', 'return', 'pass', 'lambda', 'with', 'as'
+                'def', 'if', 'else', 'elif', 'for', 'in', 'while', 'break', 'continue', 'del', 'try', 'except', 'raise', 'finally', 'from', 'import', 'return', 'pass', 'lambda', 'with', 'as', 'not', 'and', 'or', 'is'
             ),
             'keyword2' => array(
                 'True', 'False', 'None'
-            ),
-            'keyword3' => array(
-                'not', 'and', 'or', 'is'
             ),
             'function' => array(
                 'object', 'dict', 'list', 'tuple', 'set', 'bool', 'float', 'int', 'str', 'slice', 'range', 'len', 'input', 'print', 'min', 'max', 'sum', 'round', 'type', 'open'
@@ -368,9 +364,8 @@ class Highlight {
             'comment'   => '~#.*$~m',              // комментарии
             'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
-            'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\.)('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~i', // встроенные функции
-            //'digit'     => '~\b\d+\b~', // цифры
+            'digit'     => '~\b\d+\b~',            // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
