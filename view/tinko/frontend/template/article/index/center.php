@@ -82,6 +82,10 @@ defined('ZCMS') or die('Access denied');
                     <?php echo $item['excerpt']; ?>
                 </div>
                 <div class="article-category">
+                    Категория:
+                    <?php if (!empty($item['url']['root'])): ?>
+                        <a href="<?php echo $item['url']['root']; ?>"><?php echo $item['root_name']; ?></a> •
+                    <?php endif; ?>
                     <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
                 </div>
             </div>

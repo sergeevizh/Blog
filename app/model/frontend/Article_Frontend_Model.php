@@ -15,19 +15,24 @@ class Article_Frontend_Model extends Frontend_Model {
     public function getAllArticles($start = 0) {
 
         $query = "SELECT
-                      `a`.`id` AS `id`, `a`.`name` AS `name`, `a`.`excerpt` AS `excerpt`,
+                      `a`.`id` AS `id`, `a`.`name` AS `name`,
+                      `a`.`excerpt` AS `excerpt`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
-                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `b`.`parent` AS `parent`,
+                      (SELECT `c`.`id` FROM `article_categories` `c` WHERE `c`.`id` = `b`.`parent`) AS `root_id`,
+                      (SELECT `d`.`name` FROM `article_categories` `d` WHERE `d`.`id` = `b`.`parent`) AS `root_name`
                   FROM
-                      `article_items` `a` INNER JOIN `article_categories` `b`
-                      ON `a`.`category` = `b`.`id`
+                      `article_items` `a`
+                      INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       1
                   ORDER BY
                       `a`.`added` DESC
                   LIMIT
                       :start, :limit";
+
         $articles = $this->database->fetchAll(
             $query,
             array(
@@ -44,7 +49,15 @@ class Article_Frontend_Model extends Frontend_Model {
             } else {
                 $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/default.jpg';
             }
+            // URL категории статьи
             $articles[$key]['url']['category'] = $this->getURL('frontend/article/category/id/' . $value['ctg_id']);
+            // URL корневой категории статьи
+            if (!empty($articles[$key]['parent'])) {
+                $articles[$key]['url']['root'] = $this->getURL('frontend/blog/category/id/' . $value['root_id']);
+                unset($articles[$key]['parent']);
+            } else {
+                unset($articles[$key]['parent'], $articles[$key]['root_id'], $articles[$key]['root_name']);
+            }
         }
 
         return $articles;
@@ -65,18 +78,24 @@ class Article_Frontend_Model extends Frontend_Model {
     public function getCategoryArticles($id, $start) {
 
         $query = "SELECT
-                      `a`.`id` AS `id`, `a`.`name` AS `name`, `a`.`excerpt` AS `excerpt`,
+                      `a`.`id` AS `id`, `a`.`name` AS `name`,
+                      `a`.`excerpt` AS `excerpt`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
-                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `b`.`parent` AS `parent`,
+                      (SELECT `c`.`id` FROM `article_categories` `c` WHERE `c`.`id` = `b`.`parent`) AS `root_id`,
+                      (SELECT `d`.`name` FROM `article_categories` `d` WHERE `d`.`id` = `b`.`parent`) AS `root_name`
                   FROM
-                      `article_items` `a` INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
+                      `article_items` `a`
+                      INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       `a`.`category` = :id
                   ORDER BY
                       `a`.`added` DESC
                   LIMIT
                       :start, :limit";
+
         $articles = $this->database->fetchAll(
             $query,
             array(
@@ -93,6 +112,15 @@ class Article_Frontend_Model extends Frontend_Model {
                 $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/' . $value['id'] . '.jpg';
             } else {
                 $articles[$key]['url']['image'] = $this->config->site->url . 'files/article/thumb/default.jpg';
+            }
+            // URL категории статьи
+            $articles[$key]['url']['category'] = $this->getURL('frontend/article/category/id/' . $value['ctg_id']);
+            // URL корневой категории статьи
+            if (!empty($articles[$key]['parent'])) {
+                $articles[$key]['url']['root'] = $this->getURL('frontend/blog/category/id/' . $value['root_id']);
+                unset($articles[$key]['parent']);
+            } else {
+                unset($articles[$key]['parent'], $articles[$key]['root_id'], $articles[$key]['root_name']);
             }
         }
 
@@ -168,12 +196,25 @@ class Article_Frontend_Model extends Frontend_Model {
     public function getCategory($id) {
 
         $query = "SELECT
-                      `name`, `description`, `keywords`
+                      `name`, `parent`, `description`, `keywords`
                   FROM
                       `article_categories`
                   WHERE
                       `id` = :id";
-        return $this->database->fetch($query, array('id' => $id));
+        $category = $this->database->fetch($query, array('id' => $id));
+        // получаем родительскую категорию
+        if ($category['parent']) {
+            $query = "SELECT
+                          `id`, `name`
+                      FROM
+                          `article_categories`
+                      WHERE
+                          `id` = :parent";
+            $parent = $this->database->fetch($query, array('parent' => $category['parent']));
+            $category['root_id'] = $parent['id'];
+            $category['root_name'] = $parent['name'];
+        }
+        return $category;
 
     }
 

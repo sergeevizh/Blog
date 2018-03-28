@@ -54,7 +54,6 @@ abstract class Frontend_Model extends Base_Model {
     protected function highlightCodeBlocks($html) {
         $langs = array('html', 'css', 'js', 'php', 'mysql', 'язык', 'запрос', 'python', 'idle', 'bash', 'cli', 'code');
         if (preg_match_all('~\[('.implode('|', $langs).')\](.+)\[/\1\]~Us', $html, $matches)) {
-        //if (preg_match_all('~\[(html)\](.+)\[/\1\]~Us', $html, $matches)) {
             foreach($matches[0] as $key => $value) {
                 $lang = $matches[1][$key];
                 $code = $this->highlightCodeBlock($matches[2][$key], $lang);
@@ -81,7 +80,7 @@ abstract class Frontend_Model extends Base_Model {
             case 'idle'  : return $this->highlightIDLE($code);
             case 'bash'  : return $hl->highlightBash($code);
             case 'cli'   : return $this->highlightCLI($code);
-            case 'code'  : return $this->highlightCode($code);
+            case 'code'  : return $hl->highlightCode($code);
         }
     }
 

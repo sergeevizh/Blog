@@ -44,11 +44,11 @@
                         font-size: 16px;
                     }
             #articles-list > div > div:last-child .article-excerpt {
-                margin-bottom: 5px;
+                margin-bottom: 10px;
             }
-                #articles-list > div > div:last-child .article-category a {
-                    font-size: 12px;
-                }
+            #articles-list > div > div:last-child .article-category {
+                font-size: 12px;
+            }
 
 /* отдельная статья */
 #article-item {

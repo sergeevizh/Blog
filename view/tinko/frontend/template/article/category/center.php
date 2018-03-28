@@ -23,6 +23,8 @@
  *     [url] => Array (
  *       [item] => http://www.host.ru/article/item/7
  *       [image] => http://www.host.ru/files/article/7/7.jpg
+ *       [category] => http://www.host.ru/article/category/2
+ *       [root] => http://www.host.ru/article/category/1
  *     )
  *   )
  *   [1] => Array (
@@ -36,6 +38,8 @@
  *     [url] => Array (
  *       [item] => http://www.host.ru/article/item/6
  *       [image] => http://www.host.ru/files/article/6/6.jpg
+ *       [category] => http://www.host.ru/article/category/2
+ *       [root] => http://www.host.ru/article/category/1
  *     )
  *   )
  *   [2] => Array (
@@ -123,6 +127,13 @@ defined('ZCMS') or die('Access denied');
                 </div>
                 <div class="article-excerpt">
                     <?php echo $item['excerpt']; ?>
+                </div>
+                <div class="article-category">
+                    Категория:
+                    <?php if (!empty($item['url']['root'])): ?>
+                        <a href="<?php echo $item['url']['root']; ?>"><?php echo $item['root_name']; ?></a> •
+                    <?php endif; ?>
+                    <a href="<?php echo $item['url']['category']; ?>"><?php echo $item['ctg_name']; ?></a>
                 </div>
             </div>
         </div>
