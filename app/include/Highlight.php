@@ -39,9 +39,22 @@ class Highlight {
         'code' => array(
             'colors' => array(
                 'default'   => array('fore'   => '#0080FF'),
-                'selected1' => array('fore'   => '#008080'),
-                'selected2' => array('fore'   => '#EE0000'),
+                'selected1' => array('fore'   => '#EE0000'),
+                'selected2' => array('fore'   => '#008080'),
                 'selected3' => array('border' => '#EE0000'),
+            ),
+            'specchars' => array('&', '>', '<'),
+        ),
+        'cli' => array(
+            'colors' => array(
+                'default'   => array('fore' => '#808000'),
+                'cliprompt' => array('fore' => '#AAAAFF'),
+                'command'   => array('fore' => '#0080FF'),
+                'comment1'  => array('fore' => '#8000FF'),
+                'comment2'  => array('fore' => '#8000FF'),
+                'selected1' => array('fore' => '#EE0000'),
+                'selected2' => array('fore' => '#008080'),
+
             ),
             'specchars' => array('&', '>', '<'),
         ),
@@ -121,6 +134,19 @@ class Highlight {
             'delimiter' => array(
                 '.', ',', ':', ';', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!', '?', '&'
             ),
+        ),
+        'idle' => array(
+            'colors' => array(
+                'default'    => array('fore' => '#808000'),
+                'idleprompt' => array('fore' => '#AAAAFF'),
+                'command'    => array('fore' => '#0080FF'),
+                'comment1'   => array('fore' => '#8000FF'),
+                'comment2'   => array('fore' => '#8000FF'),
+                'selected1'  => array('fore' => '#EE0000'),
+                'selected2'  => array('fore' => '#008080'),
+
+            ),
+            'specchars' => array('&', '>', '<'),        
         ),
         'php' => array(
             'colors' => array(
@@ -235,6 +261,55 @@ class Highlight {
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
     }
+    
+    public function highlightCLI($code) {
+
+        $this->init($code, 'cli');
+
+        foreach ($this->settings[$this->lang]['specchars'] as $value) {
+            $specchars[] = '\\'.$value;
+        }
+
+        $this->pattern = array(
+            'comment1'  => '~^# .*$~m',                     // комментарий
+            'comment2'  => '~ # .*$~m',                     // комментарий
+            'command'   => '~(?<=^(\$|\>) ).*$~m',          // команда
+            'cliprompt' => '~^(\$|\>)(?= )~m',               // приглашение
+            'selected1' => '~\[red\].*?\[/red\]~',          // выделить текст
+            'selected2' => '~\[grn\].*?\[/grn\]~',          // выделить текст
+            'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
+        );
+
+        $this->hl();
+
+        $this->code = str_replace(array('[red]', '[grn]', '[/red]', '[/grn]'), '', $this->code);
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
+    
+    public function highlightCode($code) {
+
+        $this->init($code, 'code');
+
+        foreach ($this->settings[$this->lang]['specchars'] as $value) {
+            $specchars[] = '\\'.$value;
+        }
+
+        $this->pattern = array(
+            'selected1' => '~\[red\].*?\[/red\]~',      // выделить текст
+            'selected2' => '~\[grn\].*?\[/grn\]~',      // выделить текст
+            'selected3' => '~\[border\].*?\[/border\]~',// выделить текст
+            'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
+        );
+
+        $this->hl();
+
+        $this->code = str_replace(array('[red]', '[grn]', '[border]', '[/red]', '[/grn]', '[/border]'), '', $this->code);
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
 
     public function highlightCSS($code) {
 
@@ -332,6 +407,32 @@ class Highlight {
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
     }
+    
+    public function highlightIDLE($code) {
+
+        $this->init($code, 'idle');
+
+        foreach ($this->settings[$this->lang]['specchars'] as $value) {
+            $specchars[] = '\\'.$value;
+        }
+
+        $this->pattern = array(
+            'comment1'   => '~^# .*$~m',                     // комментарий
+            'comment2'   => '~ # .*$~m',                     // комментарий
+            'command'    => '~(?<=^(\>{3}|\.{3}) ).*$~m',     // команда
+            'idleprompt' => '~^(>{3}|\.{3})(?= )~m',          // приглашение
+            'selected1'  => '~\[red\].*?\[/red\]~',          // выделить текст
+            'selected2'  => '~\[grn\].*?\[/grn\]~',          // выделить текст
+            'specchars'  => '~'.implode('|', $specchars).'~' // спец.символы
+        );
+
+        $this->hl();
+
+        $this->code = str_replace(array('[red]', '[grn]', '[/red]', '[/grn]'), '', $this->code);
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
 
     public function highlightPHP($code) {
 
@@ -384,28 +485,6 @@ class Highlight {
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
-    }
-
-    public function highlightCode($code) {
-
-        $this->init($code, 'code');
-
-        foreach ($this->settings[$this->lang]['specchars'] as $value) {
-            $specchars[] = '\\'.$value;
-        }
-
-        $this->pattern = array(
-            'selected1' => '~\[red\].*?\[/red\]~',      // выделить текст
-            'selected2' => '~\[grn\].*?\[/grn\]~',      // выделить текст
-            'selected3' => '~\[border\].*?\[/border\]~',// выделить текст
-            'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
-        );
-
-        $this->hl();
-
-        $this->code = str_replace(array('[red]', '[grn]', '[border]', '[/red]', '[/grn]', '[/border]'), '', $this->code);
-
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
     }
 
     private function hl() {
