@@ -9,19 +9,19 @@
     font-family: "DejaVuSansMonoBold";
     src: url("../../font/DejaVuSansMonoBold.ttf") format("truetype");
     font-style: normal;
-    font-weight: normal;
+    font-weight: bold;
 }
 
 @font-face {
     font-family: "DejaVuSansMonoItalic";
     src: url("../../font/DejaVuSansMonoItalic.ttf") format("truetype");
-    font-style: normal;
+    font-style: italic;
     font-weight: normal;
 }
 
 @font-face {
     font-family: "DejaVuSansMonoBoldItalic";
     src: url("../../font/DejaVuSansMonoBoldItalic.ttf") format("truetype");
-    font-style: normal;
-    font-weight: normal;
+    font-style: italic;
+    font-weight: bold;
 }
