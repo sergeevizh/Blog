@@ -18,19 +18,19 @@ class Highlight {
                 'variable1'   => array('fore' => '#808000'),
                 'variable2'   => array('fore' => '#808000'),
                 'spec-var'    => array('fore' => '#808000'),
-                'express1'    => array('back' => '#FFEEEE'),
-                'express2'    => array('back' => '#FFEEEE'),
-                'execute1'    => array('back' => '#FFFFEE'),
-                'execute2'    => array('back' => '#FFFFEE'),
-                'execute3'    => array('back' => '#FFFFEE'),
-                'test-ext'    => array('back' => '#EEEEFF'),
+                'express'     => array('back' => '#FFF0F0'),
+                'execute1'    => array('back' => '#FFFFEB'),
+                'execute2'    => array('back' => '#FFFFFF'),
+                'execute3'    => array('back' => '#FFFFFF'),
                 'keyword'     => array('fore' => '#8000FF'),
-                'digit'       => array('fore' => '#DD00DD'),
-                'delimiter'   => array('fore' => '#FF0000'),
+                'command'     => array('fore' => '#CC6600'),
                 'number'      => array('fore' => '#CCCCCC'),
             ),
             'keyword' => array(
-                'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'exit', 'function'
+                'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'function',
+            ),
+            'command' => array(
+                'exit', 'exec', 'export', 'read', 'shift'
             ),
             'delimiter' => array(
                 ';', '&&', '\|\|', '\[', '\]', '\(\(', '\)\)'
@@ -41,20 +41,19 @@ class Highlight {
                 'default'   => array('fore'   => '#0080FF'),
                 'selected1' => array('fore'   => '#EE0000'),
                 'selected2' => array('fore'   => '#008080'),
-                'selected3' => array('border' => '#EE0000'),
+                'selected3' => array('border' => '#FF0000'),
             ),
             'specchars' => array('&', '>', '<'),
         ),
         'cli' => array(
             'colors' => array(
-                'default'   => array('fore' => '#808000'),
-                'cliprompt' => array('fore' => '#AAAAFF'),
-                'command'   => array('fore' => '#0080FF'),
-                'comment1'  => array('fore' => '#8000FF'),
-                'comment2'  => array('fore' => '#8000FF'),
+                'default'   => array('fore' => '#0080FF'),
+                'cliprompt' => array('fore' => '#AAAAAA'),
+                'command'   => array('fore' => '#8000FF'),
+                'comment1'  => array('fore' => '#888888'),
+                'comment2'  => array('fore' => '#888888'),
                 'selected1' => array('fore' => '#EE0000'),
                 'selected2' => array('fore' => '#008080'),
-
             ),
             'specchars' => array('&', '>', '<'),
         ),
@@ -137,16 +136,15 @@ class Highlight {
         ),
         'idle' => array(
             'colors' => array(
-                'default'    => array('fore' => '#808000'),
-                'idleprompt' => array('fore' => '#AAAAFF'),
-                'command'    => array('fore' => '#0080FF'),
-                'comment1'   => array('fore' => '#8000FF'),
-                'comment2'   => array('fore' => '#8000FF'),
+                'default'    => array('fore' => '#0080FF'),
+                'idleprompt' => array('fore' => '#AAAAAA'),
+                'command'    => array('fore' => '#8000FF'),
+                'comment1'   => array('fore' => '#888888'),
+                'comment2'   => array('fore' => '#888888'),
                 'selected1'  => array('fore' => '#EE0000'),
                 'selected2'  => array('fore' => '#008080'),
-
             ),
-            'specchars' => array('&', '>', '<'),        
+            'specchars' => array('&', '>', '<'),
         ),
         'php' => array(
             'colors' => array(
@@ -174,7 +172,7 @@ class Highlight {
                 'true', 'false', 'null', 'int', 'float', 'bool'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents'
+                'echo', 'exit', 'die', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen'
             ),
             'constant' => array(
                 '__FUNCTION__', '__CLASS__', '__METHOD__'
@@ -242,17 +240,14 @@ class Highlight {
             'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|!)~i',// специальные переменные
             'variable1'   => '~\$[a-z_][a-z0-9_]*~i',     // переменные
             'variable2'   => '~\$\{[^}]+\}?~i',           // переменные
-            //'express1'    => '~\$?\(\([^)(]+\)\)~',       // вычисление арифметического выражения
+            'express'     => '~\$?\(\([^)(]+\)\)~',       // вычисление арифметического выражения
             'execute1'    => '~\$\([^)(]+\)~',            // подстановка результата выполнения
-            //'express2'    => '~\$?\(\([^)(]+\)\)~',       // вычисление арифметического выражения
             'execute2'    => '~\$\([^)(]+\)~',            // подстановка результата выполнения
             'execute3'    => '~\`[^`]+`~',                // подстановка результата выполнения
             'string1'     => '~"[^"]*"~',                 // строки в двойных кавычках
             'string2'     => "~'[^']*'~",                 // строки в одинарных кавычках
-            //'test-ext'    => '~\[(\[)? .+? (?(1)\])\]~',         // команда test или конструкция [[...]]
             'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~i', // ключевые слова
-            //'digit'     => '~(?<!&)\b\d+\b(?!\>)~',     // цифры (просмотр вперед и назад для потоков)
-            //'delimiter' => '~'.implode('|', $this->settings[$this->lang]['delimiter']).'~',   // разделители
+            'command'     => '~\b('.implode('|', $this->settings[$this->lang]['command']).')\b~i', // команды
             'bin-bash'    => "~^#!/[-/a-z]+~",            // что-то типа #!/bin/bash
         );
 
@@ -261,7 +256,7 @@ class Highlight {
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
     }
-    
+
     public function highlightCLI($code) {
 
         $this->init($code, 'cli');
@@ -287,7 +282,7 @@ class Highlight {
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
     }
-    
+
     public function highlightCode($code) {
 
         $this->init($code, 'code');
@@ -297,9 +292,9 @@ class Highlight {
         }
 
         $this->pattern = array(
-            'selected1' => '~\[red\].*?\[/red\]~',      // выделить текст
-            'selected2' => '~\[grn\].*?\[/grn\]~',      // выделить текст
-            'selected3' => '~\[border\].*?\[/border\]~',// выделить текст
+            'selected1' => '~\[red\].*?\[/red\]~',          // выделить текст
+            'selected2' => '~\[grn\].*?\[/grn\]~',          // выделить текст
+            'selected3' => '~\[border\].*?\[/border\]~',    // выделить текст
             'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
         );
 
@@ -407,7 +402,7 @@ class Highlight {
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
     }
-    
+
     public function highlightIDLE($code) {
 
         $this->init($code, 'idle');
@@ -419,8 +414,8 @@ class Highlight {
         $this->pattern = array(
             'comment1'   => '~^# .*$~m',                     // комментарий
             'comment2'   => '~ # .*$~m',                     // комментарий
-            'command'    => '~(?<=^(\>{3}|\.{3}) ).*$~m',     // команда
-            'idleprompt' => '~^(>{3}|\.{3})(?= )~m',          // приглашение
+            'command'    => '~(?<=^(\>{3}|\.{3}) ).*$~m',    // команда
+            'idleprompt' => '~^(>{3}|\.{3})(?= )~m',         // приглашение
             'selected1'  => '~\[red\].*?\[/red\]~',          // выделить текст
             'selected2'  => '~\[grn\].*?\[/grn\]~',          // выделить текст
             'specchars'  => '~'.implode('|', $specchars).'~' // спец.символы

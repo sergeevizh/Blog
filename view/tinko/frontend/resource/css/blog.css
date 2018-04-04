@@ -30,11 +30,11 @@
         }
             #posts-list > div > div:last-child .post-date {
                 margin-bottom: 2px;
-                font-size: 12px;
+                font-size: 11px;
                 color: #969696;
             }
             #posts-list > div > div:last-child .post-heading {
-
+                margin-bottom: 6px;
             }
                 #posts-list > div > div:last-child .post-heading h2,
                 #posts-list > div > div:last-child .post-heading h3 {
@@ -46,11 +46,12 @@
                         font-size: 16px;
                     }
             #posts-list > div > div:last-child > .post-excerpt {
-                margin-bottom: 10px;
+                margin-bottom: 8px;
             }
             #posts-list > div > div:last-child > .post-ctg-tags {
                 font-size: 12px;
                 overflow: hidden;
+                color: #969696;
             }
                 #posts-list > div > div:last-child > .post-ctg-tags > div {
                     width: 50%;

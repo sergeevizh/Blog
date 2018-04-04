@@ -11,6 +11,7 @@ $css = array(
             'reset.css',
             'common.css',
             'awesome/font-awesome.min.css',
+            'dejavu/font-dejavu.css',
         ),
         'index'           => array(          // главная страница сайта
             'index.css',

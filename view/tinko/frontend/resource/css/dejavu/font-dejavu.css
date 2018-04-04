@@ -1,0 +1,27 @@
+@font-face {
+    font-family: "DejaVuSansMono";
+    src: url("../../font/DejaVuSansMono.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "DejaVuSansMonoBold";
+    src: url("../../font/DejaVuSansMonoBold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "DejaVuSansMonoItalic";
+    src: url("../../font/DejaVuSansMonoItalic.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "DejaVuSansMonoBoldItalic";
+    src: url("../../font/DejaVuSansMonoBoldItalic.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
