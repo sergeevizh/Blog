@@ -276,7 +276,15 @@ pre {
 /* универсальная таблица */
 .data-table {
     border-collapse: collapse;
+    margin: 15px 0;
 }
+    .data-table caption {
+        text-align: left;
+        color: #000000;
+        font-weight: normal;
+        text-shadow: 1px 1px 1px #ccc;
+        margin-bottom: 5px;
+    }
     .data-table td, .data-table th {
         padding: 5px;
         vertical-align:top;

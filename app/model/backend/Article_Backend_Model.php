@@ -429,7 +429,7 @@ class Article_Backend_Model extends Backend_Model {
             $query = "UPDATE
                           `article_categories`
                       SET
-                          `parent`      = :parent.
+                          `parent`      = :parent,
                           `name`        = :name,
                           `keywords`    = :keywords,
                           `description` = :description,
