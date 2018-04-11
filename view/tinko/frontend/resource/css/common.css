@@ -261,6 +261,7 @@ code {
 }
 pre {
     font-family: "DejaVuSansMono", monospace;
+    font-size: 13px;
     background: #f5f5f5;
     border: 0.5px solid #d1d1d1;
     padding: 5px;
@@ -296,6 +297,23 @@ pre {
         font-weight: normal;
         text-align: left;
     }
+
+/* список в несколько колонок */
+.two-columns {
+    column-count: 2;
+    list-style: none;
+    margin-left: 0 !important;
+}
+.three-columns {
+    column-count: 3;
+    list-style: none;
+    margin-left: 0 !important;
+}
+.four-columns {
+    column-count: 4;
+    list-style: none;
+    margin-left: 0 !important;
+}
 
 /* хлебные крошки */
 #breadcrumbs {
