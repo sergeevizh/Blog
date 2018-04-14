@@ -13,6 +13,7 @@ class Blog_Frontend_Model extends Frontend_Model {
      * Возвращает массив всех записей (постов) блога
      */
     public function getAllPosts($start = 0) {
+
         $query = "SELECT
                       `a`.`id` AS `id`, `a`.`name` AS `name`,
                       `a`.`excerpt` AS `excerpt`,
@@ -72,7 +73,9 @@ class Blog_Frontend_Model extends Frontend_Model {
                 unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
             }
         }
+
         return $posts;
+
     }
 
     /**
@@ -87,6 +90,7 @@ class Blog_Frontend_Model extends Frontend_Model {
      * Возвращает массив записей (постов) категории с уникальным идентификатором $id
      */
     public function getCategoryPosts($id, $start) {
+
         $query = "SELECT
                       `a`.`id` AS `id`, `a`.`name` AS `name`, `a`.`excerpt` AS `excerpt`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
@@ -152,6 +156,7 @@ class Blog_Frontend_Model extends Frontend_Model {
         }
 
         return $posts;
+
     }
 
     /**
@@ -172,6 +177,7 @@ class Blog_Frontend_Model extends Frontend_Model {
      * Возвращает информацию о записи блога с уникальным идентификатором $id
      */
     public function getPost($id) {
+
         $query = "SELECT
                       `a`.`name` AS `name`, `a`.`keywords` AS `keywords`,
                       `a`.`description` AS `description`,
@@ -220,7 +226,9 @@ class Blog_Frontend_Model extends Frontend_Model {
         }
         // подсвечиваем код
         $post['body'] = $this->highlightCodeBlocks($post['body']);
+
         return $post;
+
     }
 
     /**
