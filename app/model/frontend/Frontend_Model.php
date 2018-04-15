@@ -75,7 +75,7 @@ abstract class Frontend_Model extends Base_Model {
             case 'php'   : return $hl->highlightPHP($code);
             case 'mysql' : return $this->highlightMysql($code);
             case 'язык'  : return $hl->highlightERP($code);
-            case 'запрос': return $this->highlightQuery($code);
+            case 'запрос': return $hl->highlightQuery($code);
             case 'python': return $hl->highlightPython($code);
             case 'idle'  : return $hl->highlightIDLE($code);
             case 'bash'  : return $hl->highlightBash($code);

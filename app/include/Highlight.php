@@ -133,6 +133,20 @@ class Highlight {
                 '.', ',', ':', ';', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!', '?', '&'
             ),
         ),
+        'html' => array(
+            'colors' => array(
+                'default'   => array('fore' => '#222222'),
+                'doctype'   => array('fore' => '#8B008B'),
+                'comment'   => array('fore' => '#888888'),
+                'string'    => array('fore' => '#0080FF'),
+                'element'   => array('fore' => '#008080'),
+                'entity'    => array('fore' => '#8000FF'),
+                'attrname'  => array('fore' => '#808000'),
+                'attrvalue' => array('fore' => '#0080FF'),
+                'equal'     => array('fore' => '#EE0000'),
+                'number'    => array('fore' => '#CCCCCC'),
+            ),
+        ),
         'idle' => array(
             'colors' => array(
                 'default'    => array('fore' => '#0080FF'),
@@ -205,20 +219,32 @@ class Highlight {
                 '.', ',', ':', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!'
             ),
         ),
-        'html' => array(
+        'query' => array(
             'colors' => array(
-                'default'   => array('fore' => '#222222'),
-                'doctype'   => array('fore' => '#8B008B'),
-                'comment'   => array('fore' => '#888888'),
+                'default'   => array('fore' => '#008080'),
                 'string'    => array('fore' => '#0080FF'),
-                'element'   => array('fore' => '#008080'),
-                'entity'    => array('fore' => '#8000FF'),
-                'attrname'  => array('fore' => '#808000'),
-                'attrvalue' => array('fore' => '#0080FF'),
-                'equal'     => array('fore' => '#EE0000'),
+                'keyword1'  => array('fore' => '#8000FF'),
+                'keyword2'  => array('fore' => '#FF0080'),
+                'function'  => array('fore' => '#808000'),
+                'parameter' => array('fore' => '#FF7000'),
+                'digit'     => array('fore' => '#FF00FF'),
+                'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
             ),
+            'keyword1' => array(
+                'ВЫБРАТЬ', 'ПЕРВЫЕ', 'РАЗЛИЧНЫЕ', 'РАЗРЕШЕННЫЕ', 'ИЗ', 'СОЕДИНЕНИЕ', 'ЛЕВОЕ', 'ПРАВОЕ', 'ПО', 'ГДЕ', 'В', 'ИЕРАРХИИ', 'МЕЖДУ', 'ПОДОБНО', 'ЕСТЬ', 'СГРУППИРОВАТЬ', 'ПО', 'УПОРЯДОЧИТЬ', 'ИМЕЮЩИЕ', 'ИТОГИ', 'КАК', 'ВЫБОР', 'КОГДА', 'ИНАЧЕ', 'КОНЕЦ', 'ТОЛЬКО', 'ИЕРАРХИЯ', 'И', 'ИЛИ', 'НЕ'
+            ),
+            'keyword2' => array(
+                'ИСТИНА', 'ЛОЖЬ', 'NULL'
+            ),
+            'function'=> array(
+                'СУММА', 'ЕСТЬNULL', 'ПРЕДСТАВЛЕНИЕ', 'ПРЕДСТАВЛЕНИЕССЫЛКИ', 'ВЫРАЗИТЬ', 'ЗНАЧЕНИЕ', 'РАЗНОСТЬДАТ', 'ДОБАВИТЬКДАТЕ', 'НАЧАЛОПЕРИОДА', 'КОНЕЦПЕРИОДА'
+            ),
+            'delimiter' => array(
+                '.', ',', '=', '(', ')', '{', '}', '>', '<'
+            ),
         )
+
     );
 
     private $lang = 'code', $source = array(), $replace = array(), $pattern = array();
@@ -264,7 +290,7 @@ class Highlight {
         $this->pattern = array(
             'comment'   => '~(?<= )# .*$~m',                // комментарий
             'command'   => '~(?<=^(\$|\>) ).*$~m',          // команда
-            'cliprompt' => '~^(\$|\>)(?= )~m',              // приглашение
+            'cliprompt' => '~^(\$|\>)(?= |$)~m',              // приглашение
             'selected1' => '~\[red\].*?\[/red\]~',          // выделить текст
             'selected2' => '~\[grn\].*?\[/grn\]~',          // выделить текст
             'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
@@ -463,6 +489,29 @@ class Highlight {
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
             'function'  => '~(?<!\.)('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~i', // встроенные функции
             'digit'     => '~\b\d+\b~',            // цифры
+            'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
+        );
+
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
+
+    public function highlightQuery($code) {
+
+        $this->init($code, 'query');
+
+        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+        $this->pattern = array(
+            'string'    => '~"[^"]*"~',  // строки
+            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~ui',  // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~ui',  // ключевые слова
+            'function'  => '~\b('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~ui', // функции
+            'parameter' => '~&[а-яё]+\b~ui', // параметр
+            'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
