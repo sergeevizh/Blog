@@ -83,7 +83,7 @@ class Highlight {
                 'string'    => array('fore' => '#0000FF'),
                 'keyword1'  => array('fore' => '#8B008B'),
                 'keyword2'  => array('fore' => '#8000FF'),
-                'keyword3'  => array('fore' => '#EE00EE'),
+                'keyword3'  => array('fore' => '#CC00CC'),
                 'directive' => array('fore' => '#808000'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
@@ -97,7 +97,7 @@ class Highlight {
                 'Пока', 'Для', 'Каждого', 'Из', 'Цикл', 'КонецЦикла', 'Прервать', 'Продолжить', 'Если', 'Тогда', 'Иначе', 'ИначеЕсли', 'КонецЕсли', 'Попытка', 'Исключение', 'КонецПопытки', 'Новый'
             ),
             'keyword3' => array(
-                'Истина', 'Ложь', 'НЕ', 'И', 'ИЛИ'
+                'Истина', 'Ложь', 'НЕ', 'И', 'ИЛИ', 'Неопределено'
             ),
             'directive' => array(
                 '&НаКлиенте', '&НаСервере', '&НаСервереБезКонтекста', '&НаСервереНаКлиенте', '&НаКлиентеНаСервереБезКонтекста'
@@ -222,7 +222,9 @@ class Highlight {
         'query' => array(
             'colors' => array(
                 'default'   => array('fore' => '#008080'),
-                'string'    => array('fore' => '#0080FF'),
+                'comment'   => array('fore' => '#888888'),
+                'string'    => array('fore' => '#0000FF'),
+                'property'  => array('fore' => '#0080FF'),
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#FF0080'),
                 'function'  => array('fore' => '#808000'),
@@ -232,16 +234,16 @@ class Highlight {
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'ВЫБРАТЬ', 'ПЕРВЫЕ', 'РАЗЛИЧНЫЕ', 'РАЗРЕШЕННЫЕ', 'ИЗ', 'СОЕДИНЕНИЕ', 'ЛЕВОЕ', 'ПРАВОЕ', 'ПО', 'ГДЕ', 'В', 'ИЕРАРХИИ', 'МЕЖДУ', 'ПОДОБНО', 'ЕСТЬ', 'СГРУППИРОВАТЬ', 'ПО', 'УПОРЯДОЧИТЬ', 'ИМЕЮЩИЕ', 'ИТОГИ', 'КАК', 'ВЫБОР', 'КОГДА', 'ИНАЧЕ', 'КОНЕЦ', 'ТОЛЬКО', 'ИЕРАРХИЯ', 'И', 'ИЛИ', 'НЕ'
+                'ВЫБРАТЬ', 'ПЕРВЫЕ', 'РАЗЛИЧНЫЕ', 'РАЗРЕШЕННЫЕ', 'ПОМЕСТИТЬ', 'ИЗ', 'СОЕДИНЕНИЕ', 'ЛЕВОЕ', 'ПРАВОЕ', 'ПО', 'ГДЕ', 'В', 'ИЕРАРХИИ', 'МЕЖДУ', 'ПОДОБНО', 'ЕСТЬ', 'СГРУППИРОВАТЬ', 'ПО', 'УПОРЯДОЧИТЬ', 'ИМЕЮЩИЕ', 'ИТОГИ', 'КАК', 'ВЫБОР', 'КОГДА', 'ИНАЧЕ', 'КОНЕЦ', 'ТОЛЬКО', 'ИЕРАРХИЯ', 'ССЫЛКА', 'И', 'ИЛИ', 'НЕ'
             ),
             'keyword2' => array(
                 'ИСТИНА', 'ЛОЖЬ', 'NULL'
             ),
             'function'=> array(
-                'СУММА', 'ЕСТЬNULL', 'ПРЕДСТАВЛЕНИЕ', 'ПРЕДСТАВЛЕНИЕССЫЛКИ', 'ВЫРАЗИТЬ', 'ЗНАЧЕНИЕ', 'РАЗНОСТЬДАТ', 'ДОБАВИТЬКДАТЕ', 'НАЧАЛОПЕРИОДА', 'КОНЕЦПЕРИОДА'
+                'СУММА', 'ЕСТЬNULL', 'ПРЕДСТАВЛЕНИЕ', 'ПРЕДСТАВЛЕНИЕССЫЛКИ', 'ВЫРАЗИТЬ', 'ЗНАЧЕНИЕ', 'РАЗНОСТЬДАТ', 'ДОБАВИТЬКДАТЕ', 'НАЧАЛОПЕРИОДА', 'КОНЕЦПЕРИОДА', 'ТИП', 'ТИПЗНАЧЕНИЯ', 'ВЫРАЗИТЬ'
             ),
             'delimiter' => array(
-                '.', ',', '=', '(', ')', '{', '}', '>', '<'
+                '.', ',', '=', '(', ')', '{', '}', '>', '<', '!'
             ),
         )
 
@@ -290,7 +292,7 @@ class Highlight {
         $this->pattern = array(
             'comment'   => '~(?<= )# .*$~m',                // комментарий
             'command'   => '~(?<=^(\$|\>) ).*$~m',          // команда
-            'cliprompt' => '~^(\$|\>)(?= |$)~m',              // приглашение
+            'cliprompt' => '~^(\$|\>)(?= |$)~m',            // приглашение
             'selected1' => '~\[red\].*?\[/red\]~',          // выделить текст
             'selected2' => '~\[grn\].*?\[/grn\]~',          // выделить текст
             'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
@@ -459,7 +461,6 @@ class Highlight {
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
-            'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings[$this->lang]['function']).')\b\s?(?=\()~i', // встроенные функции
             'constant'  => '~\b('.implode('|', $this->settings[$this->lang]['constant']).')\b~i', // встроенные контстанты
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
@@ -507,8 +508,10 @@ class Highlight {
         }
         $this->pattern = array(
             'string'    => '~"[^"]*"~',  // строки
-            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~ui',  // ключевые слова
-            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~ui',  // ключевые слова
+            'comment'   => '~\/\/.*$~m', // комментарии
+            'property'  => '~(?<=\{)[^}{]*(?=\})~',   // характеристики
+            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b(?= |$)~mu',  // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b(?= |$)~mui', // ключевые слова
             'function'  => '~\b('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~ui', // функции
             'parameter' => '~&[а-яё]+\b~ui', // параметр
             'digit'     => '~\b\d+\b~', // цифры
@@ -524,6 +527,7 @@ class Highlight {
     private function hl() {
 
         foreach ($this->pattern as $color => $regexp) {
+
             $offset = 0;
             while (preg_match($regexp, $this->code, $match, PREG_OFFSET_CAPTURE, $offset)) {
 
@@ -531,6 +535,21 @@ class Highlight {
                 $offset = $match[0][1];
                 $length = strlen($match[0][0]);
                 $tmp = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $match[0][0]);
+
+                // TODO: оформить этот хак по-человечески
+                if ($this->lang == 'erp' && $color == 'string' && '"ВЫБРАТЬ' == iconv_substr($tmp, 0, 8)) {
+                    $tmp = preg_replace(
+                        '~\b('.implode('|', $this->settings['query']['keyword1']).')\b(?= |$)~mu',
+                        '<span style="color:#0000AA">$0</span>',
+                        $tmp
+                    );
+                    $tmp = preg_replace(
+                        '~\b('.implode('|', $this->settings['query']['function']).')(?=\()~ui',
+                        '<span style="color:#0000AA">$0</span>',
+                        $tmp
+                    );
+
+                }
 
                 $styles = array();
                 if (isset($this->settings[$this->lang]['colors'][$color]['fore'])) {
@@ -557,6 +576,7 @@ class Highlight {
                 $offset = $offset + strlen($rand);
 
             }
+
         }
 
         $this->source = array_reverse($this->source);

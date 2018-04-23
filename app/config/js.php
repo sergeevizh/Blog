@@ -14,10 +14,6 @@ $js = array(
             'center.js',
             'common.js',
         ),
-        'index'           => array(              // главная страница сайта
-            'index.js',
-            'tabs.js',
-        ),
         'blog'            => array(              // блог
             'fancybox/jquery.mousewheel-3.0.6.pack.js',
             'fancybox/jquery.fancybox.pack.js',

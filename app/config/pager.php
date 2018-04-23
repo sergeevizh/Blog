@@ -5,7 +5,7 @@ defined('ZCMS') or die('Access denied');
 $pager = array(                // постраничная навигация
     'frontend' => array(       // общедоступная часть сайта
         'article'   => array(
-            'perpage'   => 6,  // статей на страницу
+            'perpage'   => 10,  // статей на страницу
             'leftright' => 2,  // кол-во ссылок слева и справа
         ),
         'blog'      => array(

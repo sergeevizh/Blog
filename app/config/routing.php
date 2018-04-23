@@ -1,6 +1,5 @@
 <?php
 defined('ZCMS') or die('Access denied');
-
 // см. файл app/config/config.php
 $routing = array( // поддержка ЧПУ (SEF) для общедоступной части сайта
     'enable'  => true,
@@ -10,7 +9,6 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
          */
         '~^frontend/index/index$~i' =>
         '',
-
         /*
          * блог
          */
@@ -38,7 +36,6 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         // список всех тегов блога
         '~^frontend/blog/alltags$~i' =>
         'blog/alltags',
-
         /*
          * статьи
          */
@@ -57,21 +54,18 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         // список статей выбранной категории, постраничная навигация
         '~^frontend/article/category/id/(\d+)/page/(\d+)$~i' =>
         'articles/category/$1/page/$2',
-
         /*
          * карта сайта
          */
         '~^frontend/sitemap/index$~i' =>
         'sitemap',
     ),
-
     'sef2cap' => array( // Search Engines Friendly => Controller/Action/Params
         /*
          * главная страница сайта
          */
         '~^$~' =>
         'frontend/index/index',
-
         /*
          * блог
          */
@@ -117,7 +111,6 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         // список статей выбранной категории, постраничная навигация
         '~^articles/category/(\d+)/page/(\d+)$~i' =>
         'frontend/article/category/id/$1/page/$2',
-
         /*
          * карта сайта
          */

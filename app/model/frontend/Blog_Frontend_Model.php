@@ -346,10 +346,8 @@ class Blog_Frontend_Model extends Frontend_Model {
                 unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
             }
         }
-
         return $posts;
     }
-
     /**
      * Возвращает количество новостей в категории с уникальным идентификатором $id
      */
@@ -371,6 +369,7 @@ class Blog_Frontend_Model extends Frontend_Model {
      * Вызвращает массив всех тегов блога
      */
     public function getAllTags() {
+
         $query = "SELECT
                       `id`, `name`
                   FROM
@@ -384,6 +383,7 @@ class Blog_Frontend_Model extends Frontend_Model {
             $tags[$k]['url'] = $this->getURL('frontend/blog/tags/ids/' . $v['id']);
         }
         return $tags;
+
     }
 
     /**

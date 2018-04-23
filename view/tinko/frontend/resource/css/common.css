@@ -315,6 +315,16 @@ pre {
     margin-left: 0 !important;
 }
 
+/* формы */
+input[type="submit"] {
+    background: #395985;
+    border: 1px solid #395985;
+    color: #fff;
+    margin-top: 15px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
 /* хлебные крошки */
 #breadcrumbs {
     border: 1px solid #d1d1d1;
