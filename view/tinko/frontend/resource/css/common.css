@@ -198,13 +198,13 @@ body > .wrapper {
     text-shadow: 1px 1px 1px #ccc;
 }
 #content h1 {
-    font-size: 24px;
+    font-size: 25px;
 }
 #content h2 {
-    font-size: 20px;
+    font-size: 21px;
 }
 #content h3 {
-    font-size: 16px;
+    font-size: 15px;
 }
 #content h4 {
     font-size: 14px;
@@ -358,19 +358,20 @@ input[type="submit"] {
     }
 
 /* постраничная навигация */
-.pager {
+#content .pager {
     overflow: hidden;
     margin-top: 20px;
+    margin-left: 0;
 }
-    .pager li {
+    #content .pager li {
         list-style: none;
         float: left;
         margin-right: 15px;
     }
-    .pager li:last-child {
+    #content .pager li:last-child {
         margin-right: 0;
     }
-        .pager li a {
+        #content .pager li a {
             display: block;
             width: 26px;
             height: 26px;
@@ -381,19 +382,19 @@ input[type="submit"] {
             color: #fff;
             text-decoration: none;
         }
-        .pager li a.next-page {
+        #content .pager li a.next-page {
              background: #395985 url(../img/next-page.png) center center no-repeat;
         }
-        .pager li a.prev-page {
+        #content .pager li a.prev-page {
             background: #395985 url(../img/prev-page.png) center center no-repeat;
         }
-        .pager li a.first-page {
+        #content .pager li a.first-page {
             background: #395985 url(../img/first-page.png) center center no-repeat;
         }
-        .pager li a.last-page {
+        #content .pager li a.last-page {
             background: #395985 url(../img/last-page.png) center center no-repeat;
         }
-        .pager li span {
+        #content .pager li span {
             display: block;
             width: 26px;
             height: 26px;
@@ -449,6 +450,9 @@ input[type="submit"] {
 #left {
     display: none;
 }
+/*
+ * ЦЕНТРАЛЬНАЯ КОЛОНКА
+ */
 #content {
     margin-left: 0;
     padding-left: 0;
@@ -457,6 +461,22 @@ input[type="submit"] {
 /*
  * ПРАВАЯ КОЛОНКА
  */
+#right {
+
+}
+    #right .tags {
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+    }
+        #right > div > div:last-child > ul.tags > li {
+            font-size: 9px;
+            color: #969696;
+            letter-spacing: -0.5px;
+        }
+            #right > div > div:last-child > ul.tags > li > a {
+                font-size: 12px;
+            }
 
 
 /*

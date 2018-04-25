@@ -349,7 +349,7 @@ class Blog_Frontend_Model extends Frontend_Model {
         return $posts;
     }
     /**
-     * Возвращает количество новостей в категории с уникальным идентификатором $id
+     * Возвращает количество постов в категории с уникальным идентификатором $id
      */
     public function getCountPostsByTags($ids) {
         $ids = implode(',', $ids);
@@ -371,13 +371,48 @@ class Blog_Frontend_Model extends Frontend_Model {
     public function getAllTags() {
 
         $query = "SELECT
-                      `id`, `name`
+                      `a`.`id`, `a`.`name`, COUNT(*) AS `count`
                   FROM
-                      `blog_tags`
+                      `blog_tags` `a`
+                      INNER JOIN `blog_post_tag` `b` ON `a`.`id` = `b`.`tag_id`
+                      INNER JOIN `blog_posts` `c` ON `b`.`post_id` = `c`.`id`
+                      INNER JOIN `blog_categories` `d` ON `c`.`category` = `d`.`id`
                   WHERE
                       1
+                  GROUP BY
+                      1, 2
                   ORDER BY
-                      `name`";
+                      `a`.`name`";
+        $tags = $this->database->fetchAll($query);
+        foreach ($tags as $k => $v) {
+            $tags[$k]['url'] = $this->getURL('frontend/blog/tags/ids/' . $v['id']);
+        }
+        return $tags;
+
+    }
+
+    /**
+     * Вызвращает массив тегов блога для боковой клонки
+     */
+    public function getSideTags() {
+
+        $query = "SELECT
+                      `a`.`id` AS `id`,
+                      IF(CHAR_LENGTH(`a`.`name`) > 12, CONCAT(LEFT(`a`.`name`, 11), '…'), `a`.`name`) AS `name`,
+                      COUNT(*) AS `count`
+                  FROM
+                      `blog_tags` `a`
+                      INNER JOIN `blog_post_tag` `b` ON `a`.`id` = `b`.`tag_id`
+                      INNER JOIN `blog_posts` `c` ON `b`.`post_id` = `c`.`id`
+                      INNER JOIN `blog_categories` `d` ON `c`.`category` = `d`.`id`
+                  WHERE
+                      1
+                  GROUP BY
+                      1, 2
+                  HAVING
+                      COUNT(*) > 1
+                  ORDER BY
+                      `a`.`name`";
         $tags = $this->database->fetchAll($query);
         foreach ($tags as $k => $v) {
             $tags[$k]['url'] = $this->getURL('frontend/blog/tags/ids/' . $v['id']);

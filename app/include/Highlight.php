@@ -100,10 +100,10 @@ class Highlight {
                 'Истина', 'Ложь', 'НЕ', 'И', 'ИЛИ', 'Неопределено'
             ),
             'directive' => array(
-                '&НаКлиенте', '&НаСервере', '&НаСервереБезКонтекста', '&НаСервереНаКлиенте', '&НаКлиентеНаСервереБезКонтекста'
+                '&НаКлиентеНаСервереБезКонтекста', '&НаСервереБезКонтекста', '&НаСервереНаКлиенте', '&НаКлиенте', '&НаСервере'
             ),
             'delimiter' => array(
-                '=', ';', '.', '(', ')', '[', ']', ',', '+', '*', '-', '/', '!', '>', '<', '%'
+                '=', ';', '.', '(', ')', '[', ']', ',', '+', '*', '-', '/', '!', '>', '<', '%', '?'
             ),
         ),
         'js' => array(
@@ -165,7 +165,7 @@ class Highlight {
                 'string2'   => array('fore' => '#0000FF'),
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#808000'),
-                'keyword3'  => array('fore' => '#FF00FF'),
+                'keyword3'  => array('fore' => '#DD00DD'),
                 'function'  => array('fore' => '#0080FF'),
                 'constant'  => array('fore' => '#800080'),
                 'digit'     => array('fore' => '#FF00FF'),
@@ -461,6 +461,7 @@ class Highlight {
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
+            'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings[$this->lang]['function']).')\b\s?(?=\()~i', // встроенные функции
             'constant'  => '~\b('.implode('|', $this->settings[$this->lang]['constant']).')\b~i', // встроенные контстанты
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры

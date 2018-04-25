@@ -97,6 +97,10 @@
         -moz-column-count: 5;
         column-count: 5;
     }
+        #all-tags > ul > li > span {
+            font-size: 12px;
+            color: #969696;
+        }
 
 @media screen and (max-width: 560px) {
     /* список постов блога */

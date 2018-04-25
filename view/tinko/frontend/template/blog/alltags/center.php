@@ -32,6 +32,7 @@ defined('ZCMS') or die('Access denied');
             <li>
                 <input type="checkbox" name="tags[]" value="<?php echo $item['id']; ?>" />
                 <a href="<?php echo $item['url']; ?>"><?php echo $item['name']; ?></a>
+                <span>(<?php echo $item['count']; ?>)</span>
             </li>
         <?php endforeach; ?>
         </ul>

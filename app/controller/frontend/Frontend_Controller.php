@@ -136,6 +136,7 @@ abstract class Frontend_Controller extends Base_Controller {
         $this->rightVars = array(
             'blogCategories'    => $this->blogFrontendModel->getCategories(),
             'articleCategories' => $this->articleFrontendModel->getCategories(),
+            'blogTags'          => $this->blogFrontendModel->getSideTags(),
         );
 
         /*

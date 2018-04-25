@@ -36,6 +36,21 @@ defined('ZCMS') or die('Access denied');
 </div>
 
 <div>
+    <div>Облако тегов</div>
+    <div>
+    <?php if (!empty($blogTags)): ?>
+        <ul class="tags">
+        <?php foreach($blogTags as $item): ?>
+            <li>
+                <a href="<?php echo $item['url'] ?>"><?php echo $item['name']; ?></a>&nbsp;(<?php echo $item['count']; ?>)
+            </li>
+        <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+    </div>
+</div>
+
+<div>
     <div>Категории статей</div>
     <div>
     <?php if (!empty($articleCategories)): ?>
@@ -54,20 +69,6 @@ defined('ZCMS') or die('Access denied');
         <?php endforeach; ?>
         </ul>
     <?php endif; ?>
-    </div>
-</div>
-
-<div>
-    <div>Избранное</div>
-    <div>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    </div>
-</div>
-
-<div>
-    <div>Сравнение товаров</div>
-    <div>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </div>
 </div>
 
