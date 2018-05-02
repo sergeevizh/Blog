@@ -35,16 +35,26 @@ defined('ZCMS') or die('Access denied');
 <?php if (!empty($posts)): ?>
     <div id="all-blog-posts">
         <ul>
-            <?php foreach($posts as $item) : ?>
-                <li>
-                    <div><span><?php echo $item['date']; ?></span>&nbsp;&nbsp;<?php echo $item['name']; ?></div>
-                    <div>
-                        <span><?php echo $item['ctg_name']; ?></span>
-                        <a href="<?php echo $item['url']['edit']; ?>" title="Редактировать"><i class="fa fa-pencil-square-o"></i></a>
-                        <a href="<?php echo $item['url']['remove']; ?>" title="Удалить"><i class="fa fa-trash-o"></i></a>
-                    </div>
-                </li>
-            <?php endforeach; ?>
+        <?php foreach($posts as $item) : ?>
+            <li>
+                <div>
+                    <span>
+                        <?php if ($item['visible']): ?>
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        <?php else: ?>
+                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                        <?php endif; ?>
+                        <?php echo $item['date']; ?>
+                    </span>
+                    &nbsp;<?php echo $item['name']; ?>
+                </div>
+                <div>
+                    <span><?php echo $item['ctg_name']; ?></span>
+                    <a href="<?php echo $item['url']['edit']; ?>" title="Редактировать"><i class="fa fa-pencil-square-o"></i></a>
+                    <a href="<?php echo $item['url']['remove']; ?>" title="Удалить"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </li>
+        <?php endforeach; ?>
         </ul>
     </div>
 <?php endif; ?>

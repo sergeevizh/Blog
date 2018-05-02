@@ -5,6 +5,30 @@
 class Highlight {
 
     private $settings = array(
+        'awk' => array(
+            'colors' => array(
+                'default'     => array('fore' => '#008080'),
+                'comment'     => array('fore' => '#888888'),
+                'string'      => array('fore' => '#0080FF'),
+                'spec-var'    => array('fore' => '#808000'),
+                '$variable'   => array('fore' => '#808000'),
+                '$expression' => array('fore' => '#808000'),
+                'keyword'     => array('fore' => '#8000FF'),
+                'begin-end'   => array('fore' => '#008080'),
+                'digit'       => array('fore' => '#FF00FF'),
+                'delimiter'   => array('fore' => '#FF0000'),
+                'number'      => array('fore' => '#CCCCCC'),
+            ),
+            'keyword' => array(
+                'if', 'else', 'for', 'in', 'while', 'do', 'break', 'continue', 'next', 'exit', 'return', 'printf', 'print', 'delete'
+            ),
+            'begin-end' => array(
+                'BEGIN', 'END'
+            ),
+            'delimiter' => array(
+                ',', ';', '=', '{', '}', '(', ')', '*', '+', '/', '-', '>', '<'
+            ),
+        ),
         'bash' => array(
             'colors' => array(
                 'default'     => array('fore' => '#008080'),
@@ -159,6 +183,7 @@ class Highlight {
         'php' => array(
             'colors' => array(
                 'default'   => array('fore' => '#008080'),
+                'startphp'  => array('fore' => '#FF0000'),
                 'comment1'  => array('fore' => '#888888'),
                 'comment2'  => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000EE'),
@@ -245,6 +270,18 @@ class Highlight {
             'delimiter' => array(
                 '.', ',', '=', '(', ')', '{', '}', '>', '<', '!'
             ),
+        ),
+        'xml' => array(
+            'colors' => array(
+                'default'   => array('fore' => '#222222'),
+                'xmldecl'   => array('fore' => '#8B008B'),
+                'comment'   => array('fore' => '#888888'),
+                'element'   => array('fore' => '#008080'),
+                'attrname'  => array('fore' => '#808000'),
+                'attrvalue' => array('fore' => '#0080FF'),
+                'entity'    => array('fore' => '#8000FF'),
+                'number'    => array('fore' => '#CCCCCC'),
+            ),
         )
 
     );
@@ -252,12 +289,38 @@ class Highlight {
     private $lang = 'code', $source = array(), $replace = array(), $pattern = array();
 
 
+    public function highlightAWK($code) {
+
+        $this->init($code, 'awk');
+
+        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+
+        $this->pattern = array(
+            'comment'     => '~# .*~',                    // комментарии
+            'spec-var'    => '~\$[0-9]~',                 // позиционные переменные
+            '$variable'   => '~\$[_a-z][_a-z0-9]*~',      // позиционные переменные
+            '$expression' => '~\$\([^)]+\)~',             // позиционные переменные
+            'string'      => '~"[^"]*"~',                 // строки в двойных кавычках
+            'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~',   // ключевые слова
+            'begin-end'   => '~\b('.implode('|', $this->settings[$this->lang]['begin-end']).')\b~', // BEGIN и END
+            'digit'       => '~\b\d+\b~', // цифры
+            'delimiter'   => '~'.implode('|', $delimiter).'~', // разделители
+        );
+
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
+
     public function highlightBash($code) {
 
         $this->init($code, 'bash');
 
         $this->pattern = array(
-            'here-doc'     => '~\<\<-? ([_A-Z]+).*\1~s',  // here doc
+            'here-doc'    => '~\<\<-? ([_A-Z]+).*\1~s',   // here doc
             'comment1'    => '~^ *#+$~m',                 // пустой комментарий
             'comment2'    => '~^ *#+ .*$~m',              // комментарии от начала строки
             'comment3'    => '~(?<= )#+ .*~',             // комментарии в конце строки
@@ -389,7 +452,7 @@ class Highlight {
         $this->pattern = array(
             'entity'    => '~&[a-z]+;~',                  // html-сущности
             'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',  // имя атрибут тега
-            'attrvalue' => '~(?<=\=)"[^"]*"(?=( |/|>))~', // значение атрибут тега
+            'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~', // значение атрибут тега
             //'equal'     => '~(?<=¤)\=(?=¤)~',             // разделитель между атрибутом и значением
             'element'   => '~</?[a-z0-9]+[^>]*>~',        // открывающие и закрывающие теги
             'comment'   => '~<\!--.*-->~',                // комментарии
@@ -455,9 +518,10 @@ class Highlight {
             $delimiter[] = '\\'.$value;
         }
         $this->pattern = array(
-            'string1'   => '~"[^"]*"~',   // строки в двойных кавычках
-            'string2'   => "~'[^']*'~",   // строки в одинарных кавычках
-            'comment1'  => '~\/\/.*$~m', // комментарии
+            'startphp'  => '~<\?php~',     // начало php-кода
+            'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
+            'string2'   => "~'[^']*'~",    // строки в одинарных кавычках
+            'comment1'  => '~\/\/.*$~m',   // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
@@ -482,11 +546,11 @@ class Highlight {
             $delimiter[] = '\\'.$value;
         }
         $this->pattern = array(
+            'comment'   => '~# .*$~m',             // комментарии
             'string3'   => '~""".*?"""~s',         // строки в тройных кавычках
             'string4'   => "~'''.*?'''~s",         // строки в тройных кавычках
             'string1'   => '~[ru]{0,2}"[^"]*"~',   // строки в двойных кавычках
             'string2'   => "~[ru]{0,2}'[^']*'~",   // строки в одинарных кавычках
-            'comment'   => '~#.*$~m',              // комментарии
             'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
             'function'  => '~(?<!\.)('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~i', // встроенные функции
@@ -523,6 +587,24 @@ class Highlight {
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
+    }
+
+    public function highlightXML($code) {
+
+        $this->init($code, 'xml');
+
+        $this->pattern = array(
+            'xmldecl'   => '~<\?xml[^>]*>~',             // <?xml version="1.0" encoding="utf-8"...>
+            'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',  // имя атрибут тега
+            'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~', // значение атрибут тега
+            'element'   => '~</?[a-z0-9]+[^>]*>~',        // открывающие и закрывающие теги
+            'entity'    => '~&[a-z]+;~',                  // html-сущности
+            'comment'   => '~<\!--.*-->~',                // комментарии
+        );
+
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
     }
 
     private function hl() {

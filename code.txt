@@ -1,1 +1,28 @@
-a=b
+<?xml version="1.0" encoding="utf-8"?>
+<install version="2.5" type="plugin" group="system">
+  <name>My Meta Plugin &amp;</name>
+  <author>Vasya Pupkin</author>
+  <creationDate>June 2013</creationDate>
+  <copyright>Copyright (C) 2013 Vasya Pupkin. All rights reserved.</copyright>
+  <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+  <authorEmail>pupkin.v@mail.ru</authorEmail>
+  <authorUrl>www.pupkin.ru</authorUrl>
+  <version>2.5.0</version>
+  <description>My meta plugin</description>
+  <files>
+    <filename plugin="mymeta">mymeta.php</filename>
+    <filename>index.html</filename>
+  </files>
+  <config>
+    <fields name="params">
+      <fieldset name="basic">
+        <field name="revised" type="text"
+          description="Meta revised text for content attribute"
+          label="Revised content"
+          default=""
+          size="50"
+        />
+      </fieldset>
+    </fields>
+  </config>
+</install>

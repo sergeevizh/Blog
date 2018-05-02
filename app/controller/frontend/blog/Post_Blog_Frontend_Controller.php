@@ -43,7 +43,12 @@ class Post_Blog_Frontend_Controller extends Blog_Frontend_Controller {
         /*
          * заголовок страницы (тег <title>), мета-теги keywords и description
          */
-        $this->title = $post['name'] . '. ' . $post['ctg_name'];
+        $this->title = $post['name'] . '. Категория: ';
+        if ($post['parent']) {
+            $this->title = $this->title . $post['root_name'] . ' • ' . $post['ctg_name'];
+        } else {
+            $this->title = $this->title . $post['ctg_name'];
+        }
         if ( ! empty($post['keywords'])) {
             $this->keywords = $post['keywords'];
         }

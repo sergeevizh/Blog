@@ -50,6 +50,7 @@ defined('ZCMS') or die('Access denied');
     $excerpt     = '';
     $body        = '';
     $tags        = array();
+    $visible     = 1;
 
     if (isset($savedFormData)) {
         $name        = htmlspecialchars($savedFormData['name']);
@@ -61,6 +62,7 @@ defined('ZCMS') or die('Access denied');
         $tags        = $savedFormData['tags'];
         $date        = htmlspecialchars($savedFormData['date']);
         $time        = htmlspecialchars($savedFormData['time']);
+        $visible     = $savedFormData['visible'];
     }
 ?>
 
@@ -128,7 +130,15 @@ defined('ZCMS') or die('Access denied');
         <div>
             <input type="text" name="date" value="<?php echo $date; ?>" />
             <input type="text" name="time" value="<?php echo $time; ?>" />
+            <label>
+                <input type="checkbox" name="visible" value="1" <?php echo $visible ? 'checked="checked"' : ''; ?> />
+                <span>доступность</span>
+            </label>
         </div>
+    </div>
+    <div>
+        <div>Доступность</div>
+        <div></div>
     </div>
     <div id="new-files">
         <div>Загрузить файл(ы)</div>

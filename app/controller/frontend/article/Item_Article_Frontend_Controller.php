@@ -40,28 +40,33 @@ class Item_Article_Frontend_Controller extends Article_Frontend_Controller {
          */
         parent::input();
 
-        $this->title = $article['name'] . '. ' . $article['ctg_name'];
-        if ( ! empty($article['keywords'])) {
-            $this->keywords = $article['keywords'];
-        }
-        if ( ! empty($article['description'])) {
-            $this->description = $article['description'];
+        $this->title = $article['name'] . '. Категория: ';
+        if ($article['parent']) {
+            $this->title = $this->title . $article['root_name'] . ' • ' . $article['ctg_name'];
+        } else {
+            $this->title = $this->title . $article['ctg_name'];
         }
 
         // формируем хлебные крошки
         $breadcrumbs = array(
             array(
+                'name' => 'Главная',
                 'url' => $this->articleFrontendModel->getURL('frontend/index/index'),
-                'name' => 'Главная'
             ),
             array(
+                'name' => 'Статьи',
                 'url' => $this->articleFrontendModel->getURL('frontend/article/index'),
-                'name' => 'Статьи'
-            ),
-            array(
-                'url' => $this->articleFrontendModel->getURL('frontend/article/category/id/' . $article['ctg_id']),
-                'name' => $article['ctg_name']
-            ),
+            )
+        );
+        if ($article['parent']) {
+            $breadcrumbs[] = array(
+                'name' => $article['root_name'],
+                'url'  => $this->articleFrontendModel->getURL('frontend/article/category/id/' . $article['root_id']),
+            );
+        }
+        $breadcrumbs[] = array(
+            'name' => $article['ctg_name'],
+            'url' => $this->articleFrontendModel->getURL('frontend/article/category/id/' . $article['ctg_id']),
         );
 
         /*
@@ -79,10 +84,21 @@ class Item_Article_Frontend_Controller extends Article_Frontend_Controller {
             // наименование категории
             'categoryName'    => $article['ctg_name'],
             // URL страницы категории
-            'categoryPageUrl' => $this->articleFrontendModel->getURL('frontend/article/category/id/' . $article['ctg_id']),
+            'categoryURL'     => $this->articleFrontendModel->getURL(
+                'frontend/article/category/id/' . $article['ctg_id']
+            ),
             // источник статьи
             'source'          => $article['source'],
+            // есть или нет корневая категория
+            'root'            => (bool)$article['parent'],
         );
+
+        if ($article['parent']) {
+            $this->centerVars['rootName'] = $article['root_name'];
+            $this->centerVars['rootURL'] = $this->articleFrontendModel->getURL(
+                'frontend/article/category/id/' . $article['root_id']
+            );
+        }
     }
 
 }

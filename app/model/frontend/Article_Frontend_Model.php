@@ -90,7 +90,8 @@ class Article_Frontend_Model extends Frontend_Model {
                       `article_items` `a`
                       INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
-                      `a`.`category` = :id
+                      `a`.`category` = :id OR `a`.`category` IN
+                      (SELECT `b`.`id` FROM `article_categories` `b` WHERE `b`.`parent` = :parent)
                   ORDER BY
                       `a`.`added` DESC
                   LIMIT
@@ -99,9 +100,10 @@ class Article_Frontend_Model extends Frontend_Model {
         $articles = $this->database->fetchAll(
             $query,
             array(
-                'id'    => $id,
+                'id' => $id,
+                'parent' => $id,
                 'start' => $start,
-                'limit' => $this->config->pager->frontend->article->perpage
+                'limit' => $this->config->pager->frontend->blog->perpage,
             )
         );
 
@@ -135,10 +137,11 @@ class Article_Frontend_Model extends Frontend_Model {
         $query = "SELECT
                       COUNT(*)
                   FROM
-                      `article_items`
+                      `article_items` `a`
                   WHERE
-                      `category` = :id";
-        return $this->database->fetchOne($query, array('id' => $id));
+                      `a`.`category` = :id OR `a`.`category` IN
+                      (SELECT `b`.`id` FROM `blog_categories` `b` WHERE `b`.`parent` = :parent)";
+        return $this->database->fetchOne($query, array('id' => $id, 'parent' => $id));
     }
 
     /**
@@ -153,12 +156,25 @@ class Article_Frontend_Model extends Frontend_Model {
                       `a`.`excerpt` AS `excerpt`, `a`.`body` AS `body`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
-                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `b`.`parent` AS `parent`
                   FROM
                       `article_items` `a` INNER JOIN `article_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
                       `a`.`id` = :id";
         $article = $this->database->fetch($query, array('id' => $id));
+        // получаем корневую категорию статьи
+        if ($article['parent']) {
+            $query = "SELECT
+                          `id`, `name`
+                      FROM
+                          `article_categories`
+                      WHERE
+                          `id` = :parent";
+            $parent = $this->database->fetch($query, array('parent' => $article['parent']));
+            $article['root_id'] = $parent['id'];
+            $article['root_name'] = $parent['name'];
+        }
         // подсвечиваем код
         $article['body'] = $this->highlightCodeBlocks($article['body']);
         return $article;

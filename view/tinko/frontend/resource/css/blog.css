@@ -12,7 +12,7 @@
         border-bottom: none;
     }
         #posts-list > div > div:first-child {
-            float: left
+            float: left;
         }
         #posts-list > div > div:first-child a {
             display: block;

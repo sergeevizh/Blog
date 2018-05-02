@@ -116,6 +116,12 @@ class Addpost_Blog_Backend_Controller extends Blog_Backend_Controller {
             $data['category'] = (int)$_POST['category'];
         }
 
+        // доступность для просмотра
+        $data['visible'] = 0;
+        if (isset($_POST['visible'])) {
+            $data['visible'] = 1;
+        }
+
         // теги блога
         $data['tags'] = array();
         if (isset($_POST['tags']) and is_array($_POST['tags'])) {

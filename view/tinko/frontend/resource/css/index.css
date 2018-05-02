@@ -77,9 +77,12 @@ h2 {
 }
     #articles-list > div {
         overflow: hidden;
-        margin-bottom: 20px;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #5390cc;
     }
     #articles-list > div:last-child {
+        border-bottom: none;
         margin-bottom: 0;
     }
         #articles-list > div > div:first-child {

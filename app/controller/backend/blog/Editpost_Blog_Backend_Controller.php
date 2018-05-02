@@ -109,6 +109,8 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
             'excerpt'     => $post['excerpt'],
             // содержание поста
             'body'        => $post['body'],
+            // доступность для просмотра
+            'visible'     => $post['visible'],
             // массив всех тегов
             'allTags'     => $allTags,
             // массив тегов этого поста
@@ -162,6 +164,12 @@ class Editpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         $data['category'] = 0;
         if (ctype_digit($_POST['category'])) {
             $data['category'] = (int)$_POST['category'];
+        }
+
+        // доступность для просмотра
+        $data['visible'] = 0;
+        if (isset($_POST['visible'])) {
+            $data['visible'] = 1;
         }
 
         // теги блога

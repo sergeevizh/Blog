@@ -31,7 +31,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                       LEFT JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
                       LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
                   WHERE
-                      1
+                      `a`.`visible` = 1
                   GROUP BY
                       1, 2, 3, 4, 5, 6, 7
                   ORDER BY
@@ -82,7 +82,7 @@ class Blog_Frontend_Model extends Frontend_Model {
      * Возвращает общее количество записей (постов) блога (во всех категориях)
      */
     public function getCountAllPosts() {
-        $query = "SELECT COUNT(*) FROM `blog_posts` WHERE 1";
+        $query = "SELECT COUNT(*) FROM `blog_posts` WHERE `visible` = 1";
         return $this->database->fetchOne($query);
     }
 
@@ -108,14 +108,23 @@ class Blog_Frontend_Model extends Frontend_Model {
                       LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
 
                   WHERE
-                      `a`.`category` = :id OR `a`.`category` IN
-                      (SELECT `g`.`id` FROM `blog_categories` `g` WHERE `g`.`parent` = :parent)
+                      `a`.`visible` = 1 AND (`a`.`category` = :id OR `a`.`category` IN
+                      (SELECT `g`.`id` FROM `blog_categories` `g` WHERE `g`.`parent` = :parent))
                   GROUP BY
                       1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                   ORDER BY
                       `a`.`added` DESC
-                  LIMIT " . $start . ", " . $this->config->pager->frontend->blog->perpage;
-        $posts = $this->database->fetchAll($query, array('id' => $id, 'parent' => $id));
+                  LIMIT
+                      :start, :limit";
+        $posts = $this->database->fetchAll(
+            $query,
+            array(
+                'id' => $id,
+                'parent' => $id,
+                'start' => $start,
+                'limit' => $this->config->pager->frontend->blog->perpage,
+            )
+        );
         /*
          * добавляем в массив постов блога информацию об URL записи (поста), картинки,
          * категории и корнево категории
@@ -168,8 +177,8 @@ class Blog_Frontend_Model extends Frontend_Model {
                   FROM
                       `blog_posts` `a`
                   WHERE
-                      `a`.`category` = :id OR `a`.`category` IN
-                      (SELECT `b`.`id` FROM `blog_categories` `b` WHERE `b`.`parent` = :parent)";
+                      `a`.`visible` = 1 AND (`a`.`category` = :id OR `a`.`category` IN
+                      (SELECT `b`.`id` FROM `blog_categories` `b` WHERE `b`.`parent` = :parent))";
         return $this->database->fetchOne($query, array('id' => $id, 'parent' => $id));
     }
 
@@ -194,7 +203,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                       LEFT JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
                       LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
                   WHERE
-                      `a`.`id` = :id
+                      `a`.`id` = :id AND `a`.`visible` = 1
                   GROUP BY
                       1, 2, 3, 4, 5, 6, 7, 8, 9, 10";
         $post = $this->database->fetch($query, array('id' => $id));
@@ -300,7 +309,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                       INNER JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
                       INNER JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
                   WHERE
-                      `a`.`id` IN
+                      `a`.`visible` = 1 AND `a`.`id` IN
                       (SELECT `g`.`post_id` FROM `blog_post_tag` `g` WHERE `g`.`tag_id` IN (" . $ids . "))
                   GROUP BY
                       1, 2, 3, 4, 5, 6, 7, 8, 9, 10
@@ -349,7 +358,7 @@ class Blog_Frontend_Model extends Frontend_Model {
         return $posts;
     }
     /**
-     * Возвращает количество постов в категории с уникальным идентификатором $id
+     * Возвращает количество постов, которые связаны с тегами $ids
      */
     public function getCountPostsByTags($ids) {
         $ids = implode(',', $ids);
@@ -361,7 +370,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                       INNER JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
                       INNER JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
                   WHERE
-                      `d`.`id` IN (" . $ids . ")";
+                      `d`.`id` IN (" . $ids . ") AND `a`.`visible` = 1";
         return $this->database->fetchOne($query);
     }
 
@@ -378,7 +387,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                       INNER JOIN `blog_posts` `c` ON `b`.`post_id` = `c`.`id`
                       INNER JOIN `blog_categories` `d` ON `c`.`category` = `d`.`id`
                   WHERE
-                      1
+                      `c`.`visible` = 1
                   GROUP BY
                       1, 2
                   ORDER BY
@@ -406,7 +415,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                       INNER JOIN `blog_posts` `c` ON `b`.`post_id` = `c`.`id`
                       INNER JOIN `blog_categories` `d` ON `c`.`category` = `d`.`id`
                   WHERE
-                      1
+                      `c`.`visible` = 1
                   GROUP BY
                       1, 2
                   HAVING

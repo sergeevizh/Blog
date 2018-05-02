@@ -15,9 +15,9 @@ class Blog_Backend_Model extends Backend_Model {
      */
     public function getCategoryPosts($id, $start) {
         $query = "SELECT
-                      `id`, `name,
+                      `id`, `name`, `visible`
                       DATE_FORMAT(`added`, '%d.%m.%Y') AS `date`,
-                      DATE_FORMAT(`added`, '%H:%i:%s') AS `time`
+                      DATE_FORMAT(`added`, '%H:%i:%s') AS `time`,
                   FROM
                       `blog_posts`
                   WHERE
@@ -50,7 +50,8 @@ class Blog_Backend_Model extends Backend_Model {
                       `a`.`id` AS `id`, `a`.`name` AS `name`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
-                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `a`.`visible` AS `visible`
                   FROM
                       `blog_posts` `a` INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
                   WHERE
@@ -92,7 +93,8 @@ class Blog_Backend_Model extends Backend_Model {
                       `a`.`excerpt` AS `excerpt`, `a`.`body` AS `body`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
-                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `a`.`visible` AS `visible`
                   FROM
                       `blog_posts` `a` INNER JOIN `blog_categories` `b`
                       ON `a`.`category` = `b`.`id`
@@ -125,7 +127,8 @@ class Blog_Backend_Model extends Backend_Model {
                       `description`,
                       `excerpt`,
                       `body`,
-                      `added`
+                      `added`,
+                      `visible`
                   )
                   VALUES
                   (
@@ -135,7 +138,8 @@ class Blog_Backend_Model extends Backend_Model {
                       :description,
                       :excerpt,
                       :body,
-                      :added
+                      :added,
+                      :visible
                   )";
         $this->database->execute($query, $data);
         $id = $this->database->lastInsertId();
@@ -196,7 +200,8 @@ class Blog_Backend_Model extends Backend_Model {
                       `description` = :description,
                       `excerpt`     = :excerpt,
                       `body`        = :body,
-                      `added`       = :added
+                      `added`       = :added,
+                      `visible`     = :visible
                   WHERE
                       `id` = :id";
         $this->database->execute($query, $data);

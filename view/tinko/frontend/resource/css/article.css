@@ -4,13 +4,15 @@
 }
     #articles-list > div {
         overflow: hidden;
-        margin-bottom: 20px;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #5390cc;
     }
     #articles-list > div:last-child {
-        margin-bottom: 0;
+        border-bottom: none;
     }
         #articles-list > div > div:first-child {
-            float: left
+            float: left;
         }
         #articles-list > div > div:first-child a {
             display: block;
