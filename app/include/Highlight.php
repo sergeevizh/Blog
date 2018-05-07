@@ -14,13 +14,14 @@ class Highlight {
                 '$variable'   => array('fore' => '#808000'),
                 '$expression' => array('fore' => '#808000'),
                 'keyword'     => array('fore' => '#8000FF'),
-                'begin-end'   => array('fore' => '#008080'),
+                'begin-end'   => array('fore' => '#800080'),
+                'pattern'     => array('fore' => '#800080'),
                 'digit'       => array('fore' => '#FF00FF'),
                 'delimiter'   => array('fore' => '#FF0000'),
                 'number'      => array('fore' => '#CCCCCC'),
             ),
             'keyword' => array(
-                'if', 'else', 'for', 'in', 'while', 'do', 'break', 'continue', 'next', 'exit', 'return', 'printf', 'print', 'delete'
+                'if', 'else', 'for', 'in', 'while', 'do', 'break', 'continue', 'next', 'exit', 'return', 'printf', 'print', 'delete', 'function'
             ),
             'begin-end' => array(
                 'BEGIN', 'END'
@@ -37,8 +38,8 @@ class Highlight {
                 'comment1'    => array('fore' => '#888888'),
                 'comment2'    => array('fore' => '#888888'),
                 'comment3'    => array('fore' => '#888888'),
-                'string1'     => array('fore' => '#0080FF'),
-                'string2'     => array('fore' => '#0000DD'),
+                'string1'     => array('fore' => '#0000DD'),
+                'string2'     => array('fore' => '#0080FF'),
                 'variable1'   => array('fore' => '#808000'),
                 'variable2'   => array('fore' => '#808000'),
                 'spec-var'    => array('fore' => '#808000'),
@@ -48,13 +49,17 @@ class Highlight {
                 'execute3'    => array('back' => '#FFFFFF'),
                 'keyword'     => array('fore' => '#8000FF'),
                 'command'     => array('fore' => '#CC6600'),
+                'signal'      => array('fore' => '#FF0000'),
                 'number'      => array('fore' => '#CCCCCC'),
             ),
             'keyword' => array(
                 'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'function',
             ),
             'command' => array(
-                'exit', 'exec', 'export', 'read', 'shift'
+                'exit', 'exec', 'export', 'read', 'shift', 'sleep', 'wait', 'source', 'true', 'false'
+            ),
+            'signal' => array(
+                'SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGKILL', 'SIGTERM', 'SIGCONT', 'SIGSTOP', 'SIGTSTP'
             ),
             'delimiter' => array(
                 ';', '&&', '\|\|', '\[', '\]', '\(\(', '\)\)'
@@ -305,6 +310,7 @@ class Highlight {
             'string'      => '~"[^"]*"~',                 // строки в двойных кавычках
             'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~',   // ключевые слова
             'begin-end'   => '~\b('.implode('|', $this->settings[$this->lang]['begin-end']).')\b~', // BEGIN и END
+            'pattern'     => '~/[^/]+/~', // регулярное выражение
             'digit'       => '~\b\d+\b~', // цифры
             'delimiter'   => '~'.implode('|', $delimiter).'~', // разделители
         );
@@ -320,21 +326,22 @@ class Highlight {
         $this->init($code, 'bash');
 
         $this->pattern = array(
-            'here-doc'    => '~\<\<-? ([_A-Z]+).*\1~s',   // here doc
-            'comment1'    => '~^ *#+$~m',                 // пустой комментарий
-            'comment2'    => '~^ *#+ .*$~m',              // комментарии от начала строки
-            'comment3'    => '~(?<= )#+ .*~',             // комментарии в конце строки
-            'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|!)~i',// специальные переменные
-            'variable1'   => '~\$[a-z_][a-z0-9_]*~i',     // переменные
-            'variable2'   => '~\$\{[^}]+\}?~i',           // переменные
-            'express'     => '~\$?\(\([^)(]+\)\)~',       // вычисление арифметического выражения
-            'execute1'    => '~\$\([^)(]+\)~',            // подстановка результата выполнения
-            'execute2'    => '~\$\([^)(]+\)~',            // подстановка результата выполнения
-            'execute3'    => '~\`[^`]+`~',                // подстановка результата выполнения
-            'string1'     => '~"[^"]*"~',                 // строки в двойных кавычках
-            'string2'     => "~'[^']*'~",                 // строки в одинарных кавычках
+            'here-doc'    => '~\<\<-? ([_A-Z]+).*\1~s',    // here doc
+            'comment1'    => '~^ *#+$~m',                  // пустой комментарий
+            'comment2'    => '~^ *#+ .*$~m',               // комментарии от начала строки
+            'comment3'    => '~(?<= )#+ .*~',              // комментарии в конце строки
+            'string1'     => "~'[^']*'~",                  // строки в одинарных кавычках
+            'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|\?)~i',// специальные переменные
+            'variable1'   => '~\$[a-z_][a-z0-9_]*~i',      // переменные
+            'variable2'   => '~\$\{[^}]+\}?~i',            // переменные
+            'express'     => '~\$?\(\([^)(]+\)\)~',        // вычисление арифметического выражения
+            'execute1'    => '~\$\([^)(]+\)~',             // подстановка результата выполнения
+            'execute2'    => '~\$\([^)(]+\)~',             // подстановка результата выполнения
+            'execute3'    => '~\`[^`]+`~',                 // подстановка результата выполнения
+            'string2'     => '~"[^"]*"~',                  // строки в двойных кавычках
             'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~i', // ключевые слова
             'command'     => '~\b('.implode('|', $this->settings[$this->lang]['command']).')\b~i', // команды
+            'signal'      => '~\b('.implode('|', $this->settings[$this->lang]['signal']).')\b~',   // сигналы
             'bin-bash'    => "~^#!/[-/a-z]+~",            // что-то типа #!/bin/bash
         );
 
