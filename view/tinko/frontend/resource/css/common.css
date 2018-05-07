@@ -222,6 +222,9 @@ body > .wrapper {
 #content img {
     max-width: 100%;
 }
+    #content a.zoom > img {
+        max-width: 60%;
+    }
 #content strong {
     color: #000000;
     font-weight: normal;
