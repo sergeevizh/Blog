@@ -560,7 +560,7 @@ class Highlight {
             'string2'   => "~[ru]{0,2}'[^']*'~",   // строки в одинарных кавычках
             'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
-            'function'  => '~(?<!\.)('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~i', // встроенные функции
+            'function'  => '~(?<!\.)\b('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~i', // встроенные функции
             'digit'     => '~\b\d+\b~',            // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );

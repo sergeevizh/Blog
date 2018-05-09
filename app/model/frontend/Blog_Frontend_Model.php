@@ -406,8 +406,8 @@ class Blog_Frontend_Model extends Frontend_Model {
     public function getSideTags() {
 
         $query = "SELECT
-                      `a`.`id` AS `id`,
-                      IF(CHAR_LENGTH(`a`.`name`) > 12, CONCAT(LEFT(`a`.`name`, 11), '…'), `a`.`name`) AS `name`,
+                      `a`.`id` AS `id`, `a`.`name` AS `name`,
+                      IF(CHAR_LENGTH(`a`.`name`) > 12, CONCAT(LEFT(`a`.`name`, 11), '…'), `a`.`name`) AS `short`,
                       COUNT(*) AS `count`
                   FROM
                       `blog_tags` `a`
