@@ -369,7 +369,8 @@ class Blog_Backend_Model extends Backend_Model {
      */
     public function getAllTags() {
         $query = "SELECT
-                      `id`, `name`
+                      `id`, `name`,
+                      IF(CHAR_LENGTH(`name`) > 17, CONCAT(LEFT(`name`, 16), '…'), `name`) AS `short`
                   FROM
                       `blog_tags`
                   WHERE

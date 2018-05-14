@@ -151,7 +151,7 @@ defined('ZCMS') or die('Access denied');
                             Теги:
                             <?php foreach ($item['tags'] as $i => $tag): ?>
                                 <?php if ($i) echo '•'; ?>
-                                <a href="<?php echo $tag['url']; ?>"><?php echo $tag['name']; ?></a>
+                                <a href="<?php echo $tag['url']; ?>" title="<?php echo htmlspecialchars($tag['name']); ?>"><?php echo $tag['short']; ?></a>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>

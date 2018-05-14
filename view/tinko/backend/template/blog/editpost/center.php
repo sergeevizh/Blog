@@ -130,7 +130,10 @@ defined('ZCMS') or die('Access denied');
         <?php if (!empty($allTags)): ?>
             <ul>
             <?php foreach ($allTags as $item): ?>
-                <li><input type="checkbox" name="tags[]" value="<?php echo $item['id']; ?>" <?php echo in_array($item['id'], $tags) ? 'checked="checked"' : ''; ?> /> <?php echo $item['name']; ?></li>
+                <li>
+                    <input type="checkbox" name="tags[]" value="<?php echo $item['id']; ?>" <?php echo in_array($item['id'], $tags) ? 'checked="checked"' : ''; ?> />
+                    <span title="<?php echo htmlspecialchars($item['name']); ?>"><?php echo htmlspecialchars($item['short']); ?></span>
+                </li>
             <?php endforeach; ?>
             </ul>
         <?php endif; ?>

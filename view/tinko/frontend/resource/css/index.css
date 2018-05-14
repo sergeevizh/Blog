@@ -64,10 +64,11 @@ h2 {
                 color: #969696;
             }
                 #posts-list > div > div:last-child > .post-ctg-tags > div {
-                    width: 50%;
+                    width: 35%;
                     float: left;
                 }
                 #posts-list > div > div:last-child > .post-ctg-tags > div:last-child {
+                    width: 65%;
                     text-align: right;
                 }
 

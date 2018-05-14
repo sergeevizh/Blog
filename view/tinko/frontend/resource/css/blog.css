@@ -54,10 +54,11 @@
                 color: #969696;
             }
                 #posts-list > div > div:last-child > .post-ctg-tags > div {
-                    width: 50%;
+                    width: 35%;
                     float: left;
                 }
                 #posts-list > div > div:last-child > .post-ctg-tags > div:last-child {
+                    width: 65%;
                     text-align: right;
                 }
 
@@ -72,13 +73,14 @@
         #post-item > div:first-child > p {
             font-size: 12px;
             color: #969696;
-            width: 50%;
             margin: 0;
         }
         #post-item > div:first-child > p:nth-child(1) {
+            width: 20%;
             float: left;
         }
         #post-item > div:first-child > p:nth-child(2) {
+            width: 80%;
             float: right;
             text-align: right;
         }

@@ -49,7 +49,12 @@ body > .wrapper {
 /* шапка */
 #header {
     height: 80px;
-    background: #395985;
+    background: #3a6995 url('../img/background.png');
+    color: #5390cc;
+    font-weight: bold;
+    font-size: 50px;
+    line-height: 80px;
+    text-shadow: 0.5px 0.5px 0.5px #fff;
 }
 /* главное меню */
 #main-menu {
@@ -83,17 +88,6 @@ body > .wrapper {
     background: #2f3133;
     position: absolute;
     bottom: 0;
-}
-
-/*
- * ШАПКА САЙТА
- */
-#header {
-    color: #5390cc;
-    font-weight: bold;
-    font-size: 50px;
-    line-height: 80px;
-    text-shadow: 1px 1px 1px #ccc;
 }
 
 /*
@@ -143,7 +137,6 @@ body > .wrapper {
     #menu a {
         text-decoration: none;
         color: #fff;
-        text-shadow: 1px 1px 1px #ccc;
         padding: 8px 25px;
         font-size: 18px;
     }
@@ -195,7 +188,7 @@ body > .wrapper {
     margin: 15px 0;
     color: #5390cc;
     font-weight: normal;
-    text-shadow: 1px 1px 1px #ccc;
+    text-shadow: 0.5px 0.5px 0.5px #ccc;
 }
 #content h1 {
     font-size: 25px;

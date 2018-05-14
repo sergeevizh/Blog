@@ -24,12 +24,13 @@ $config = array(
     'site' => array(
         'url'   => '//www.host12.ru/', /* //server.com/ или http://server.com/ или https://server.com/ */
         'name'  => 'Записки программиста',
-        'email' => 'tokmakov.e@mail.ru',
+        'email' => 'tokmakov.e@mail.ru', // с этого e-mail будет отправляться почта
         'theme' => 'view/tinko', // путь к папке с темой
     ),
-    'admin' => array( // логин-пароль администратора сайта
+    'admin' => array( // логин, пароль и e-mail администратора сайта
         'name'     => 'admin',
         'password' => 'qwerty',
+        'email'    => 'tokmakov.e@mail.ru'
     ),
     'error' => array(
         'debug'    => true,                      // должен быть true на этапе разработки

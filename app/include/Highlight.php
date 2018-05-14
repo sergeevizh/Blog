@@ -34,7 +34,7 @@ class Highlight {
             'colors' => array(
                 'default'     => array('fore' => '#008080'),
                 'bin-bash'    => array('fore' => '#888888', 'back' => '#FFFFFF'),
-                'here-doc'    => array('fore' => '#0080FF', 'back' => '#FFFFFF'),
+                'here-doc'    => array('fore' => '#BB00BB'),
                 'comment1'    => array('fore' => '#888888'),
                 'comment2'    => array('fore' => '#888888'),
                 'comment3'    => array('fore' => '#888888'),
@@ -112,8 +112,9 @@ class Highlight {
                 'string'    => array('fore' => '#0000FF'),
                 'keyword1'  => array('fore' => '#8B008B'),
                 'keyword2'  => array('fore' => '#8000FF'),
-                'keyword3'  => array('fore' => '#CC00CC'),
+                'keyword3'  => array('fore' => '#DD00DD'),
                 'directive' => array('fore' => '#808000'),
+                'datetime'  => array('fore' => '#DD00DD'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'object'    => array('fore' => '#0080FF'),
@@ -258,7 +259,7 @@ class Highlight {
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#FF0080'),
                 'function'  => array('fore' => '#808000'),
-                'parameter' => array('fore' => '#FF7000'),
+                'parameter' => array('fore' => '#DD00DD'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
@@ -326,19 +327,19 @@ class Highlight {
         $this->init($code, 'bash');
 
         $this->pattern = array(
-            'here-doc'    => '~\<\<-? ([_A-Z]+).*\1~s',    // here doc
-            'comment1'    => '~^ *#+$~m',                  // пустой комментарий
-            'comment2'    => '~^ *#+ .*$~m',               // комментарии от начала строки
-            'comment3'    => '~(?<= )#+ .*~',              // комментарии в конце строки
-            'string1'     => "~'[^']*'~",                  // строки в одинарных кавычках
-            'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|\?)~i',// специальные переменные
-            'variable1'   => '~\$[a-z_][a-z0-9_]*~i',      // переменные
-            'variable2'   => '~\$\{[^}]+\}?~i',            // переменные
-            'express'     => '~\$?\(\([^)(]+\)\)~',        // вычисление арифметического выражения
-            'execute1'    => '~\$\([^)(]+\)~',             // подстановка результата выполнения
-            'execute2'    => '~\$\([^)(]+\)~',             // подстановка результата выполнения
-            'execute3'    => '~\`[^`]+`~',                 // подстановка результата выполнения
-            'string2'     => '~"[^"]*"~',                  // строки в двойных кавычках
+            'comment1'    => '~^ *#+$~m',                          // пустой комментарий
+            'comment2'    => '~^ *#+ .*$~m',                       // комментарии от начала строки
+            'comment3'    => '~(?<= )#+ .*~',                      // комментарии в конце строки
+            'string1'     => "~'[^']*'~",                          // строки в одинарных кавычках
+            'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|\?)~i',        // специальные переменные
+            'variable1'   => '~\$[a-z_][a-z0-9_]*~i',              // переменные
+            'variable2'   => '~\$\{[^}]+\}?~i',                    // переменные
+            'express'     => '~\$?\(\([^)(]+\)\)~',                // вычисление арифметического выражения
+            'execute1'    => '~\$\([^)(]+\)~',                     // подстановка результата выполнения
+            'execute2'    => '~\$\([^)(]+\)~',                     // подстановка результата выполнения
+            'execute3'    => '~\`[^`]+`~',                         // подстановка результата выполнения
+            'string2'     => '~"[^"]*"~',                          // строки в двойных кавычках
+            'here-doc'    => '~(?<=\<\<) ?-?([-_A-Za-z]+).*?\1~s', // here doc
             'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~i', // ключевые слова
             'command'     => '~\b('.implode('|', $this->settings[$this->lang]['command']).')\b~i', // команды
             'signal'      => '~\b('.implode('|', $this->settings[$this->lang]['signal']).')\b~',   // сигналы
@@ -442,6 +443,7 @@ class Highlight {
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~ui',  // ключевые слова
             'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~ui',  // ключевые слова
             'directive' => '~('.implode('|', $this->settings[$this->lang]['directive']).')~ui', // директивы компиляции
+            'datetime'  => "~'\d+'~", // дата и время
             'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
