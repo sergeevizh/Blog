@@ -64,7 +64,7 @@ class Index_Frontend_Model extends Frontend_Model {
             if (!empty($posts[$key]['tag_ids'])) {
                 $ids = explode('¤', $posts[$key]['tag_ids']);
                 $names = explode('¤', $posts[$key]['tag_names']);
-                $i = 0;
+                $length = 0;
                 foreach ($ids as $k => $v) {
                     $short = (iconv_strlen($names[$k]) > 15) ? iconv_substr($names[$k], 0, 14) . '…' : $names[$k];
                     $posts[$key]['tags'][] = array(
@@ -73,8 +73,8 @@ class Index_Frontend_Model extends Frontend_Model {
                         'short' => $short,
                         'url'   => $this->getURL('frontend/blog/tags/ids/' . $v)
                     );
-                    $i++;
-                    if ($i > 4) break;
+                    $length = $length + iconv_strlen($names[$k]);
+                    if ($length > 50) break;
                 }
                 unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
             }

@@ -53,10 +53,10 @@ class Highlight {
                 'number'      => array('fore' => '#CCCCCC'),
             ),
             'keyword' => array(
-                'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'function',
+                'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'function', 'return', 'local'
             ),
             'command' => array(
-                'exit', 'exec', 'export', 'read', 'shift', 'sleep', 'wait', 'source', 'true', 'false'
+                'exit', 'exec', 'export', 'read', 'shift', 'sleep', 'wait', 'source', 'true', 'false', 'echo'
             ),
             'signal' => array(
                 'SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGKILL', 'SIGTERM', 'SIGCONT', 'SIGSTOP', 'SIGTSTP'
@@ -444,7 +444,7 @@ class Highlight {
             'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~ui',  // ключевые слова
             'directive' => '~('.implode('|', $this->settings[$this->lang]['directive']).')~ui', // директивы компиляции
             'datetime'  => "~'\d+'~", // дата и время
-            'digit'     => '~\b\d+\b~', // цифры
+            'digit'     => '~\b\d+\b~u', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 

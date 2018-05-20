@@ -63,13 +63,16 @@ h2 {
                 overflow: hidden;
                 color: #969696;
             }
-                #posts-list > div > div:last-child > .post-ctg-tags > div {
+                #posts-list > div > div:last-child > .post-ctg-tags > div:first-child {
                     width: 35%;
                     float: left;
                 }
                 #posts-list > div > div:last-child > .post-ctg-tags > div:last-child {
-                    width: 65%;
+                    width: 60%;
+                    float: right;
                     text-align: right;
+                    white-space: nowrap;
+                    overflow: hidden;
                 }
 
 /* список статей (всех статей или выбранной категории) */
