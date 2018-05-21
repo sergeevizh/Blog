@@ -42,7 +42,7 @@ defined('ZCMS') or die('Access denied');
         <ul class="tags">
         <?php foreach($blogTags as $item): ?>
             <li>
-                <a href="<?php echo $item['url'] ?>"><?php echo $item['name']; ?></a>&nbsp;(<?php echo $item['count']; ?>)
+                <a href="<?php echo $item['url'] ?>" title="<?php echo htmlspecialchars($item['name']); ?>"><?php echo $item['short']; ?></a>&nbsp;(<?php echo $item['count']; ?>)
             </li>
         <?php endforeach; ?>
         </ul>

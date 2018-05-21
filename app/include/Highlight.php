@@ -47,13 +47,14 @@ class Highlight {
                 'execute1'    => array('back' => '#FFFFEB'),
                 'execute2'    => array('back' => '#FFFFFF'),
                 'execute3'    => array('back' => '#FFFFFF'),
+                'arr-init'    => array('back' => '#F5FFF5'),
                 'keyword'     => array('fore' => '#8000FF'),
                 'command'     => array('fore' => '#CC6600'),
                 'signal'      => array('fore' => '#FF0000'),
                 'number'      => array('fore' => '#CCCCCC'),
             ),
             'keyword' => array(
-                'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'function', 'return', 'local'
+                'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'function', 'return', 'local', 'declare'
             ),
             'command' => array(
                 'exit', 'exec', 'export', 'read', 'shift', 'sleep', 'wait', 'source', 'true', 'false', 'echo'
@@ -340,6 +341,7 @@ class Highlight {
             'execute3'    => '~\`[^`]+`~',                         // подстановка результата выполнения
             'string2'     => '~"[^"]*"~',                          // строки в двойных кавычках
             'here-doc'    => '~(?<=\<\<) ?-?([-_A-Za-z]+).*?\1~s', // here doc
+            'arr-init'    => '~(?<=[a-z]\=)\([^)]*\)~i',           // инициализация массива
             'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~i', // ключевые слова
             'command'     => '~\b('.implode('|', $this->settings[$this->lang]['command']).')\b~i', // команды
             'signal'      => '~\b('.implode('|', $this->settings[$this->lang]['signal']).')\b~',   // сигналы
