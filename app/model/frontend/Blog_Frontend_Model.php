@@ -217,6 +217,10 @@ class Blog_Frontend_Model extends Frontend_Model {
                   GROUP BY
                       1, 2, 3, 4, 5, 6, 7, 8, 9, 10";
         $post = $this->database->fetch($query, array('id' => $id));
+        // если пост не найден или скрыт
+        if ( ! $post) {
+            return false;
+        }
         // получаем корневую категорию поста
         if ($post['parent']) {
             $query = "SELECT
@@ -397,7 +401,7 @@ class Blog_Frontend_Model extends Frontend_Model {
 
         $query = "SELECT
                       `a`.`id`, `a`.`name`, COUNT(*) AS `count`,
-                      IF(CHAR_LENGTH(`a`.`name`) > 17, CONCAT(LEFT(`a`.`name`, 16), '…'), `a`.`name`) AS `short`
+                      IF(CHAR_LENGTH(`a`.`name`) > 25, CONCAT(LEFT(`a`.`name`, 24), '…'), `a`.`name`) AS `short`
                   FROM
                       `blog_tags` `a`
                       INNER JOIN `blog_post_tag` `b` ON `a`.`id` = `b`.`tag_id`

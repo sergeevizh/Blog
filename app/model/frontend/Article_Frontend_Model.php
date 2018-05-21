@@ -163,6 +163,10 @@ class Article_Frontend_Model extends Frontend_Model {
                   WHERE
                       `a`.`id` = :id";
         $article = $this->database->fetch($query, array('id' => $id));
+        // если статья не найдена
+        if ( ! $article) {
+            return false;
+        }
         // получаем корневую категорию статьи
         if ($article['parent']) {
             $query = "SELECT

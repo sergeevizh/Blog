@@ -63,6 +63,10 @@ h2 {
                 overflow: hidden;
                 color: #969696;
             }
+                #posts-list > div > div:last-child > .post-ctg-tags > div {
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
                 #posts-list > div > div:last-child > .post-ctg-tags > div:first-child {
                     width: 35%;
                     float: left;
@@ -71,8 +75,6 @@ h2 {
                     width: 60%;
                     float: right;
                     text-align: right;
-                    white-space: nowrap;
-                    overflow: hidden;
                 }
 
 /* список статей (всех статей или выбранной категории) */
@@ -129,15 +131,26 @@ h2 {
                 color: #969696;
             }
 
-@media screen and (max-width: 560px) {
-    /* список постов блока */
+
+@media screen and (max-width: 1250px) {
+    #posts-list > div > div:last-child > .post-ctg-tags > div:first-child,
+    #posts-list > div > div:last-child > .post-ctg-tags > div:last-child {
+        float: none;
+        width: 100%;
+        text-align: left;
+    }
+    #posts-list > div > div:last-child > .post-ctg-tags > div:first-child {
+        margin-bottom: 4px;
+    }
+}
+@media screen and (max-width: 1000px) {
     #posts-list > div > div:first-child {
         display: none;
     }
     #posts-list > div > div:last-child {
         margin-left: 0;
     }
-    /* список статей */
+
     #articles-list > div > div:first-child {
         display: none;
     }

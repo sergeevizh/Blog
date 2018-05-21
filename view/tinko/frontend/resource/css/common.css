@@ -430,19 +430,19 @@ input[type="submit"] {
             border-top: 1px solid #d1d1d1;
             padding: 15px;
         }
-            #left > div > div:last-child ul, #right > div > div:last-child ul {
+            #right > div > div:last-child ul {
                 list-style: none;
             }
-                #left > div > div:last-child > ul > li, #right > div > div:last-child > ul > li {
+                #right > div > div:last-child > ul > li {
                     margin-bottom: 7px;
                 }
-                #left > div > div:last-child > ul > li:last-child, #right > div > div:last-child > ul > li:last-child {
+                #right > div > div:last-child > ul > li:last-child {
                     margin-bottom: 0;
                 }
-                #left > div > div:last-child > ul > li > a, #right > div > div:last-child > ul > li > a {
+                #right > div > div:last-child > ul > li > a {
                     font-size: 16px;
                 }
-                #left > div > div:last-child > ul ul, #right > div > div:last-child > ul ul {
+                #right > div > div:last-child > ul ul {
                     padding-left: 15px;
                 }
 
@@ -492,3 +492,31 @@ input[type="submit"] {
 /*
  * MEDIA-ЗАПРОСЫ
  */
+@media screen and (max-width: 800px) {
+    #content { /* перемещаем правую колонку вниз */
+        margin: 0;
+        padding: 20px 0 0 0;
+        float: none;
+        margin-bottom: 40px;
+    }
+    #right {
+        width: 100%;
+        float: none;
+        margin-left: 0;
+    }
+    #right .tags {
+        column-count: 5;
+    }
+    #right > div:first-child > div:last-child > ul > li { /* категории блога */
+        float: left;
+        width: 33.33333%;
+    }
+    #right > div:first-child > div:last-child > ul > li > ul {
+        margin-top: 10px;
+        padding-left: 0;
+    }
+    #right > div:last-child > div:last-child > ul > li { /* категории статей */
+        float: left;
+        width: 33.33333%;
+    }
+}

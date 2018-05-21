@@ -71,12 +71,12 @@ defined('ZCMS') or die('Access denied');
     <?php endif; ?>
     </div>
 </div>
-
+<!--
 <div>
     <div>Вы уже смотрели</div>
     <div>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </div>
 </div>
-
+-->
 <!-- Конец шаблона view/example/frontend/template/right.php -->
