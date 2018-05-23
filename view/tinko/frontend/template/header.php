@@ -12,8 +12,6 @@ defined('ZCMS') or die('Access denied');
 
 <!-- Начало шаблона view/example/frontend/template/header.php -->
 
-<div id="top-logo">
-    Узелки на память
-</div>
+Узелки на память
 
 <!-- Конец шаблона view/example/frontend/template/header.php -->

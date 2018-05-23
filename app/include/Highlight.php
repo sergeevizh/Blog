@@ -115,6 +115,7 @@ class Highlight {
                 'keyword2'  => array('fore' => '#8000FF'),
                 'keyword3'  => array('fore' => '#DD00DD'),
                 'directive' => array('fore' => '#808000'),
+                'code-area' => array('fore' => '#808000'),
                 'datetime'  => array('fore' => '#DD00DD'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
@@ -445,6 +446,7 @@ class Highlight {
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~ui',  // ключевые слова
             'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~ui',  // ключевые слова
             'directive' => '~('.implode('|', $this->settings[$this->lang]['directive']).')~ui', // директивы компиляции
+            'code-area' => '~#(Область|КонецОбласти).*$~umi', // области кода
             'datetime'  => "~'\d+'~", // дата и время
             'digit'     => '~\b\d+\b~u', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
