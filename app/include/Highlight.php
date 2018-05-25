@@ -48,6 +48,7 @@ class Highlight {
                 'execute2'    => array('back' => '#FFFFFF'),
                 'execute3'    => array('back' => '#FFFFFF'),
                 'arr-init'    => array('back' => '#F5FFF5'),
+                'function'    => array('fore' => '#CC22CC'),
                 'keyword'     => array('fore' => '#8000FF'),
                 'command'     => array('fore' => '#CC6600'),
                 'signal'      => array('fore' => '#FF0000'),
@@ -328,7 +329,7 @@ class Highlight {
 
         $this->init($code, 'bash');
 
-        $this->pattern = array(
+        $temp1 = array(
             'comment1'    => '~^ *#+$~m',                          // пустой комментарий
             'comment2'    => '~^ *#+ .*$~m',                       // комментарии от начала строки
             'comment3'    => '~(?<= )#+ .*~',                      // комментарии в конце строки
@@ -336,6 +337,20 @@ class Highlight {
             'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|\?)~i',        // специальные переменные
             'variable1'   => '~\$[a-z_][a-z0-9_]*~i',              // переменные
             'variable2'   => '~\$\{[^}]+\}?~i',                    // переменные
+        );
+        if (preg_match_all('~^[_a-z][_a-z0-9]*(?=\(\) \{)~im', $code, $matches)) {
+            foreach($matches[0] as $match)
+            $functions[] = $match;
+        }
+        if (preg_match_all('~(?<=function )[_a-z][_a-z0-9]*(?= \{)~i', $code, $matches)) {
+            foreach($matches[0] as $match)
+            $functions[] = $match;
+        }
+        $temp = array();
+        if (!empty($functions)) {
+            $temp['function'] = '~\b('.implode('|', $functions).')\b~';
+        }
+        $temp2 = array(
             'express'     => '~\$?\(\([^)(]+\)\)~',                // вычисление арифметического выражения
             'execute1'    => '~\$\([^)(]+\)~',                     // подстановка результата выполнения
             'execute2'    => '~\$\([^)(]+\)~',                     // подстановка результата выполнения
@@ -346,9 +361,11 @@ class Highlight {
             'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~i', // ключевые слова
             'command'     => '~\b('.implode('|', $this->settings[$this->lang]['command']).')\b~i', // команды
             'signal'      => '~\b('.implode('|', $this->settings[$this->lang]['signal']).')\b~',   // сигналы
-            'bin-bash'    => "~^#!/[-/a-z]+~",            // что-то типа #!/bin/bash
+            'bin-bash'    => "~^#!/[-/a-z]+~",                      // что-то типа #!/bin/bash
         );
-
+        
+        $this->pattern = array_merge($temp1, $temp, $temp2);
+        
         $this->hl();
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
