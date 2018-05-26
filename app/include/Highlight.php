@@ -120,14 +120,16 @@ class Highlight {
                 'datetime'  => array('fore' => '#DD00DD'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
+                'function'  => array('fore' => '#0080FF'),
+                'procedure' => array('fore' => '#0080FF'),
                 'object'    => array('fore' => '#0080FF'),
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'Процедура', 'КонецПроцедуры', 'Функция', 'КонецФункции', 'Возврат', 'Экспорт', 'Знач', 'Перем',
+                'Процедура', 'КонецПроцедуры', 'Функция', 'КонецФункции', 'Экспорт'
             ),
             'keyword2' => array(
-                'Пока', 'Для', 'Каждого', 'По', 'Из', 'Цикл', 'КонецЦикла', 'Прервать', 'Продолжить', 'Если', 'Тогда', 'Иначе', 'ИначеЕсли', 'КонецЕсли', 'Попытка', 'Исключение', 'КонецПопытки', 'Новый'
+                'Пока', 'Для', 'Каждого', 'По', 'Из', 'Цикл', 'КонецЦикла', 'Прервать', 'Продолжить', 'Если', 'Тогда', 'Иначе', 'ИначеЕсли', 'КонецЕсли', 'Попытка', 'Исключение', 'КонецПопытки', 'Новый', 'Возврат', 'Знач', 'Перем'
             ),
             'keyword3' => array(
                 'Истина', 'Ложь', 'НЕ', 'И', 'ИЛИ', 'Неопределено'
@@ -363,9 +365,9 @@ class Highlight {
             'signal'      => '~\b('.implode('|', $this->settings[$this->lang]['signal']).')\b~',   // сигналы
             'bin-bash'    => "~^#!/[-/a-z]+~",                      // что-то типа #!/bin/bash
         );
-        
+
         $this->pattern = array_merge($temp1, $temp, $temp2);
-        
+
         $this->hl();
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
@@ -381,11 +383,11 @@ class Highlight {
         }
 
         $this->pattern = array(
+            'selected1' => '~\[red\].*?\[/red\]~',          // выделить текст
+            'selected2' => '~\[grn\].*?\[/grn\]~',          // выделить текст
             'comment'   => '~(?<= )# .*$~m',                // комментарий
             'command'   => '~(?<=^(\$|\>) ).*$~m',          // команда
             'cliprompt' => '~^(\$|\>)(?= |$)~m',            // приглашение
-            'selected1' => '~\[red\].*?\[/red\]~',          // выделить текст
-            'selected2' => '~\[grn\].*?\[/grn\]~',          // выделить текст
             'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
         );
 
@@ -459,6 +461,8 @@ class Highlight {
             'string'    => '~"[^"]*"~',  // строки
             'comment'   => '~\/\/.*$~m', // комментарии
             'object'    => '~(?<=Новый )[а-яa-z]+\b~ui', // создание объекта
+            'function'  => '~(?<=Функция )[а-яa-z]+\b~ui', // объявление функции
+            'procedure' => '~(?<=Процедура )[а-яa-z]+\b~ui', // объявление процедуры
             'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~ui',  // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~ui',  // ключевые слова
             'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~ui',  // ключевые слова

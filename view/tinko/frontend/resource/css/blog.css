@@ -81,17 +81,29 @@
             margin: 0;
         }
         #post-item > div:first-child > p:nth-child(1) {
-            width: 15%;
+            width: 10%;
             float: left;
         }
         #post-item > div:first-child > p:nth-child(2) {
-            width: 85%;
+            width: 90%;
             float: right;
             text-align: right;
         }
             #post-item > div:first-child > p:nth-child(2) > a {
                 font-size: 12px;
             }
+    #post-item .liked-posts {
+        margin-top: 30px;
+        border: 1px solid #d1d1d1;
+        background: #f0f0f0;
+        padding: 10px;
+    }
+    #post-item .liked-posts h4 {
+        margin: 0 0 10px 0;
+    }
+     #post-item .liked-posts ul {
+        margin: 0 0 0 30px;
+    }
 
 #all-tags {
 

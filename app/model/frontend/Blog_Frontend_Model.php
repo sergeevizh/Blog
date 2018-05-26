@@ -247,6 +247,8 @@ class Blog_Frontend_Model extends Frontend_Model {
             }
             unset($post['tag_ids'], $post['tag_names']);
         }
+        // получаем похожие посты
+        $post['liked'] = $this->getLikedPosts($id);
         // подсвечиваем код
         $post['body'] = $this->highlightCodeBlocks($post['body']);
 
@@ -458,5 +460,36 @@ class Blog_Frontend_Model extends Frontend_Model {
         $query = "SELECT `name` FROM `blog_tags` WHERE `id` = :id";
         return $this->database->fetchOne($query, array('id' => $id));
     }
+
+    /**
+     * Вызвращает массив похожих постов
+     */
+    private function getLikedPosts($id) {
+        $query = "SELECT
+                      `b`.`id` AS `id`, `b`.`name` AS `name`, COUNT(*) AS `count`
+                  FROM
+                      `blog_post_tag` `a`
+                      INNER JOIN `blog_posts` `b` ON `a`.`post_id` = `b`.`id`
+                      INNER JOIN `blog_categories` `c` ON `b`.`category` = `c`.`id`
+                  WHERE
+                      `a`.`tag_id` IN
+                      (SELECT `d`.`tag_id` FROM `blog_post_tag` `d` WHERE `d`.`post_id` = :id1)
+                      AND `b`.`id` <> :id2 AND `b`.`visible` = 1
+                  GROUP BY
+                      1, 2
+                  HAVING COUNT(*) > 1
+                  ORDER BY
+                      COUNT(*) DESC, `b`.`added` DESC
+                  LIMIT
+                      5";
+        $posts = $this->database->fetchAll($query, array('id1' => $id, 'id2' => $id));
+        // добавляем в массив постов блога информацию об URL поста
+        foreach($posts as $key => $value) {
+            // URL записи (поста) блога
+            $posts[$key]['url'] = $this->getURL('frontend/blog/post/id/' . $value['id']);
+        }
+        return $posts;
+    }
+
 
 }

@@ -96,7 +96,9 @@ class Post_Blog_Frontend_Controller extends Blog_Frontend_Controller {
             'categoryURL'     =>
                 $this->blogFrontendModel->getURL('frontend/blog/category/id/' . $post['ctg_id']),
             // теги поста блога
-            'tags'            => $post['tags']
+            'tags'            => $post['tags'],
+            // похожие посты
+            'liked'           => $post['liked']
         );
     }
 
