@@ -481,7 +481,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                   ORDER BY
                       COUNT(*) DESC, `b`.`added` DESC
                   LIMIT
-                      5";
+                      7";
         $posts = $this->database->fetchAll($query, array('id1' => $id, 'id2' => $id));
         // добавляем в массив постов блога информацию об URL поста
         foreach($posts as $key => $value) {

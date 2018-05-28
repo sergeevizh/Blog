@@ -80,16 +80,10 @@
             color: #969696;
             margin: 0;
         }
-        #post-item > div:first-child > p:nth-child(1) {
-            width: 10%;
-            float: left;
+        #post-item > div:first-child > p:first-child {
+            margin-bottom: 5px;
         }
-        #post-item > div:first-child > p:nth-child(2) {
-            width: 90%;
-            float: right;
-            text-align: right;
-        }
-            #post-item > div:first-child > p:nth-child(2) > a {
+            #post-item > div:first-child > p > a {
                 font-size: 12px;
             }
     #post-item .liked-posts {
