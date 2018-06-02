@@ -58,7 +58,7 @@ class Highlight {
                 'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'break', 'continue', 'in', 'do', 'done', 'case', 'esac', 'function', 'return', 'local', 'declare'
             ),
             'command' => array(
-                'exit', 'exec', 'export', 'read', 'shift', 'sleep', 'wait', 'source', 'true', 'false', 'echo'
+                'exit', 'exec', 'export', 'read', 'shift', 'sleep', 'wait', 'source', 'true', 'false', 'echo', 'set'
             ),
             'signal' => array(
                 'SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGKILL', 'SIGTERM', 'SIGCONT', 'SIGSTOP', 'SIGTSTP'
@@ -219,7 +219,7 @@ class Highlight {
                 'true', 'false', 'null', 'int', 'float', 'bool'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL'
@@ -572,6 +572,24 @@ class Highlight {
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
+    }
+
+    public function highlightPHTML($code) {
+        ini_set('highlight.string',  '#0000FF');
+        ini_set('highlight.comment', '#888888');
+        ini_set('highlight.keyword', '#FF0000');
+        ini_set('highlight.default', '#008080');
+        ini_set('highlight.html',    '#0080FF');
+        $html = '<div class="phtml">'.highlight_string(trim($code), true).'</div>';
+        return str_replace(
+            array('&lt;?php', '&lt;?=', '?&gt;'),
+            array(
+                '<span style="background:#FFFFCC;">&lt;?php</span>',
+                '<span style="background:#FFFFCC;">&lt;?=</span>',
+                '<span style="background:#FFFFCC;">?&gt;</span>'
+            ),
+            $html
+        );
     }
 
     public function highlightPython($code) {
