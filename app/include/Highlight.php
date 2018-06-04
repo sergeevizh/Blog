@@ -584,9 +584,9 @@ class Highlight {
         return str_replace(
             array('&lt;?php', '&lt;?=', '?&gt;'),
             array(
-                '<span style="background:#FFFFCC;">&lt;?php</span>',
-                '<span style="background:#FFFFCC;">&lt;?=</span>',
-                '<span style="background:#FFFFCC;">?&gt;</span>'
+                '<span style="background:#FFFFEE;">&lt;?php</span>',
+                '<span style="background:#FFFFEE;">&lt;?=</span>',
+                '<span style="background:#FFFFEE;">?&gt;</span>'
             ),
             $html
         );
