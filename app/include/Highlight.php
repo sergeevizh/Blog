@@ -5,6 +5,15 @@
 class Highlight {
 
     private $settings = array(
+        'apache' => array(
+            'colors' => array(
+                'default'  => array('fore' => '#0080FF'),
+                'comment'  => array('fore' => '#888888'),
+                'section'  => array('fore' => '#8000FF'),
+                'param'    => array('fore' => '#008080'),
+                'string'   => array('fore' => '#0000FF'),
+            )
+        ),
         'awk' => array(
             'colors' => array(
                 'default'     => array('fore' => '#008080'),
@@ -114,7 +123,7 @@ class Highlight {
                 'string'    => array('fore' => '#0000FF'),
                 'keyword1'  => array('fore' => '#8B008B'),
                 'keyword2'  => array('fore' => '#8000FF'),
-                'keyword3'  => array('fore' => '#DD00DD'),
+                'keyword3'  => array('fore' => '#BB00BB'),
                 'directive' => array('fore' => '#808000'),
                 'code-area' => array('fore' => '#808000'),
                 'datetime'  => array('fore' => '#DD00DD'),
@@ -190,6 +199,16 @@ class Highlight {
                 'comment'    => array('fore' => '#888888'),
             ),
             'specchars' => array('&', '>', '<'),
+        ),
+        'ini' => array(
+            'colors' => array(
+                'default'  => array('fore' => '#0080FF'),
+                'comment'  => array('fore' => '#888888'),
+                'section'  => array('fore' => '#8000FF'),
+                'param'    => array('fore' => '#008080'),
+                'string'   => array('fore' => '#0000FF'),
+                'equal'    => array('fore' => '#FF0000')
+            )
         ),
         'php' => array(
             'colors' => array(
@@ -300,6 +319,23 @@ class Highlight {
 
     private $lang = 'code', $source = array(), $replace = array(), $pattern = array();
 
+
+    public function highlightApache($code) {
+
+        $this->init($code, 'apache');
+
+        $this->pattern = array(
+            'comment' => '~^\s*#.*~m',              // комментарии
+            'string'  => '~"[^"]*"~',               // строки в двойных кавычках
+            'section' => '~\<[^>]+\>~',             // секция
+            'param'   => '~^\s*[a-z]+(?= )~im',     // параметр
+        );
+
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
 
     public function highlightAWK($code) {
 
@@ -533,10 +569,28 @@ class Highlight {
         }
 
         $this->pattern = array(
-            'comment'    => '~(?<= )# .*$~m',                  // комментарий
+            'comment'    => '~(?<= )# .*$~m',                // комментарий
             'command'    => '~(?<=^(\>{3}|\.{3}) ).*$~m',    // команда
             'idleprompt' => '~^(>{3}|\.{3})(?= )~m',         // приглашение
             'specchars'  => '~'.implode('|', $specchars).'~' // спец.символы
+        );
+
+        $this->hl();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
+
+    public function highlightINI($code) {
+
+        $this->init($code, 'ini');
+
+        $this->pattern = array(
+            'comment' => '~^;.*~m',              // комментарии
+            'string'  => '~"[^"]*"~',            // строки в двойных кавычках
+            'section' => '~^\[[_a-z0-9]+\]~mi',  // начало секции
+            'param'   => '~^[_a-z.]+(?= =)~im',  // параметр
+            'equal'   => '~(?<= )=(?=( |$))~',   // знак =
         );
 
         $this->hl();

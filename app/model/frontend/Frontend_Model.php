@@ -52,7 +52,7 @@ abstract class Frontend_Model extends Base_Model {
      * Функция «подсвечивает» блоки кода, которые встречаются в HTML-тексте
      */
     protected function highlightCodeBlocks($html) {
-        $langs = array('awk', 'html', 'css', 'js', 'php', 'phtml', 'mysql', 'язык', 'запрос', 'python', 'idle', 'bash', 'cli', 'xml', 'code');
+        $langs = array('apache', 'awk', 'html', 'css', 'js', 'ini', 'php', 'phtml', 'mysql', 'язык', 'запрос', 'python', 'idle', 'bash', 'cli', 'xml', 'code');
         if (preg_match_all('~\[('.implode('|', $langs).')\](.+)\[/\1\]~Us', $html, $matches)) {
             foreach($matches[0] as $key => $value) {
                 $lang = $matches[1][$key];
@@ -69,10 +69,12 @@ abstract class Frontend_Model extends Base_Model {
     private function highlightCodeBlock($code, $lang) {
         $hl = new Highlight();
         switch ($lang) {
+            case 'apache': return $hl->highlightApache($code);
             case 'awk'   : return $hl->highlightAWK($code);
             case 'html'  : return $hl->highlightHTML($code);
             case 'css'   : return $hl->highlightCSS($code);
             case 'js'    : return $hl->highlightJS($code);
+            case 'ini'   : return $hl->highlightINI($code);
             case 'php'   : return $hl->highlightPHP($code);
             case 'phtml' : return $hl->highlightPHTML($code);
             case 'mysql' : return $this->highlightMysql($code);

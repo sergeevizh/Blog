@@ -137,6 +137,7 @@ abstract class Frontend_Controller extends Base_Controller {
             'blogCategories'    => $this->blogFrontendModel->getCategories(),
             'articleCategories' => $this->articleFrontendModel->getCategories(),
             'blogTags'          => $this->blogFrontendModel->getSideTags(),
+            'allTagsURL'        => $this->blogFrontendModel->getURL('frontend/blog/alltags'),
         );
 
         /*

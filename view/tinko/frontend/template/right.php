@@ -38,15 +38,16 @@ defined('ZCMS') or die('Access denied');
 <div>
     <div>Облако тегов</div>
     <div>
-    <?php if (!empty($blogTags)): ?>
-        <ul class="tags">
-        <?php foreach($blogTags as $item): ?>
-            <li>
-                <a href="<?php echo $item['url'] ?>" title="<?php echo htmlspecialchars($item['name']); ?>"><?php echo $item['short']; ?></a>&nbsp;(<?php echo $item['count']; ?>)
-            </li>
-        <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
+        <?php if (!empty($blogTags)): ?>
+            <ul class="side-tags">
+            <?php foreach($blogTags as $item): ?>
+                <li>
+                    <a href="<?php echo $item['url'] ?>" title="<?php echo htmlspecialchars($item['name']); ?>"><?php echo $item['short']; ?></a>&nbsp;(<?php echo $item['count']; ?>)
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+        <a href="<?php echo $allTagsURL; ?>" class="all-tags">Все теги</a>
     </div>
 </div>
 

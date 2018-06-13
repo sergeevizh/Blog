@@ -466,19 +466,28 @@ input[type="submit"] {
 #right {
 
 }
-    #right .tags {
+    #right ul.side-tags {
         -webkit-column-count: 2;
         -moz-column-count: 2;
         column-count: 2;
     }
-        #right > div > div:last-child > ul.tags > li {
+        #right > div > div:last-child > ul.side-tags > li {
             font-size: 9px;
             color: #969696;
             letter-spacing: -0.5px;
         }
-            #right > div > div:last-child > ul.tags > li > a {
+            #right > div > div:last-child > ul.side-tags > li > a {
                 font-size: 12px;
             }
+    #right a.all-tags {
+        display: block;
+        margin-top: 15px;
+        text-align: center;
+        background: #395985;
+        color: #FFFFFF;
+        text-decoration: none;
+        padding: 5px 0;
+    }
 
 
 /*
