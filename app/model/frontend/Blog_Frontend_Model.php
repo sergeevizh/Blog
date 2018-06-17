@@ -442,7 +442,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                   GROUP BY
                       1, 2
                   HAVING
-                      COUNT(*) > 3
+                      COUNT(*) > 4
                   ORDER BY
                       `a`.`name`";
         $tags = $this->database->fetchAll($query);
