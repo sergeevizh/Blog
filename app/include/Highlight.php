@@ -238,7 +238,7 @@ class Highlight {
                 'true', 'false', 'null', 'int', 'float', 'bool'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL'
@@ -608,6 +608,7 @@ class Highlight {
         }
         $this->pattern = array(
             'startphp'  => '~<\?php~',     // начало php-кода
+            
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
             'string2'   => "~'[^']*'~",    // строки в одинарных кавычках
             'comment1'  => '~\/\/.*$~m',   // комментарии
@@ -622,7 +623,10 @@ class Highlight {
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
+        $this->replaceQuoteInString();
         $this->hl();
+        $this->code = str_replace(chr(19), '"', $this->code);
+        $this->code = str_replace(chr(20), "'", $this->code);
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
@@ -776,6 +780,7 @@ class Highlight {
         if (!empty($this->source)) {
             $this->code = str_replace($this->replace, $this->source, $this->code);
         }
+        
 
     }
 
@@ -813,6 +818,73 @@ class Highlight {
             $number++;
         }
         $this->code = implode("\r\n", $res);
+
+    }
+    
+    /**
+     * Заменяет двойную/одинарную кавычку внутри строки в одинарных/двойных кавычках
+     */
+    private function replaceQuoteInString() {
+        
+        /*
+         * ищем двойную кавычку внутри строки в одинарных кавычках
+         */
+        // ищем позиции, которые занимают в строке кода символы строки в одинарных кавычках
+        $positions = array();
+        $offset = 0;
+        $i = 0;
+        while(false !== $pos = strpos($this->code, "'", $offset)) {
+            if ($i % 2) {
+                $stop = $pos;
+                for ($j = $start; $j <= $stop; $j++) {
+                    $positions[] = $j;
+                }
+            } else {
+                $start = $pos;
+            }
+            $offset = $pos + 1;
+            $i++;
+        }
+
+        // теперь проверяем, входит ли позиция двойной кавычки в массив $positions
+        $offset = 0;
+        while(false !== $pos = strpos($this->code, '"', $offset)) {
+            
+            if (in_array($pos, $positions)) {
+                $this->code = substr_replace($this->code, chr(19), $pos, 1);
+            }
+            $offset = $pos + 1;
+        }
+
+        /*
+         * ищем одинарную кавычку внутри строки в двойных кавычках
+         */
+        // ищем позиции, которые занимают в строке кода символы строки в двойных кавычках
+        $positions = array();
+        $offset = 0;
+        $i = 0;
+        while(false !== $pos = strpos($this->code, '"', $offset)) {
+            if ($i % 2) {
+                $stop = $pos;
+                for ($j = $start; $j <= $stop; $j++) {
+                    $positions[] = $j;
+                }
+            } else {
+                $start = $pos;
+            }
+            $offset = $pos + 1;
+            $i++;
+            if ($i > 5) break;
+        }
+        // print_r($positions);
+        // теперь проверяем, входит ли позиция одинарной кавычки в массив $positions
+        $offset = 0;
+        while(false !== $pos = strpos($this->code, "'", $offset)) {
+            if (in_array($pos, $positions)) {
+                $this->code = substr_replace($this->code, chr(20), $pos, 1);
+            }
+            $offset = $pos + 1;
+        }       
 
     }
 }
