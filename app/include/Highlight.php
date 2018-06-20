@@ -373,9 +373,6 @@ class Highlight {
             'comment2'    => '~^ *#+ .*$~m',                       // комментарии от начала строки
             'comment3'    => '~(?<= )#+ .*~',                      // комментарии в конце строки
             'string1'     => "~'[^']*'~",                          // строки в одинарных кавычках
-            'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|\?)~i',        // специальные переменные
-            'variable1'   => '~\$[a-z_][a-z0-9_]*~i',              // переменные
-            'variable2'   => '~\$\{[^}]+\}?~i',                    // переменные
         );
         if (preg_match_all('~^[_a-z][_a-z0-9]*(?=\(\) \{)~im', $code, $matches)) {
             foreach($matches[0] as $match)
@@ -390,6 +387,9 @@ class Highlight {
             $temp['function'] = '~\b('.implode('|', $functions).')\b~';
         }
         $temp2 = array(
+            'spec-var'    => '~\$([0-9]|#|!|\*|@|\$|\?)~i',        // специальные переменные
+            'variable1'   => '~\$[a-z_][a-z0-9_]*~i',              // переменные
+            'variable2'   => '~\$\{[^}]+\}?~i',                    // переменные
             'express'     => '~\$?\(\([^)(]+\)\)~',                // вычисление арифметического выражения
             'execute1'    => '~\$\([^)(]+\)~',                     // подстановка результата выполнения
             'execute2'    => '~\$\([^)(]+\)~',                     // подстановка результата выполнения
@@ -608,11 +608,10 @@ class Highlight {
         }
         $this->pattern = array(
             'startphp'  => '~<\?php~',     // начало php-кода
-            
+            'comment1'  => '~\/\/ .*$~m',  // комментарии
+            'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
             'string2'   => "~'[^']*'~",    // строки в одинарных кавычках
-            'comment1'  => '~\/\/.*$~m',   // комментарии
-            'comment2'  => '~/\*.*\*/~sU', // комментарии
             'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
             'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
@@ -623,10 +622,7 @@ class Highlight {
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->replaceQuoteInString();
         $this->hl();
-        $this->code = str_replace(chr(19), '"', $this->code);
-        $this->code = str_replace(chr(20), "'", $this->code);
 
         return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
 
@@ -721,6 +717,8 @@ class Highlight {
 
     private function hl() {
 
+        $this->replaceQuoteInString();
+
         foreach ($this->pattern as $color => $regexp) {
 
             $offset = 0;
@@ -780,7 +778,9 @@ class Highlight {
         if (!empty($this->source)) {
             $this->code = str_replace($this->replace, $this->source, $this->code);
         }
-        
+
+        $this->code = str_replace(chr(19), "'", $this->code);
+        $this->code = str_replace(chr(20), '"', $this->code);
 
     }
 
@@ -820,12 +820,12 @@ class Highlight {
         $this->code = implode("\r\n", $res);
 
     }
-    
+
     /**
      * Заменяет двойную/одинарную кавычку внутри строки в одинарных/двойных кавычках
      */
-    private function replaceQuoteInString() {
-        
+    private function replaceQuoteInStringOld() {
+
         /*
          * ищем двойную кавычку внутри строки в одинарных кавычках
          */
@@ -849,7 +849,7 @@ class Highlight {
         // теперь проверяем, входит ли позиция двойной кавычки в массив $positions
         $offset = 0;
         while(false !== $pos = strpos($this->code, '"', $offset)) {
-            
+
             if (in_array($pos, $positions)) {
                 $this->code = substr_replace($this->code, chr(19), $pos, 1);
             }
@@ -884,7 +884,57 @@ class Highlight {
                 $this->code = substr_replace($this->code, chr(20), $pos, 1);
             }
             $offset = $pos + 1;
-        }       
+        }
 
+    }
+
+    /**
+     * Заменяет двойную/одинарную кавычку внутри строки в одинарных/двойных кавычках
+     */
+    private function replaceQuoteInString() {
+        //print_r($this->code);
+        //$chars = explode('', $this->code);
+        $strlen = iconv_strlen($this->code);
+        $singleQuoteString = false;
+        $doubleQuoteString = false;
+        for ($i = 0; $i < $strlen; $i++) {
+            $char = $this->code[$i];
+            if ( ! in_array($char, ['"', "'"])) {
+                continue;
+            }
+            /*
+             * Возможны три варианта:
+             * 1. Мы внутри строки в одинарных кавычках
+             * 2. Мы внутри строки в двойных кавычках
+             * 3. Ни первое, ни второе
+             */
+            if (false === $singleQuoteString && false === $doubleQuoteString) { // третий случай
+                if ($char === '"') { // ситуация изменилась, теперь это второй случай
+                    $doubleQuoteString = true;
+                }
+                if ($char === "'") { // ситуация изменилась, теперь это первый случай
+                    $singleQuoteString = true;
+                }
+            } elseif ($doubleQuoteString) { // второй случай, мы внутри строки в двойных кавычках
+                // еще одна встреченная двойная кавычка означает, что строка здесь заканчивается
+                if ($char === '"') {
+                    $doubleQuoteString = false;
+                }
+                // если мы встретили одинарную кавычку, заменяем ее, чтобы не было коллизий при подсветке
+                if ($char === "'") {
+                    $this->code = substr_replace($this->code, chr(19), $i, 1);
+                }
+            } elseif ($singleQuoteString) { // третий случай, мы внутри строки в одинарных кавычках
+                // еще одна встреченная одинарная кавычка означает, что строка здесь заканчивается
+                if ($char === "'") {
+                    $singleQuoteString = false;
+                }
+                // если мы встретили двойную кавычку, заменяем ее, чтобы не было коллизий при подсветке
+                if ($char === '"') {
+                    $this->code = substr_replace($this->code, chr(20), $i, 1);
+                }
+            }
+
+        }
     }
 }
