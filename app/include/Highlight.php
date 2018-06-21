@@ -629,6 +629,36 @@ class Highlight {
     }
 
     public function highlightPHTML($code) {
+    
+        /*
+         * Сначала врезаем куски php-кода, потом раскрашиваем все эти куски, потом вставляем обратно
+         */
+        /*
+        $offset = 0;
+        $source = array();
+        $replace = array();
+        while (preg_match('~<\?(=|php)?.*\?>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
+            $item = $match[0][0];
+            $offset = $match[0][1];
+            $length = strlen($match[0][0]);
+            
+            $this->highlightCodeString(); // результат работы будет в $this->code
+            $source[] = $this->code;
+            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+            $replace[] = $rand;
+            $code = substr_replace($code, $rand, $offset, $length);
+            $offset = $offset + strlen($rand);
+        }
+    
+        $source = array_reverse($source);
+        $replace = array_reverse($replace);
+
+        if (!empty($this->source)) {
+            $code = str_replace($replace, $source, $code);
+        }
+        
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $code . '</pre>';
+        */
         ini_set('highlight.string',  '#0000FF');
         ini_set('highlight.comment', '#888888');
         ini_set('highlight.keyword', '#FF0000');
@@ -717,7 +747,7 @@ class Highlight {
 
     private function highlightCodeString() {
 
-        $this->replaceQuoteInString();
+        //$this->replaceQuoteInString();
 
         foreach ($this->pattern as $color => $regexp) {
 
