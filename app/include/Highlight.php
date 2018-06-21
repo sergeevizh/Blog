@@ -747,7 +747,7 @@ class Highlight {
 
     private function highlightCodeString() {
 
-        //$this->replaceQuoteInString();
+        $this->replaceQuoteInString();
 
         foreach ($this->pattern as $color => $regexp) {
 
