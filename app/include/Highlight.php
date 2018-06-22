@@ -1,6 +1,6 @@
 <?php
 /**
- * Класс Highlight, для подсветки кода в публикациях ...
+ * Класс Highlight, для подсветки кода в публикациях
  */
 class Highlight {
 
@@ -179,7 +179,7 @@ class Highlight {
         ),
         'html' => array(
             'colors' => array(
-                'default'   => array('fore' => '#222222'),
+                'default'   => array('fore' => '#333333'),
                 'doctype'   => array('fore' => '#8B008B'),
                 'comment'   => array('fore' => '#888888'),
                 'string'    => array('fore' => '#0080FF'),
@@ -213,7 +213,9 @@ class Highlight {
         'php' => array(
             'colors' => array(
                 'default'   => array('fore' => '#008080'),
-                'startphp'  => array('fore' => '#FF0000'),
+                'startphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
+                'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
+                'stotphp'   => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'comment1'  => array('fore' => '#888888'),
                 'comment2'  => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000EE'),
@@ -229,7 +231,7 @@ class Highlight {
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case', 'default', 'use', 'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new', 'parent', 'const',  'array', 'list',
+                'if', 'else', 'elseif', 'endif', 'for', 'endfor', 'while', 'foreach', 'endforeach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case', 'default', 'use', 'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new', 'parent', 'const',  'array', 'list',
             ),
             'keyword2' => array(
                 'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include'
@@ -238,7 +240,7 @@ class Highlight {
                 'true', 'false', 'null', 'int', 'float', 'bool'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL'
@@ -246,6 +248,11 @@ class Highlight {
             'delimiter' => array(
                 '.', ',', ':', ';', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!', '?', '&', '@', '\\'
             ),
+        ),
+        'phtml' => array(
+            'colors' => array(
+                'default'   => array('fore' => '#888888'),
+            )
         ),
         'python' => array(
             'colors' => array(
@@ -608,6 +615,8 @@ class Highlight {
         }
         $this->pattern = array(
             'startphp'  => '~<\?php~',     // начало php-кода
+            'startecho' => '~<\?=~',       // начало php-кода
+            'stotphp'   => '~\?>~',        // конец php-кода
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
@@ -629,51 +638,47 @@ class Highlight {
     }
 
     public function highlightPHTML($code) {
-    
+
         /*
          * Сначала врезаем куски php-кода, потом раскрашиваем все эти куски, потом вставляем обратно
          */
-        /*
         $offset = 0;
         $source = array();
         $replace = array();
+        $code = trim($code);
+        $code = str_replace("\r\n", "\n", $code);
+        $code = str_replace("\t", '    ', $code);
         while (preg_match('~<\?(=|php)?.*\?>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
             $item = $match[0][0];
             $offset = $match[0][1];
             $length = strlen($match[0][0]);
-            
-            $this->highlightCodeString(); // результат работы будет в $this->code
-            $source[] = $this->code;
+
+            $this->highlightPHP($item); // результат работы будет в $this->code
+            $source[] = '<span style="color:'.$this->settings['php']['colors']['default']['fore'].'">'.$this->code.'</span>';
             $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
             $replace[] = $rand;
             $code = substr_replace($code, $rand, $offset, $length);
             $offset = $offset + strlen($rand);
         }
-    
+
+        // теперь раскрашиваем html
+        $this->highlightHTML($code); // результат работы будет в $this->code
+        $code = $this->code;
+        /*
+        // html-код будет серым
+        $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $code);
+        $code = '<span style="color:'.$this->settings['phtml']['colors']['default']['fore'].'">' . $code . '</span>';
+        */
+
+        // вставляем куски php-кода обратно
         $source = array_reverse($source);
         $replace = array_reverse($replace);
-
-        if (!empty($this->source)) {
+        if (!empty($source)) {
             $code = str_replace($replace, $source, $code);
         }
-        
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $code . '</pre>';
-        */
-        ini_set('highlight.string',  '#0000FF');
-        ini_set('highlight.comment', '#888888');
-        ini_set('highlight.keyword', '#FF0000');
-        ini_set('highlight.default', '#008080');
-        ini_set('highlight.html',    '#0080FF');
-        $html = '<div class="phtml">'.highlight_string(trim($code), true).'</div>';
-        return str_replace(
-            array('&lt;?php', '&lt;?=', '?&gt;'),
-            array(
-                '<span style="background:#FFFFEE;">&lt;?php</span>',
-                '<span style="background:#FFFFEE;">&lt;?=</span>',
-                '<span style="background:#FFFFEE;">?&gt;</span>'
-            ),
-            $html
-        );
+
+        return '<pre>' . $code . '</pre>';
+
     }
 
     public function highlightPython($code) {
@@ -749,6 +754,8 @@ class Highlight {
 
         $this->replaceQuoteInString();
 
+        $source = array();
+        $replace = array();
         foreach ($this->pattern as $color => $regexp) {
 
             $offset = 0;
@@ -757,19 +764,19 @@ class Highlight {
                 $item = $match[0][0];
                 $offset = $match[0][1];
                 $length = strlen($match[0][0]);
-                $tmp = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $match[0][0]);
+                $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $match[0][0]);
 
                 // TODO: оформить этот хак по-человечески
-                if ($this->lang == 'erp' && $color == 'string' && '"ВЫБРАТЬ' == iconv_substr($tmp, 0, 8)) {
-                    $tmp = preg_replace(
+                if ($this->lang == 'erp' && $color == 'string' && '"ВЫБРАТЬ' == iconv_substr($code, 0, 8)) {
+                    $code = preg_replace(
                         '~\b('.implode('|', $this->settings['query']['keyword1']).')\b(?= |$)~mu',
                         '<span style="color:#0000AA">$0</span>',
-                        $tmp
+                        $code
                     );
-                    $tmp = preg_replace(
+                    $code = preg_replace(
                         '~\b('.implode('|', $this->settings['query']['function']).')(?=\()~ui',
                         '<span style="color:#0000AA">$0</span>',
-                        $tmp
+                        $code
                     );
 
                 }
@@ -789,12 +796,12 @@ class Highlight {
                     $style = implode(';', $styles);
                 }
                 if (!empty($style)) {
-                    $this->source[] = '<span style="' . $style . '">' . $tmp . '</span>';
+                    $source[] = '<span style="' . $style . '">' . $code . '</span>';
                 } else {
-                    $this->source[] = $tmp;
+                    $source[] = $code;
                 }
                 $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-                $this->replace[] = $rand;
+                $replace[] = $rand;
                 $this->code = substr_replace($this->code, $rand, $offset, $length);
                 $offset = $offset + strlen($rand);
 
@@ -802,11 +809,11 @@ class Highlight {
 
         }
 
-        $this->source = array_reverse($this->source);
-        $this->replace = array_reverse($this->replace);
+        $source = array_reverse($source);
+        $replace = array_reverse($replace);
 
-        if (!empty($this->source)) {
-            $this->code = str_replace($this->replace, $this->source, $this->code);
+        if (!empty($source)) {
+            $this->code = str_replace($replace, $source, $this->code);
         }
 
         $this->code = str_replace(chr(19), "'", $this->code);
@@ -822,8 +829,6 @@ class Highlight {
         $this->code = str_replace("\r\n", "\n", $this->code);
         $this->code = str_replace("\t", '    ', $this->code);
 
-        $this->source = array();
-        $this->replace = array();
         $this->pattern = array();
 
     }
@@ -850,7 +855,7 @@ class Highlight {
         $this->code = implode("\r\n", $res);
 
     }
-    
+
     /**
      * Заменяет двойную/одинарную кавычку внутри строки в одинарных/двойных кавычках
      */
