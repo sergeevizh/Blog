@@ -233,7 +233,7 @@ class Highlight {
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'if', 'else', 'elseif', 'endif', 'for', 'endfor', 'while', 'foreach', 'endforeach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case', 'default', 'use', 'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new', 'parent', 'const',  'array', 'list',
+                'if', 'else', 'elseif', 'endif', 'for', 'endfor', 'while', 'endwhile', 'foreach', 'endforeach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case', 'default', 'use', 'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new', 'parent', 'const',  'array', 'list',
             ),
             'keyword2' => array(
                 'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include'
@@ -286,20 +286,20 @@ class Highlight {
         ),
         'query' => array(
             'colors' => array(
-                'default'   => array('fore' => '#008080'),
+                'default'   => array('fore' => '#0080C0'),
                 'comment'   => array('fore' => '#888888'),
                 'string'    => array('fore' => '#0000FF'),
                 'property'  => array('fore' => '#0080FF'),
                 'keyword1'  => array('fore' => '#8000FF'),
-                'keyword2'  => array('fore' => '#FF0080'),
+                'keyword2'  => array('fore' => '#CC00CC'),
                 'function'  => array('fore' => '#808000'),
-                'parameter' => array('fore' => '#DD00DD'),
+                'parameter' => array('fore' => '#CC6600'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'ВЫБРАТЬ', 'ПЕРВЫЕ', 'РАЗЛИЧНЫЕ', 'РАЗРЕШЕННЫЕ', 'ПОМЕСТИТЬ', 'ИЗ', 'СОЕДИНЕНИЕ', 'ЛЕВОЕ', 'ПРАВОЕ', 'ПО', 'ГДЕ', 'В', 'ИЕРАРХИИ', 'МЕЖДУ', 'ПОДОБНО', 'ЕСТЬ', 'СГРУППИРОВАТЬ', 'ПО', 'УПОРЯДОЧИТЬ', 'ИМЕЮЩИЕ', 'ИТОГИ', 'КАК', 'ВЫБОР', 'КОГДА', 'ИНАЧЕ', 'КОНЕЦ', 'ТОЛЬКО', 'ИЕРАРХИЯ', 'ССЫЛКА', 'ОБЪЕДИНИТЬ', 'ВСЕ', 'И', 'ИЛИ', 'НЕ'
+                'ВЫБРАТЬ', 'ПЕРВЫЕ', 'РАЗЛИЧНЫЕ', 'РАЗРЕШЕННЫЕ', 'ПОМЕСТИТЬ', 'ИЗ', 'СОЕДИНЕНИЕ', 'ЛЕВОЕ', 'ПРАВОЕ', 'ПО', 'ГДЕ', 'В', 'ИЕРАРХИИ', 'МЕЖДУ', 'ПОДОБНО', 'ЕСТЬ', 'СГРУППИРОВАТЬ', 'ПО', 'УПОРЯДОЧИТЬ', 'ИМЕЮЩИЕ', 'ИТОГИ', 'КАК', 'ВЫБОР', 'КОГДА', 'ИНАЧЕ', 'КОНЕЦ', 'ТОЛЬКО', 'ИЕРАРХИЯ', 'ИЕРАРХИИ', 'ССЫЛКА', 'ОБЪЕДИНИТЬ', 'ВСЕ', 'И', 'ИЛИ', 'НЕ'
             ),
             'keyword2' => array(
                 'ИСТИНА', 'ЛОЖЬ', 'NULL'
@@ -721,8 +721,8 @@ class Highlight {
             'string'    => '~"[^"]*"~',  // строки
             'comment'   => '~\/\/.*$~m', // комментарии
             'property'  => '~(?<=\{)[^}{]*(?=\})~',   // характеристики
-            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b(?= |$)~mu',  // ключевые слова
-            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b(?= |$)~mui', // ключевые слова
+            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b(?= |,|$)~mu', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b(?= |$)~mui',  // ключевые слова
             'function'  => '~\b('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~ui', // функции
             'parameter' => '~&[а-яё]+\b~ui', // параметр
             'digit'     => '~\b\d+\b~', // цифры
@@ -768,21 +768,6 @@ class Highlight {
                 $offset = $match[0][1];
                 $length = strlen($match[0][0]);
                 $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $match[0][0]);
-
-                // TODO: оформить этот хак по-человечески
-                if ($this->lang == 'erp' && $color == 'string' && '"ВЫБРАТЬ' == iconv_substr($code, 0, 8)) {
-                    $code = preg_replace(
-                        '~\b('.implode('|', $this->settings['query']['keyword1']).')\b(?= |$)~mu',
-                        '<span style="color:#0000AA">$0</span>',
-                        $code
-                    );
-                    $code = preg_replace(
-                        '~\b('.implode('|', $this->settings['query']['function']).')(?=\()~ui',
-                        '<span style="color:#0000AA">$0</span>',
-                        $code
-                    );
-
-                }
 
                 $styles = array();
                 if (isset($this->settings[$this->lang]['colors'][$color]['fore'])) {
