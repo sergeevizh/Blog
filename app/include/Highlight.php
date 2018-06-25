@@ -105,8 +105,8 @@ class Highlight {
                 'media'       => array('fore' => '#EE00EE'),
                 'prop-name'   => array('fore' => '#8000FF'),
                 'prop-value'  => array('fore' => '#0080FF'),
-                'css-uniq'    => array('fore' => '#8B008B'),
-                'css-class'   => array('fore' => '#0000EE'),
+                'css-uniq'    => array('fore' => '#0080C0'),
+                'css-class'   => array('fore' => '#808000'),
                 'pseudo-el'   => array('fore' => '#FF8000'),
                 'pseudo-cl'   => array('fore' => '#FF8000'),
                 'pseudo-cl-n' => array('fore' => '#FF8000'),
@@ -183,7 +183,7 @@ class Highlight {
                 'doctype'   => array('fore' => '#8B008B'),
                 'comment'   => array('fore' => '#888888'),
                 'string'    => array('fore' => '#0080FF'),
-                'element'   => array('fore' => '#008080'),
+                'element'   => array('fore' => '#0080C0'),
                 'entity'    => array('fore' => '#8000FF'),
                 'attrname'  => array('fore' => '#808000'),
                 'attrvalue' => array('fore' => '#0080FF'),
@@ -214,8 +214,10 @@ class Highlight {
             'colors' => array(
                 'default'   => array('fore' => '#008080'),
                 'startphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
+                'shortphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
-                'stotphp'   => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
+                'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
+                'stopphp'   => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'comment1'  => array('fore' => '#888888'),
                 'comment2'  => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000EE'),
@@ -616,7 +618,8 @@ class Highlight {
         $this->pattern = array(
             'startphp'  => '~<\?php~',     // начало php-кода
             'startecho' => '~<\?=~',       // начало php-кода
-            'stotphp'   => '~\?>~',        // конец php-кода
+            'shortphp'  => '~<\?~',        // начало php-кода
+            'stopphp'   => '~\?>~',        // конец php-кода
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
