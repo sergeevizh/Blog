@@ -155,13 +155,13 @@ class Highlight {
                 'default'   => array('fore' => '#008080'),
                 'comment1'  => array('fore' => '#888888'),
                 'comment2'  => array('fore' => '#888888'),
-                'string1'   => array('fore' => '#0080FF'),
-                'string2'   => array('fore' => '#0080FF'),
+                'string1'   => array('fore' => '#0000FF'),
+                'string2'   => array('fore' => '#0000FF'),
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#DD00DD'),
                 'function'  => array('fore' => '#990099'),
                 'digit'     => array('fore' => '#DD00DD'),
-                'delimiter' => array('fore' => '#FF5555'),
+                'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
@@ -242,7 +242,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'json_encode', 'json_decode'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL'
@@ -530,13 +530,13 @@ class Highlight {
         $this->init($code, 'html');
 
         $this->pattern = array(
-            'entity'    => '~&[a-z]+;~',                  // html-сущности
-            'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',  // имя атрибут тега
+            'entity'    => '~&[a-z]+;~',                   // html-сущности
+            'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',   // имя атрибут тега
             'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~', // значение атрибут тега
-            //'equal'     => '~(?<=¤)\=(?=¤)~',             // разделитель между атрибутом и значением
-            'element'   => '~</?[a-z0-9]+[^>]*>~',        // открывающие и закрывающие теги
-            'comment'   => '~<\!--.*-->~',                // комментарии
-            'doctype'   => '~<\!DOCTYPE[^>]*>~',          // <!DOCTYPE html>
+            //'equal'     => '~(?<=¤)\=(?=¤)~',            // разделитель между атрибутом и значением
+            'element'   => '~</?[a-z0-9]+[^>]*>~',         // открывающие и закрывающие теги
+            'comment'   => '~<\!--.*-->~',                 // комментарии
+            'doctype'   => '~<\!DOCTYPE[^>]*>~i',          // <!DOCTYPE html>
         );
 
         $this->highlightCodeString();
@@ -616,14 +616,14 @@ class Highlight {
             $delimiter[] = '\\'.$value;
         }
         $this->pattern = array(
-            'startphp'  => '~<\?php~',     // начало php-кода
-            'startecho' => '~<\?=~',       // начало php-кода
-            'shortphp'  => '~<\?~',        // начало php-кода
-            'stopphp'   => '~\?>~',        // конец php-кода
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
             'string2'   => "~'[^']*'~",    // строки в одинарных кавычках
+            'startphp'  => '~<\?php~',     // начало php-кода
+            'startecho' => '~<\?=~',       // начало php-кода
+            'shortphp'  => '~<\?~',        // начало php-кода
+            'stopphp'   => '~\?>~',        // конец php-кода
             'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
             'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
