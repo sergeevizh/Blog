@@ -29,7 +29,7 @@ $config = array(
     ),
     'admin' => array( // логин, пароль и e-mail администратора сайта
         'name'     => 'admin',
-        'password' => 'qwerty',
+        'password' => 'tsjukmte',
         'email'    => 'tokmakov.e@mail.ru'
     ),
     'error' => array(
