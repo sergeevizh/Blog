@@ -180,7 +180,7 @@ class Highlight {
         'html' => array(
             'colors' => array(
                 'default'   => array('fore' => '#333333'),
-                'doctype'   => array('fore' => '#8B008B'),
+                'doctype'   => array('fore' => '#0080C0', 'back' => '#FFFFFF'),
                 'comment'   => array('fore' => '#888888'),
                 'string'    => array('fore' => '#0080FF'),
                 'element'   => array('fore' => '#0080C0'),
@@ -209,6 +209,22 @@ class Highlight {
                 'string'   => array('fore' => '#0000FF'),
                 'equal'    => array('fore' => '#FF0000')
             )
+        ),
+        'mysql' => array(
+            'colors' => array(
+                'default'  => array('fore' => '#8000FF'),
+                'comment1' => array('fore' => '#888888'),
+                'comment2' => array('fore' => '#888888'),
+                'comment3' => array('fore' => '#888888'),
+                'string1'  => array('fore' => '#0080FF'),
+                'string2'  => array('fore' => '#0080FF'),
+                'string3'  => array('fore' => '#0080C0'),
+                'digit'    => array('fore' => '#DD00DD'),
+                'delimiter'=> array('fore' => '#FF0000'),
+            ),
+	        'delimiter' => array(
+	            '.', ',', ';', '=', '(', ')', '@', '*'
+	        ),
         ),
         'php' => array(
             'colors' => array(
@@ -531,7 +547,7 @@ class Highlight {
 
         $this->pattern = array(
             'doctype'   => '~<\!DOCTYPE[^>]*>~i',          // <!DOCTYPE html>
-        	'comment'   => '~<\!--.*-->~s',                // комментарии
+        	'comment'   => '~<\!--.*-->~sU',               // комментарии
             'entity'    => '~&[a-z]+;~',                   // html-сущности
             'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',   // имя атрибут тега
             'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~', // значение атрибут тега
@@ -600,6 +616,30 @@ class Highlight {
             'section' => '~^\[[_a-z0-9]+\]~mi',  // начало секции
             'param'   => '~^[_a-z.]+(?= =)~im',  // параметр
             'equal'   => '~(?<= )=(?=( |$))~',   // знак =
+        );
+
+        $this->highlightCodeString();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
+
+    public function highlightMySQL($code) {
+
+        $this->init($code, 'mysql');
+
+        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+        $this->pattern = array(
+            'comment1'  => '~(?<= |^)--\s.*$~m', // комментарии
+            'comment2'  => '~(?<= |^)#\s.*$~m',  // комментарии
+            'comment3'  => '~/\*.*\*/~sU',       // комментарии
+            'string1'   => '~"[^"]*"~',          // строки в двойных кавычках
+            'string2'   => "~'[^']*'~",          // строки в одинарных кавычках
+            'string3'   => '~`[^`]*`~',          // строки в обратных кавычках
+            'digit'     => '~\b\d+(\.\d+)?\b~',  // цифры
+            'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
         $this->highlightCodeString();
