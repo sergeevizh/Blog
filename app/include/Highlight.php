@@ -470,9 +470,9 @@ class Highlight {
         }
 
         $this->pattern = array(
-            'selected1' => '~\[red\].*?\[/red\]~',          // выделить текст
-            'selected2' => '~\[grn\].*?\[/grn\]~',          // выделить текст
-            'selected3' => '~\[border\].*?\[/border\]~',    // выделить текст
+            'selected1' => '~\[red\].*\[/red\]~sU',         // выделить текст
+            'selected2' => '~\[grn\].*\[/grn\]~sU',         // выделить текст
+            'selected3' => '~\[border\].*\[/border\]~sU',   // выделить текст
             'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
         );
 
@@ -781,7 +781,7 @@ class Highlight {
 
         $this->pattern = array(
             'xmldecl'   => '~<\?xml[^>]*>~',                       // <?xml version="1.0" encoding="utf-8"...>
-            'comment'   => '~<\!--.*-->~s',                        // комментарии
+            'comment'   => '~<\!--.*-->~sU',                       // комментарии
             'attrname'  => '~(?<= )[-a-zA-Zа-яА-Я0-9:]+(?=\=")~u', // имя атрибут тега
             'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~',         // значение атрибут тега
             'element'   => '~</?[a-zA-Zа-яА-Я0-9]+[^>]*>~u',       // открывающие и закрывающие теги
@@ -844,6 +844,7 @@ class Highlight {
             $this->code = str_replace($replace, $source, $this->code);
         }
 
+		// замена непечатных символов обратно на кавычки, см. метод replaceQuoteInString()
         $this->code = str_replace(chr(19), "'", $this->code);
         $this->code = str_replace(chr(20), '"', $this->code);
 
@@ -896,7 +897,7 @@ class Highlight {
          * Кавычки внутри строки заменяем на непечатные символы, чтобы правильно раскрасить
          * код. А когда раскраска сделана, непечатные символы заменяются обратно на кавычки.
          */
-        $offset = 0;
+        $offset = 0; // сдвиг от начала строки кода, который надо раскрасить
         $singleQuoteString = false; // признак того, что мы внутри строки в одинарных кавычках
         $doubleQuoteString = false; // признак того, что мы внутри строки в двойных кавычках
         while (preg_match('~[\'"]~', $this->code, $match, PREG_OFFSET_CAPTURE, $offset)) {
@@ -934,7 +935,7 @@ class Highlight {
                     $this->code = substr_replace($this->code, chr(20), $position, 1);
                 }
             }
-            $offset = $position + 1;
+            $offset = $position + 1; // следующий поиск кавычки уже с этой позиции
         }
     }
 }
