@@ -11,6 +11,6 @@ defined('ZCMS') or die('Access denied');
 
 <!-- Начало шаблона view/example/frontend/template/footer.php -->
 
-All right reserved
+Узелки на память: Web-разработка, 1С:Предприятие, ОС Linux
 
 <!-- Конец шаблона view/example/frontend/template/footer.php -->
