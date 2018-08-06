@@ -795,6 +795,10 @@ class Highlight {
 
     private function highlightCodeString() {
 
+        // заменяем экранированные кавычки на непечатные символы, чтобы правильно раскрашивать код
+        $this->code = str_replace("\\'", chr(11).chr(11), $this->code);
+        $this->code = str_replace('\\"', chr(12).chr(12), $this->code);
+        // заменяем одинарные кавычки внутри двойных и двойные внутри одинарных, чтобы правильно раскрашивать код
         $this->replaceQuoteInString();
 
         $source = array();
@@ -844,9 +848,12 @@ class Highlight {
             $this->code = str_replace($replace, $source, $this->code);
         }
 
-		// замена непечатных символов обратно на кавычки, см. метод replaceQuoteInString()
-        $this->code = str_replace(chr(19), "'", $this->code);
-        $this->code = str_replace(chr(20), '"', $this->code);
+        // заменяем непечатные символы обратно на экранированные кавычки
+        $this->code = str_replace(chr(11).chr(11), "\\'", $this->code);
+        $this->code = str_replace(chr(12).chr(12), '\\"', $this->code);
+        // замена непечатных символов обратно на кавычки, см. метод replaceQuoteInString()
+        $this->code = str_replace(chr(13), "'", $this->code);
+        $this->code = str_replace(chr(14), '"', $this->code);
 
     }
 
@@ -923,7 +930,7 @@ class Highlight {
                 }
                 // если мы встретили одинарную кавычку, заменяем ее, чтобы не было коллизий при подсветке
                 if ($quote === "'") {
-                    $this->code = substr_replace($this->code, chr(19), $position, 1);
+                    $this->code = substr_replace($this->code, chr(13), $position, 1);
                 }
             } elseif ($singleQuoteString) { // третий случай, мы внутри строки в одинарных кавычках
                 // если мы встретили одинарную кавычку, это означает, что строка '...' здесь заканчивается
@@ -932,7 +939,7 @@ class Highlight {
                 }
                 // если мы встретили двойную кавычку, заменяем ее, чтобы не было коллизий при подсветке
                 if ($quote === '"') {
-                    $this->code = substr_replace($this->code, chr(20), $position, 1);
+                    $this->code = substr_replace($this->code, chr(14), $position, 1);
                 }
             }
             $offset = $position + 1; // следующий поиск кавычки уже с этой позиции
