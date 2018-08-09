@@ -177,6 +177,20 @@ class Highlight {
                 '.', ',', ':', ';', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!', '?', '&'
             ),
         ),
+        'json' => array(
+            'colors' => array(
+                'default'   => array('fore' => '#000000'),
+                'string'    => array('fore' => '#0080FF'),
+                'null'      => array('fore' => '#808000'),
+                'bool'      => array('fore' => '#FF8000'),
+                'digit'     => array('fore' => '#EE00EE'),
+                'delimiter' => array('fore' => '#FF0000'),
+                'number'    => array('fore' => '#CCCCCC'),
+            ),
+            'delimiter' => array(
+                ',', ':', '[', ']', '{', '}'
+            ),
+        ),
         'html' => array(
             'colors' => array(
                 'default'   => array('fore' => '#333333'),
@@ -222,9 +236,9 @@ class Highlight {
                 'digit'    => array('fore' => '#DD00DD'),
                 'delimiter'=> array('fore' => '#FF0000'),
             ),
-	        'delimiter' => array(
-	            '.', ',', ';', '=', '(', ')', '@', '*'
-	        ),
+            'delimiter' => array(
+                '.', ',', ';', '=', '(', ')', '@', '*'
+            ),
         ),
         'php' => array(
             'colors' => array(
@@ -258,7 +272,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos',
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'stream_context_create',
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL'
@@ -332,7 +346,7 @@ class Highlight {
                 'default'   => array('fore' => '#222222'),
                 'xmldecl'   => array('fore' => '#8B008B'),
                 'comment'   => array('fore' => '#888888'),
-                'element'   => array('fore' => '#008080'),
+                'element'   => array('fore' => '#0080C0'),
                 'attrname'  => array('fore' => '#808000'),
                 'attrvalue' => array('fore' => '#0080FF'),
                 'entity'    => array('fore' => '#8000FF'),
@@ -576,6 +590,27 @@ class Highlight {
             'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
             'function'  => '~\b('.implode('|', $this->settings[$this->lang]['function']).')\b\s?(?=\()~i', // встроенные функции
             'digit'     => '~\b\d+\b~', // цифры
+            'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
+        );
+
+        $this->highlightCodeString();
+
+        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+
+    }
+
+    public function highlightJSON($code) {
+
+        $this->init($code, 'json');
+
+        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+        $this->pattern = array(
+            'string'   => '~"[^"]*"~',     // строки в двойных кавычках
+            'null'     => '~\bnull\b~',
+            'bool'     => '~\btrue|false\b~',
+            'digit'     => '~\b\d+\b~',    // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
