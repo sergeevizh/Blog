@@ -356,56 +356,54 @@ class Highlight {
 
     );
 
-    private $lang = 'code', $source = array(), $replace = array(), $pattern = array();
-
 
     public function highlightApache($code) {
 
-        $this->init($code, 'apache');
+        $code = $this->trim($code);
 
-        $this->pattern = array(
+        $pattern = array(
             'comment' => '~^\s*#.*~m',              // комментарии
             'string'  => '~"[^"]*"~',               // строки в двойных кавычках
             'section' => '~\<[^>]+\>~',             // секция
             'param'   => '~^\s*[a-z]+(?= )~im',     // параметр
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'apache');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['apache']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightAWK($code) {
 
-        $this->init($code, 'awk');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+        foreach ($this->settings['awk']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
 
-        $this->pattern = array(
+        $pattern = array(
             'comment'     => '~# .*~',                    // комментарии
             'spec-var'    => '~\$[0-9]~',                 // позиционные переменные
             '$variable'   => '~\$[_a-z][_a-z0-9]*~',      // позиционные переменные
             '$expression' => '~\$\([^)]+\)~',             // позиционные переменные
             'string'      => '~"[^"]*"~',                 // строки в двойных кавычках
-            'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~',   // ключевые слова
-            'begin-end'   => '~\b('.implode('|', $this->settings[$this->lang]['begin-end']).')\b~', // BEGIN и END
+            'keyword'     => '~\b('.implode('|', $this->settings['awk']['keyword']).')\b~',   // ключевые слова
+            'begin-end'   => '~\b('.implode('|', $this->settings['awk']['begin-end']).')\b~', // BEGIN и END
             'pattern'     => '~/[^/]+/~', // регулярное выражение
             'digit'       => '~\b\d+\b~', // цифры
             'delimiter'   => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'awk');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['awk']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightBash($code) {
 
-        $this->init($code, 'bash');
+        $code = $this->trim($code);
 
         $temp1 = array(
             'comment1'    => '~^ *#+$~m',                          // пустой комментарий
@@ -436,29 +434,29 @@ class Highlight {
             'string2'     => '~"[^"]*"~',                          // строки в двойных кавычках
             'here-doc'    => '~(?<=\<\<) ?-?([-_A-Za-z]+).*?\1~s', // here doc
             'arr-init'    => '~(?<=[a-z]\=)\([^)]*\)~i',           // инициализация массива
-            'keyword'     => '~\b('.implode('|', $this->settings[$this->lang]['keyword']).')\b~i', // ключевые слова
-            'command'     => '~\b('.implode('|', $this->settings[$this->lang]['command']).')\b~i', // команды
-            'signal'      => '~\b('.implode('|', $this->settings[$this->lang]['signal']).')\b~',   // сигналы
+            'keyword'     => '~\b('.implode('|', $this->settings['bash']['keyword']).')\b~i', // ключевые слова
+            'command'     => '~\b('.implode('|', $this->settings['bash']['command']).')\b~i', // команды
+            'signal'      => '~\b('.implode('|', $this->settings['bash']['signal']).')\b~',   // сигналы
             'bin-bash'    => "~^#!/[-/a-z]+~",                      // что-то типа #!/bin/bash
         );
 
-        $this->pattern = array_merge($temp1, $temp, $temp2);
+        $pattern = array_merge($temp1, $temp, $temp2);
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'bash');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['bash']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightCLI($code) {
 
-        $this->init($code, 'cli');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['specchars'] as $value) {
+        foreach ($this->settings['cli']['specchars'] as $value) {
             $specchars[] = '\\'.$value;
         }
 
-        $this->pattern = array(
+        $pattern = array(
             'selected1' => '~\[red\].*?\[/red\]~',          // выделить текст
             'selected2' => '~\[grn\].*?\[/grn\]~',          // выделить текст
             'comment'   => '~(?<= )# .*$~m',                // комментарий
@@ -467,45 +465,45 @@ class Highlight {
             'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'cli');
 
-        $this->code = str_replace(array('[red]', '[grn]', '[/red]', '[/grn]'), '', $this->code);
+        $code = str_replace(array('[red]', '[grn]', '[/red]', '[/grn]'), '', $code);
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['cli']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightCode($code) {
 
-        $this->init($code, 'code');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['specchars'] as $value) {
+        foreach ($this->settings['code']['specchars'] as $value) {
             $specchars[] = '\\'.$value;
         }
 
-        $this->pattern = array(
+        $pattern = array(
             'selected1' => '~\[red\].*\[/red\]~sU',         // выделить текст
             'selected2' => '~\[grn\].*\[/grn\]~sU',         // выделить текст
             'selected3' => '~\[border\].*\[/border\]~sU',   // выделить текст
             'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'code');
 
-        $this->code = str_replace(array('[red]', '[grn]', '[border]', '[/red]', '[/grn]', '[/border]'), '', $this->code);
+        $code = str_replace(array('[red]', '[grn]', '[border]', '[/red]', '[/grn]', '[/border]'), '', $code);
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['code']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightCSS($code) {
 
-        $this->init($code, 'css');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+        foreach ($this->settings['css']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $this->pattern = array(
+        $pattern = array(
             'comment'     => '~/\*.*\*/~sU',                     // комментарии
             'prop-name'   => '~^\s*[-a-z]+\s*(?=:)~m',           // свойство
             'prop-value'  => '~(?<=¤:)\s*[^;¤{]+\s*(?=;)~',      // значение свойства
@@ -520,46 +518,46 @@ class Highlight {
             'delimiter'   => '~'.implode('|', $delimiter).'~',   // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'css');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['css']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightERP($code) {
 
-        $this->init($code, 'erp');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+        foreach ($this->settings['erp']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $this->pattern = array(
+        $pattern = array(
             'comment'   => '~\/\/.*$~m', // комментарии
             'string'    => '~"[^"]*"~',   // строки
             'object'    => '~(?<=Новый )[а-яa-z]+\b~ui', // создание объекта
             'function'  => '~(?<=Функция )[а-яa-z]+\b~ui', // объявление функции
             'procedure' => '~(?<=Процедура )[а-яa-z]+\b~ui', // объявление процедуры
-            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~ui',  // ключевые слова
-            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~ui',  // ключевые слова
-            'keyword3'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~ui',  // ключевые слова
-            'directive' => '~('.implode('|', $this->settings[$this->lang]['directive']).')~ui', // директивы компиляции
+            'keyword1'  => '~\b('.implode('|', $this->settings['erp']['keyword1']).')\b~ui',  // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings['erp']['keyword2']).')\b~ui',  // ключевые слова
+            'keyword3'  => '~\b('.implode('|', $this->settings['erp']['keyword3']).')\b~ui',  // ключевые слова
+            'directive' => '~('.implode('|', $this->settings['erp']['directive']).')~ui', // директивы компиляции
             'code-area' => '~#(Область|КонецОбласти).*$~umi', // области кода
             'datetime'  => "~'\d+'~", // дата и время
             'digit'     => '~\b\d+\b~u', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'erp');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['erp']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
+    
+    public function highlightHTMLOld($code) {
 
-    public function highlightHTML($code) {
+        $code = $this->trim($code);
 
-        $this->init($code, 'html');
-
-        $this->pattern = array(
+        $pattern = array(
             'doctype'   => '~<\!DOCTYPE[^>]*>~i',          // <!DOCTYPE html>
         	'comment'   => '~<\!--.*-->~sU',               // комментарии
             'entity'    => '~&[a-z]+;~',                   // html-сущности
@@ -569,83 +567,142 @@ class Highlight {
             'element'   => '~</?[a-z0-9]+[^>]*>~',         // открывающие и закрывающие теги
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'html');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
     }
 
-    public function highlightJS($code) {
+    public function highlightHTML($code) {
+        
+        $code = $this->trim($code);
 
-        $this->init($code, 'js');
+        /*
+         * 1. вырезаем куски javascript-кода, вставляя на это место заглушки, и раскрашиваем все эти куски
+         * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
+         * 3. вставляем на место заглушек из первого шага раскрашенные кусочки javascript-кода
+         */
+        $offset = 0;
+        $source = array();
+        $replace = array();
+        while (preg_match('~<script(?: type="(?:text|application)/javascript")?>(.+)</script>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
+            $item = $match[1][0];
+            $offset = $match[1][1];
+            $length = strlen($match[1][0]);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+            $piece = $this->highlightJS($item, false);
+            $source[] = '<span style="color:'.$this->settings['js']['colors']['default']['fore'].'">' . $piece . '</span>';
+            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+            $replace[] = $rand;
+            $code = substr_replace($code, $rand, $offset, $length);
+            $offset = $offset + strlen($rand) + 9; // 9 = strlen(</script>)
+        }
+
+        /*
+         * теперь раскрашиваем html
+         */
+        $pattern = array(
+            'doctype'   => '~<\!DOCTYPE[^>]*>~i',          // <!DOCTYPE html>
+        	'comment'   => '~<\!--.*-->~sU',               // комментарии
+            'entity'    => '~&[a-z]+;~',                   // html-сущности
+            'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',   // имя атрибут тега
+            'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~', // значение атрибут тега
+            //'equal'     => '~(?<=¤)\=(?=¤)~',            // разделитель между атрибутом и значением
+            'element'   => '~</?[a-z0-9]+[^>]*>~',         // открывающие и закрывающие теги
+        );
+
+        $code = $this->highlightCodeString($code, $pattern, 'html');
+
+        /*
+         * вставляем куски javascript-кода обратно
+         */
+        $source = array_reverse($source);
+        $replace = array_reverse($replace);
+        if (!empty($source)) {
+            $code = str_replace($replace, $source, $code);
+        }
+        
+        return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
+
+    }
+
+    public function highlightJS($code, $pre = true) {
+
+        if ($pre) {
+            $code = $this->trim($code);
+        }
+
+        foreach ($this->settings['js']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $this->pattern = array(
+        $pattern = array(
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
             'string2'   => "~'[^']*'~",    // строки в одинарных кавычках
             'comment1'  => '~\/\/.*$~m',   // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
-            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
-            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
-            'function'  => '~\b('.implode('|', $this->settings[$this->lang]['function']).')\b\s?(?=\()~i', // встроенные функции
+            'keyword1'  => '~\b('.implode('|', $this->settings['js']['keyword1']).')\b~i', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings['js']['keyword2']).')\b~i', // ключевые слова
+            'function'  => '~\b('.implode('|', $this->settings['js']['function']).')\b\s?(?=\()~i', // встроенные функции
             'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'js');
+        
+        if (!$pre) {
+            return $code;
+        }
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['js']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightJSON($code) {
 
-        $this->init($code, 'json');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+        foreach ($this->settings['json']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $this->pattern = array(
-            'string'   => '~"[^"]*"~',     // строки в двойных кавычках
-            'null'     => '~\bnull\b~',
-            'bool'     => '~\btrue|false\b~',
+        $pattern = array(
+            'string'    => '~"[^"]*"~',     // строки в двойных кавычках
+            'null'      => '~\bnull\b~',
+            'bool'      => '~\btrue|false\b~',
             'digit'     => '~\b\d+\b~',    // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'json');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['json']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightIDLE($code) {
 
-        $this->init($code, 'idle');
+        $code = $this->trim($code);
 
         foreach ($this->settings[$this->lang]['specchars'] as $value) {
             $specchars[] = '\\'.$value;
         }
 
-        $this->pattern = array(
+        $pattern = array(
             'comment'    => '~(?<= )# .*$~m',                // комментарий
             'command'    => '~(?<=^(\>{3}|\.{3}) ).*$~m',    // команда
             'idleprompt' => '~^(>{3}|\.{3})(?= )~m',         // приглашение
             'specchars'  => '~'.implode('|', $specchars).'~' // спец.символы
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'idle');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['idle']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightINI($code) {
 
-        $this->init($code, 'ini');
+        $code = $this->trim($code);
 
-        $this->pattern = array(
+        $pattern = array(
             'comment' => '~^;.*~m',              // комментарии
             'string'  => '~"[^"]*"~',            // строки в двойных кавычках
             'section' => '~^\[[_a-z0-9]+\]~mi',  // начало секции
@@ -653,20 +710,20 @@ class Highlight {
             'equal'   => '~(?<= )=(?=( |$))~',   // знак =
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'ini');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['ini']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightMySQL($code) {
 
-        $this->init($code, 'mysql');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+        foreach ($this->settings['mysql']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $this->pattern = array(
+        $pattern = array(
             'comment1'  => '~(?<= |^)--\s.*$~m', // комментарии
             'comment2'  => '~(?<= |^)#\s.*$~m',  // комментарии
             'comment3'  => '~/\*.*\*/~sU',       // комментарии
@@ -677,20 +734,20 @@ class Highlight {
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'mysql');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['mysql']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
-    public function highlightPHP($code) {
+    public function highlightPHP($code, $pre = true) {
 
-        $this->init($code, 'php');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+        foreach ($this->settings['php']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $this->pattern = array(
+        $pattern = array(
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
@@ -699,40 +756,42 @@ class Highlight {
             'startecho' => '~<\?=~',       // начало php-кода
             'shortphp'  => '~<\?~',        // начало php-кода
             'stopphp'   => '~\?>~',        // конец php-кода
-            'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
-            'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
-            'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings[$this->lang]['keyword3']).')\b~i', // ключевые слова
-            'function'  => '~(?<!\->)\b('.implode('|', $this->settings[$this->lang]['function']).')\b\s?(?=\()~i', // встроенные функции
-            'defined'   => '~\b('.implode('|', $this->settings[$this->lang]['defined']).')\b~i', // встроенные контстанты
+            'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword1']).')\b~i', // ключевые слова
+            'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword2']).')\b~i', // ключевые слова
+            'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword3']).')\b~i', // ключевые слова
+            'function'  => '~(?<!\->)\b('.implode('|', $this->settings['php']['function']).')\b\s?(?=\()~i', // встроенные функции
+            'defined'   => '~\b('.implode('|', $this->settings['php']['defined']).')\b~i', // встроенные контстанты
             'constant'  => '~(?<!\$)\b([_A-Z]+)\b~', // контстанты
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'php');
+        
+        if (!$pre) {
+            return $code;
+        }
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['php']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightPHTML($code) {
 
+        $code = $this->trim($code);
         /*
          * Сначала врезаем куски php-кода, потом раскрашиваем все эти куски, потом вставляем обратно
          */
         $offset = 0;
         $source = array();
         $replace = array();
-        $code = trim($code);
-        $code = str_replace("\r\n", "\n", $code);
-        $code = str_replace("\t", '    ', $code);
         while (preg_match('~<\?(=|php)?.*\?>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
             $item = $match[0][0];
             $offset = $match[0][1];
             $length = strlen($match[0][0]);
 
-            $this->highlightPHP($item); // результат работы будет в $this->code
-            $source[] = '<span style="color:'.$this->settings['php']['colors']['default']['fore'].'">'.$this->code.'</span>';
+            $piece = $this->highlightPHP($item, false);
+            $source[] = '<span style="color:'.$this->settings['php']['colors']['default']['fore'].'">' . $piece . '</span>';
             $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
             $replace[] = $rand;
             $code = substr_replace($code, $rand, $offset, $length);
@@ -740,13 +799,7 @@ class Highlight {
         }
 
         // теперь раскрашиваем html
-        $this->highlightHTML($code); // результат работы будет в $this->code
-        $code = $this->code;
-        /*
-        // html-код будет серым
-        $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $code);
-        $code = '<span style="color:'.$this->settings['phtml']['colors']['default']['fore'].'">' . $code . '</span>';
-        */
+        $code = $this->highlightHTML($code);
 
         // вставляем куски php-кода обратно
         $source = array_reverse($source);
@@ -754,67 +807,67 @@ class Highlight {
         if (!empty($source)) {
             $code = str_replace($replace, $source, $code);
         }
-
-        return '<pre>' . $code . '</pre>';
+        
+        return $code;
 
     }
 
     public function highlightPython($code) {
 
-        $this->init($code, 'python');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+        foreach ($this->settings['python']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $this->pattern = array(
+        $pattern = array(
             'comment'   => '~# .*$~m',             // комментарии
             'string3'   => '~""".*?"""~s',         // строки в тройных кавычках
             'string4'   => "~'''.*?'''~s",         // строки в тройных кавычках
             'string1'   => '~[ru]{0,2}"[^"]*"~',   // строки в двойных кавычках
             'string2'   => "~[ru]{0,2}'[^']*'~",   // строки в одинарных кавычках
-            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b~i', // ключевые слова
-            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b~i', // ключевые слова
-            'function'  => '~(?<!\.)\b('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~i', // встроенные функции
+            'keyword1'  => '~\b('.implode('|', $this->settings['python']['keyword1']).')\b~i', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings['python']['keyword2']).')\b~i', // ключевые слова
+            'function'  => '~(?<!\.)\b('.implode('|', $this->settings['python']['function']).')(?=\()~i', // встроенные функции
             'digit'     => '~\b\d+\b~',            // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'python');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['python']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightQuery($code) {
 
-        $this->init($code, 'query');
+        $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['delimiter'] as $value) {
+        foreach ($this->settings['query']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $this->pattern = array(
+        $pattern = array(
             'string'    => '~"[^"]*"~',  // строки
             'comment'   => '~\/\/.*$~m', // комментарии
             'property'  => '~(?<=\{)[^}{]*(?=\})~',   // характеристики
-            'keyword1'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword1']).')\b(?= |,|$)~mu', // ключевые слова
-            'keyword2'  => '~\b('.implode('|', $this->settings[$this->lang]['keyword2']).')\b(?= |$)~mui',  // ключевые слова
-            'function'  => '~\b('.implode('|', $this->settings[$this->lang]['function']).')(?=\()~ui', // функции
+            'keyword1'  => '~\b('.implode('|', $this->settings['query']['keyword1']).')\b(?= |,|$)~mu', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings['query']['keyword2']).')\b(?= |$)~mui',  // ключевые слова
+            'function'  => '~\b('.implode('|', $this->settings['query']['function']).')(?=\()~ui', // функции
             'parameter' => '~&[а-яё]+\b~ui', // параметр
             'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'query');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['query']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
     public function highlightXML($code) {
 
-        $this->init($code, 'xml');
+        $code = $this->trim($code);
 
-        $this->pattern = array(
+        $pattern = array(
             'xmldecl'   => '~<\?xml[^>]*>~',                       // <?xml version="1.0" encoding="utf-8"...>
             'comment'   => '~<\!--.*-->~sU',                       // комментарии
             'attrname'  => '~(?<= )[-a-zA-Zа-яА-Я0-9:]+(?=\=")~u', // имя атрибут тега
@@ -823,53 +876,53 @@ class Highlight {
             'entity'    => '~&[a-z]+;~',                           // html-сущности
         );
 
-        $this->highlightCodeString();
+        $code = $this->highlightCodeString($code, $pattern, 'xml');
 
-        return '<pre style="color:'.$this->settings[$this->lang]['colors']['default']['fore'].'">' . $this->code . '</pre>';
+        return '<pre style="color:'.$this->settings['xml']['colors']['default']['fore'].'">' . $code . '</pre>';
     }
 
-    private function highlightCodeString() {
+    private function highlightCodeString($code, $pattern, $lang) {
 
         // заменяем экранированные кавычки на непечатные символы, чтобы правильно раскрашивать код
-        $this->code = str_replace("\\'", chr(11).chr(11), $this->code);
-        $this->code = str_replace('\\"', chr(12).chr(12), $this->code);
+        $code = str_replace("\\'", chr(11).chr(11), $code);
+        $code = str_replace('\\"', chr(12).chr(12), $code);
         // заменяем одинарные кавычки внутри двойных и двойные внутри одинарных, чтобы правильно раскрашивать код
-        $this->replaceQuoteInString();
+        $code = $this->replaceQuoteInString($code);
 
         $source = array();
         $replace = array();
-        foreach ($this->pattern as $color => $regexp) {
+        foreach ($pattern as $color => $regexp) {
 
             $offset = 0;
-            while (preg_match($regexp, $this->code, $match, PREG_OFFSET_CAPTURE, $offset)) {
+            while (preg_match($regexp, $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
 
                 $item = $match[0][0];
                 $offset = $match[0][1];
                 $length = strlen($match[0][0]);
-                $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $match[0][0]);
+                $piece = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $match[0][0]);
 
                 $styles = array();
-                if (isset($this->settings[$this->lang]['colors'][$color]['fore'])) {
-                    $styles[] = 'color:'.$this->settings[$this->lang]['colors'][$color]['fore'];
+                if (isset($this->settings[$lang]['colors'][$color]['fore'])) {
+                    $styles[] = 'color:'.$this->settings[$lang]['colors'][$color]['fore'];
                 }
-                if (isset($this->settings[$this->lang]['colors'][$color]['back'])) {
-                    $styles[] = 'background:'.$this->settings[$this->lang]['colors'][$color]['back'];
+                if (isset($this->settings[$lang]['colors'][$color]['back'])) {
+                    $styles[] = 'background:'.$this->settings[$lang]['colors'][$color]['back'];
                 }
-                if (isset($this->settings[$this->lang]['colors'][$color]['border'])) {
-                    $styles[] = 'border:1px solid '.$this->settings[$this->lang]['colors'][$color]['border'];
+                if (isset($this->settings[$lang]['colors'][$color]['border'])) {
+                    $styles[] = 'border:1px solid '.$this->settings[$lang]['colors'][$color]['border'];
                 }
                 $style = '';
                 if (!empty($styles)) {
                     $style = implode(';', $styles);
                 }
                 if (!empty($style)) {
-                    $source[] = '<span style="' . $style . '">' . $code . '</span>';
+                    $source[] = '<span style="' . $style . '">' . $piece . '</span>';
                 } else {
-                    $source[] = $code;
+                    $source[] = $piece;
                 }
                 $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
                 $replace[] = $rand;
-                $this->code = substr_replace($this->code, $rand, $offset, $length);
+                $code = substr_replace($code, $rand, $offset, $length);
                 $offset = $offset + strlen($rand);
 
             }
@@ -880,27 +933,27 @@ class Highlight {
         $replace = array_reverse($replace);
 
         if (!empty($source)) {
-            $this->code = str_replace($replace, $source, $this->code);
+            $code = str_replace($replace, $source, $code);
         }
 
         // заменяем непечатные символы обратно на экранированные кавычки
-        $this->code = str_replace(chr(11).chr(11), "\\'", $this->code);
-        $this->code = str_replace(chr(12).chr(12), '\\"', $this->code);
+        $code = str_replace(chr(11).chr(11), "\\'", $code);
+        $code = str_replace(chr(12).chr(12), '\\"', $code);
         // замена непечатных символов обратно на кавычки, см. метод replaceQuoteInString()
-        $this->code = str_replace(chr(13), "'", $this->code);
-        $this->code = str_replace(chr(14), '"', $this->code);
+        $code = str_replace(chr(13), "'", $code);
+        $code = str_replace(chr(14), '"', $code);
+        
+        return $code;
 
     }
+    
+    private function trim($code) {
 
-    private function init($code, $lang) {
+        $code = trim($code);
+        $code = str_replace("\r\n", "\n", $code);
+        $code = str_replace("\t", '    ', $code);
 
-        $this->lang = $lang;
-
-        $this->code = trim($code);
-        $this->code = str_replace("\r\n", "\n", $this->code);
-        $this->code = str_replace("\t", '    ', $this->code);
-
-        $this->pattern = array();
+        return $code;
 
     }
 
@@ -930,7 +983,7 @@ class Highlight {
     /**
      * Заменяет двойную/одинарную кавычку внутри строки в одинарных/двойных кавычках
      */
-    private function replaceQuoteInString() {
+    private function replaceQuoteInString($code) {
         /*
          * Находим в строке кода первую кавычку (одинарную или двойную), потом от этого места
          * находим вторую кавычку, потом от этого места находим третью и так далее. Задача в
@@ -942,7 +995,7 @@ class Highlight {
         $offset = 0; // сдвиг от начала строки кода, который надо раскрасить
         $singleQuoteString = false; // признак того, что мы внутри строки в одинарных кавычках
         $doubleQuoteString = false; // признак того, что мы внутри строки в двойных кавычках
-        while (preg_match('~[\'"]~', $this->code, $match, PREG_OFFSET_CAPTURE, $offset)) {
+        while (preg_match('~[\'"]~', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
             $position = $match[0][1]; // позиция вождения очередной одинарной или двойной кавычки
             $quote = $match[0][0]; // собственно, сам символ кавычки (двойной или одинарной)
             /*
@@ -965,7 +1018,7 @@ class Highlight {
                 }
                 // если мы встретили одинарную кавычку, заменяем ее, чтобы не было коллизий при подсветке
                 if ($quote === "'") {
-                    $this->code = substr_replace($this->code, chr(13), $position, 1);
+                    $code = substr_replace($code, chr(13), $position, 1);
                 }
             } elseif ($singleQuoteString) { // третий случай, мы внутри строки в одинарных кавычках
                 // если мы встретили одинарную кавычку, это означает, что строка '...' здесь заканчивается
@@ -974,10 +1027,12 @@ class Highlight {
                 }
                 // если мы встретили двойную кавычку, заменяем ее, чтобы не было коллизий при подсветке
                 if ($quote === '"') {
-                    $this->code = substr_replace($this->code, chr(14), $position, 1);
+                    $code = substr_replace($code, chr(14), $position, 1);
                 }
             }
             $offset = $position + 1; // следующий поиск кавычки уже с этой позиции
         }
+        
+        return $code;
     }
 }
