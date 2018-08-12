@@ -57,7 +57,7 @@ class Highlight {
                 'execute2'    => array('back' => '#FFFFFF'),
                 'execute3'    => array('back' => '#FFFFFF'),
                 'arr-init'    => array('back' => '#F5FFF5'),
-                'function'    => array('fore' => '#CC22CC'),
+                'function'    => array('fore' => '#AA00AA'),
                 'keyword'     => array('fore' => '#8000FF'),
                 'command'     => array('fore' => '#CC6600'),
                 'signal'      => array('fore' => '#FF0000'),
@@ -98,12 +98,12 @@ class Highlight {
         ),
         'css' => array(
             'colors' => array(
-                'default'     => array('fore' => '#008080'),
+                'default'     => array('fore' => '#0080C0'),
                 'comment'     => array('fore' => '#888888'),
                 'string'      => array('fore' => '#0000FF'),
                 'import'      => array('fore' => '#EE00EE'),
                 'media'       => array('fore' => '#EE00EE'),
-                'prop-name'   => array('fore' => '#0080C0'),
+                'prop-name'   => array('fore' => '#008080'),
                 'prop-value'  => array('fore' => '#0080FF'),
                 'css-uniq'    => array('fore' => '#8000FF'),
                 'css-class'   => array('fore' => '#808000'),
@@ -527,6 +527,7 @@ class Highlight {
     public function highlightERP($code) {
 
         $code = $this->trim($code);
+        $code = $this->collapse($code);
 
         foreach ($this->settings['erp']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
@@ -549,6 +550,14 @@ class Highlight {
 
         $code = $this->highlightCodeString($code, $pattern, 'erp');
 
+        $code = str_replace(
+            array(chr(5), chr(6)),
+            array(
+                '<div class="collapse"><i class="fa fa-minus-square-o" aria-hidden="true"></i><div class="collapse-code">',
+                '</div><div class="collapse-message">[код свернут]</div></div>'
+            ), $code
+        );
+
         return '<pre style="color:'.$this->settings['erp']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
@@ -559,7 +568,7 @@ class Highlight {
 
         $pattern = array(
             'doctype'   => '~<\!DOCTYPE[^>]*>~i',          // <!DOCTYPE html>
-        	'comment'   => '~<\!--.*-->~sU',               // комментарии
+            'comment'   => '~<\!--.*-->~sU',               // комментарии
             'entity'    => '~&[a-z]+;~',                   // html-сущности
             'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',   // имя атрибут тега
             'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~', // значение атрибут тега
@@ -779,6 +788,7 @@ class Highlight {
     public function highlightPHTML($code) {
 
         $code = $this->trim($code);
+
         /*
          * Сначала врезаем куски php-кода, потом раскрашиваем все эти куски, потом вставляем обратно
          */
@@ -807,7 +817,7 @@ class Highlight {
         if (!empty($source)) {
             $code = str_replace($replace, $source, $code);
         }
-        
+
         return $code;
 
     }
@@ -1034,5 +1044,41 @@ class Highlight {
         }
         
         return $code;
+    }
+    
+    private function collapse($code) {
+        $strings = explode("\n", $code);
+
+        foreach ($strings as $string) {
+            if (iconv_substr($string, 0, 10) === 'Процедура '
+                || iconv_substr($string, 0, 8) === 'Функция '
+                || iconv_substr($string, 0, 4) === 'Для '
+                || iconv_substr($string, 0, 8) === '    Для '
+                || iconv_substr($string, 0, 12) === '        Для '
+                || iconv_substr($string, 0, 5) === 'Пока '
+                || iconv_substr($string, 0, 9) === '    Пока '
+                || iconv_substr($string, 0, 13) === '        Пока '
+                || iconv_substr($string, 0, 5) === 'Если '
+                || iconv_substr($string, 0, 9) === '    Если '
+                || iconv_substr($string, 0, 13) === '        Если ') {
+                $result[] = $string . chr(5);
+            } elseif (iconv_substr($string, 0, 5) === 'Иначе'
+                      || iconv_substr($string, 0, 9) === '    Иначе'
+                      || iconv_substr($string, 0, 13) === '        Иначе') {
+                $result[] = chr(6) . $string . chr(5);
+            } elseif (iconv_substr($string, 0, 14) === 'КонецПроцедуры'
+                      || iconv_substr($string, 0, 12) === 'КонецФункции'
+                      || iconv_substr($string, 0, 10) === 'КонецЦикла'
+                      || iconv_substr($string, 0, 14) === '    КонецЦикла'
+                      || iconv_substr($string, 0, 18) === '        КонецЦикла'
+                      || iconv_substr($string, 0, 9) === 'КонецЕсли'
+                      || iconv_substr($string, 0, 13) === '    КонецЕсли'
+                      || iconv_substr($string, 0, 17) === '        КонецЕсли') {
+                $result[] = chr(6) . $string . "\n";
+            } else {
+                $result[] = $string . "\n";
+            }
+        }
+        return implode('', $result);
     }
 }

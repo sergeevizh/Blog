@@ -324,11 +324,11 @@ hr {
  * РАЗНЫЕ СТИЛИ, ИСПОЛЬЗУЮТСЯ ВЕЗДЕ
  */
 
-code {
+#content code {
     color: #0000BB;
     /*font-family: "DejaVuSansMono", monospace;*/
 }
-pre, .phtml {
+#content pre {
     /*font-family: "DejaVuSansMono", monospace;*/
     font-size: 13.5px;
     background: #f5f5f5;
@@ -337,11 +337,47 @@ pre, .phtml {
     overflow: auto;
     max-height: 400px;
     margin: 15px 0;
+    padding-left: 15px;
 }
 
-    pre .codeblock {
+    #content pre .codeblock {
         border-left: 0.5px solid #dddddd;
     }
+    #content pre .collapse {
+        margin-top: -16px;
+    }
+        #content pre .collapse .collapse-message {
+            display: none;
+            padding-left: 30px;
+            color: #bbb;
+        }
+            #content pre .collapse .collapse-code .collapse .collapse-message {
+                display: none;
+                padding-left: 60px;
+                color: #bbb;
+            }
+                #content pre .collapse .collapse-code .collapse .collapse-code .collapse .collapse-message {
+                    display: none;
+                    padding-left: 90px;
+                    color: #bbb;
+                }
+        #content pre .collapse .collapse-toggle {
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: #ccc;
+            position: relative;
+            left: -13px;
+            top: -4px;
+            
+        }
+        #content pre .collapse i {
+            cursor: pointer;
+            font-size: 11px;
+            position: relative;
+            left: -13px;
+            color: #d1d1d1;
+        }
 
 /* универсальная таблица */
 .data-table {
