@@ -690,7 +690,7 @@ class Highlight {
 
         $code = $this->trim($code);
 
-        foreach ($this->settings[$this->lang]['specchars'] as $value) {
+        foreach ($this->settings['idle']['specchars'] as $value) {
             $specchars[] = '\\'.$value;
         }
 
