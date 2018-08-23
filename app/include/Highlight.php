@@ -165,7 +165,7 @@ class Highlight {
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'return', 'switch', 'case', 'default', 'delete', 'do', 'with', 'in', 'abstract', 'class', 'extends', 'function', 'final', 'public', 'protected', 'private', 'static', 'self', 'new', 'instanceof', 'interface', 'this', 'try', 'throw', 'throws', 'finally', 'implements', 'super', 'var',  'typeof', 'void'
+                'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'return', 'switch', 'case', 'default', 'do', 'with', 'in', 'abstract', 'class', 'extends', 'function', 'final', 'public', 'protected', 'private', 'static', 'self', 'new', 'instanceof', 'interface', 'this', 'try', 'throw', 'throws', 'finally', 'implements', 'super', 'var',  'typeof', 'void'
             ),
             'keyword2' => array(
                 'true', 'false', 'boolean', 'int', 'float', 'undefined', 'null'
@@ -272,7 +272,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'stream_context_create', 'ob_start', 'ob_get_clean'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL'
@@ -644,10 +644,10 @@ class Highlight {
             $delimiter[] = '\\'.$value;
         }
         $pattern = array(
+            'comment1'  => '~\/\/ .*$~m',  // комментарии
+            'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
             'string2'   => "~'[^']*'~",    // строки в одинарных кавычках
-            'comment1'  => '~\/\/.*$~m',   // комментарии
-            'comment2'  => '~/\*.*\*/~sU', // комментарии
             'keyword1'  => '~\b('.implode('|', $this->settings['js']['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings['js']['keyword2']).')\b~i', // ключевые слова
             'function'  => '~\b('.implode('|', $this->settings['js']['function']).')\b\s?(?=\()~i', // встроенные функции
