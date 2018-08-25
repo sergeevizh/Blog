@@ -770,7 +770,7 @@ class Highlight {
             'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings['php']['function']).')\b\s?(?=\()~i', // встроенные функции
             'defined'   => '~\b('.implode('|', $this->settings['php']['defined']).')\b~i', // встроенные контстанты
-            'constant'  => '~(?<!\$)\b([_A-Z]+)\b~', // контстанты
+            'constant'  => '~(?<!\$|\\\)\b([_A-Z]+)\b(?!\\\)~', // контстанты
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
