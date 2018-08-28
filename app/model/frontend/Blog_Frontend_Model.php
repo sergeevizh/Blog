@@ -379,6 +379,7 @@ class Blog_Frontend_Model extends Frontend_Model {
         }
         return $posts;
     }
+
     /**
      * Возвращает количество постов, которые связаны с тегами $ids
      */
@@ -424,7 +425,7 @@ class Blog_Frontend_Model extends Frontend_Model {
     }
 
     /**
-     * Вызвращает массив тегов блога для боковой клонки
+     * Вызвращает массив тегов блога для боковой колонки
      */
     public function getSideTags() {
 
@@ -442,7 +443,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                   GROUP BY
                       1, 2
                   HAVING
-                      COUNT(*) > 4
+                      COUNT(*) > 6
                   ORDER BY
                       `a`.`name`";
         $tags = $this->database->fetchAll($query);
