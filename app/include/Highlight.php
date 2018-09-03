@@ -233,8 +233,12 @@ class Highlight {
                 'string1'  => array('fore' => '#0080FF'),
                 'string2'  => array('fore' => '#0080FF'),
                 'string3'  => array('fore' => '#0080C0'),
+                'type'     => array('fore' => '#808000'),
                 'digit'    => array('fore' => '#DD00DD'),
                 'delimiter'=> array('fore' => '#FF0000'),
+            ),
+            'type' => array(
+                'TINYINT', 'SMALLINT', 'MEDIUMINT', 'INTEGER', 'BIGINT', 'INT', 'FLOAT', 'DOUBLE', 'REAL', 'DECIMAL', 'NUMERIC', 'BIT', 'YEAR', 'DATETIME', 'DATE', 'TIMESTAMP', 'TIME', 'VARCHAR', 'CHAR', 'VARBINARY', 'BINARY', 'TINYBLOB', 'MEDIUMBLOB', 'LONGBLOB', 'BLOB', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'TEXT', 'ENUM', 'SET'
             ),
             'delimiter' => array(
                 '.', ',', ';', '=', '(', ')', '@', '*'
@@ -272,7 +276,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'in_array'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'in_array', 'nl2br'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL'
@@ -558,7 +562,7 @@ class Highlight {
             ), $code
         );
 
-        return '<pre style="color:'.$this->settings['erp']['colors']['default']['fore'].'">' . $code . '</pre>';
+        return '<pre style="color:'.$this->settings['erp']['colors']['default']['fore'].'" class="erp">' . $code . '</pre>';
 
     }
     
@@ -739,6 +743,7 @@ class Highlight {
             'string1'   => '~"[^"]*"~',          // строки в двойных кавычках
             'string2'   => "~'[^']*'~",          // строки в одинарных кавычках
             'string3'   => '~`[^`]*`~',          // строки в обратных кавычках
+            'type'      => '~\b('.implode('|', $this->settings['mysql']['type']).')\b~i', // типы данных
             'digit'     => '~\b\d+(\.\d+)?\b~',  // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );

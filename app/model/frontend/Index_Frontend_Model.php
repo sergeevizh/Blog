@@ -31,7 +31,7 @@ class Index_Frontend_Model extends Frontend_Model {
                       LEFT JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
                       LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
                   WHERE
-                      1
+                      `a`.`visible` = 1
                   GROUP BY
                       1, 2, 3, 4, 5, 6, 7
                   ORDER BY

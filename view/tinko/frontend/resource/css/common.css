@@ -326,10 +326,10 @@ hr {
 
 #content code {
     color: #0000BB;
-    /*font-family: "DejaVuSansMono", monospace;*/
 }
 #content pre {
     /*font-family: "DejaVuSansMono", monospace;*/
+    /*font-family: "InputRegular", monospace;*/
     font-size: 13.5px;
     background: #f5f5f5;
     border: 0.5px solid #d1d1d1;
@@ -337,6 +337,8 @@ hr {
     overflow: auto;
     max-height: 400px;
     margin: 15px 0;
+}
+#content pre.erp {
     padding-left: 15px;
 }
 
@@ -369,7 +371,7 @@ hr {
             position: relative;
             left: -13px;
             top: -4px;
-            
+
         }
         #content pre .collapse i {
             cursor: pointer;

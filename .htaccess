@@ -12,12 +12,18 @@ RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php.*\ HTTP/
 RewriteRule ^(.*)index\.php$ http://www.host12.ru [R=301,L]
 
 #
+# Если какоой-то css или js-файл отсутствует, сервер просто ответит 404
+# Not Found. Это нужно, чтобы не провоцировать вызов скрипта /index.php
+#
+RewriteRule ^.*\.(css|js|jpe?g|gif|png|svg|ttf|eot|otf|woff|woff2)$ - [L]
+
+#
 # одна точка входа, все запросы (кроме файлов и директорий) на /index.php
 #
 # строка ниже нужна, потому что многие браузере вместе с HTTP-запросом
 # отправляют ещё один фоновый запрос — на получение favicon.ico; если
-# данный файл отсутствует, провоцируется новый вызов скрипта index.php
-RewriteCond %{REQUEST_FILENAME} !^favicon\.ico
+# данный файл отсутствует, провоцируется новый вызов скрипта /index.php
+RewriteCond %{REQUEST_FILENAME} !^favicon\.ico$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule (.*) index.php

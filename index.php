@@ -46,7 +46,7 @@ try {
         $page->request();
     }
 } catch (Exception $e) { // если произошла какая-то ошибка
-    $page = new Error($e);
+    $page = new ErrorPage($e);
     die();
 }
 // отправляем заголовки

@@ -10,8 +10,9 @@ $css = array(
         'base'            => array(          // CSS-файлы, подключаемые ко всем страницам
             'reset.css',
             'common.css',
-            'awesome/font-awesome.min.css',
-            'dejavu/font-dejavu.css',
+            'font/awesome.min.css',
+            'font/dejavu.css',
+            'font/input.css',
         ),
         'index'           => array(          // главная страница сайта
             'index.css',

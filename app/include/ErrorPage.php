@@ -1,8 +1,8 @@
 <?php
 /**
- * Класс Error отвечает за обработку ошибок, возникающих при работе приложения
+ * Класс ErrorPage отвечает за обработку ошибок, возникающих при работе приложения
  */
-class Error extends Base {
+class ErrorPage extends Base {
 
     /**
      * полная информация об ошибке; код ошибки; сообщение об ошибке; файл,
@@ -14,7 +14,7 @@ class Error extends Base {
 
     public function __construct($e) {
 
-        parent::__construct();
+    	parent::__construct();
 
         /*
          * полная информация об ошибке; код ошибки; сообщение об ошибке; файл,
