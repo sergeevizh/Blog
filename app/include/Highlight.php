@@ -11,7 +11,9 @@ class Highlight {
                 'comment'  => array('fore' => '#888888'),
                 'section'  => array('fore' => '#8000FF'),
                 'param'    => array('fore' => '#008080'),
+                'vars'     => array('fore' => '#808000'),
                 'string'   => array('fore' => '#0000FF'),
+                'flags'    => array('fore' => '#DD5500'),
             )
         ),
         'awk' => array(
@@ -366,10 +368,12 @@ class Highlight {
         $code = $this->trim($code);
 
         $pattern = array(
-            'comment' => '~^\s*#.*~m',              // комментарии
-            'string'  => '~"[^"]*"~',               // строки в двойных кавычках
-            'section' => '~\<[^>]+\>~',             // секция
-            'param'   => '~^\s*[a-z]+(?= )~im',     // параметр
+            'comment' => '~^\s*#.*~m',                 // комментарии
+            'string'  => '~"[^"]*"~',                  // строки в двойных кавычках
+            'section' => '~\<[^>]+\>~',                // секция
+            'param'   => '~^\s*[a-z]+(?= )~im',        // параметр
+            'vars'    => '~(%|\$)\{[^\}]+\}~',         // переменные
+            'flags'   => '~(?<= )\[[^\]]+\](?= |$)~m', // флаги
         );
 
         $code = $this->highlightCodeString($code, $pattern, 'apache');

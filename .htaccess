@@ -12,7 +12,7 @@ RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php.*\ HTTP/
 RewriteRule ^(.*)index\.php$ http://www.host12.ru [R=301,L]
 
 #
-# Если какоой-то css или js-файл отсутствует, сервер просто ответит 404
+# Если какой-то css или js-файл отсутствует, сервер просто ответит 404
 # Not Found. Это нужно, чтобы не провоцировать вызов скрипта /index.php
 #
 RewriteRule ^.*\.(css|js|jpe?g|gif|png|svg|ttf|eot|otf|woff|woff2)$ - [L]
