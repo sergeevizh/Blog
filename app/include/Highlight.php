@@ -161,6 +161,7 @@ class Highlight {
                 'comment2'  => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000FF'),
                 'string2'   => array('fore' => '#0000FF'),
+                'regexp'    => array('fore' => '#EE8000'),
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#CC00DD'),
                 'function'  => array('fore' => '#990099'),
@@ -280,7 +281,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'in_array', 'nl2br'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'str_replace', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'in_array', 'nl2br', 'htmlspecialchars', 'array_key_exists'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL'
@@ -657,10 +658,11 @@ class Highlight {
             $delimiter[] = '\\'.$value;
         }
         $pattern = array(
-            'comment1'  => '~\/\/ .*$~m',  // комментарии
-            'comment2'  => '~/\*.*\*/~sU', // комментарии
-            'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
-            'string2'   => "~'[^']*'~",    // строки в одинарных кавычках
+            'comment1'  => '~\/\/ .*$~m',     // комментарии
+            'comment2'  => '~/\*.*\*/~sU',    // комментарии
+            'string1'   => '~"[^"]*"~',       // строки в двойных кавычках
+            'string2'   => "~'[^']*'~",       // строки в одинарных кавычках
+            'regexp'    => "~/[^/]+/[igm]*~", // регулярное выражение
             'keyword1'  => '~\b('.implode('|', $this->settings['js']['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings['js']['keyword2']).')\b~i', // ключевые слова
             'function'  => '~\b('.implode('|', $this->settings['js']['function']).')\b\s?(?=\()~i', // встроенные функции
@@ -910,6 +912,8 @@ class Highlight {
         // заменяем экранированные кавычки на непечатные символы, чтобы правильно раскрашивать код
         $code = str_replace("\\'", chr(11).chr(11), $code);
         $code = str_replace('\\"', chr(12).chr(12), $code);
+        // заменяем экранированный прямой слэш на непечатные символы, чтобы правильно раскрашивать код
+        $code = str_replace("\\/", chr(15).chr(15), $code);
         // заменяем одинарные кавычки внутри двойных и двойные внутри одинарных, чтобы правильно раскрашивать код
         $code = $this->replaceQuoteInString($code);
 
@@ -963,6 +967,8 @@ class Highlight {
         // заменяем непечатные символы обратно на экранированные кавычки
         $code = str_replace(chr(11).chr(11), "\\'", $code);
         $code = str_replace(chr(12).chr(12), '\\"', $code);
+        // заменяем непечатные символы обратно на экранированный прямой слэш
+        $code = str_replace(chr(15).chr(15), "\\/", $code);
         // замена непечатных символов обратно на кавычки, см. метод replaceQuoteInString()
         $code = str_replace(chr(13), "'", $code);
         $code = str_replace(chr(14), '"', $code);
