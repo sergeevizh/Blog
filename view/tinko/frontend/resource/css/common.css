@@ -19,7 +19,7 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font: 14.5px/1.2 Arial, sans-serif;
+    font: 14px/1.2 Arial, sans-serif;
     color: #323232;
     overflow-y: scroll;
     height: 100%;
@@ -232,7 +232,7 @@ hr {
 }
 
 #content .note, #content .post-scriptum, #content .post-post-scriptum {
-    font-size: 12px;
+    font-size: 13px;
     color: #646464;
     margin: 25px 0;
     border: 0.5px solid #d1d1d1;
@@ -265,7 +265,7 @@ hr {
     #content .note pre,
     #content .post-scriptum pre,
     #content .post-post-scriptum pre {
-        font-size: 12px;
+        font-size: 13px;
         background: #ffffff;
     }
     #content .note p, #content .note pre,
