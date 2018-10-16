@@ -263,7 +263,7 @@ class Highlight {
                 'string2'   => array('fore' => '#0000FF'),
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#808000'),
-                'keyword3'  => array('fore' => '#DD6600'),
+                'keyword3'  => array('fore' => '#EE6600'),
                 'function'  => array('fore' => '#0080FF'),
                 'def-call'  => array('fore' => '#0080C0'),
                 'defined'   => array('fore' => '#CC00CC'),
