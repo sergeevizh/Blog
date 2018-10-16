@@ -263,9 +263,10 @@ class Highlight {
                 'string2'   => array('fore' => '#0000FF'),
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#808000'),
-                'keyword3'  => array('fore' => '#CC00CC'),
+                'keyword3'  => array('fore' => '#DD6600'),
                 'function'  => array('fore' => '#0080FF'),
-                'defined'   => array('fore' => '#EE6600'),
+                'def-call'  => array('fore' => '#0080C0'),
+                'defined'   => array('fore' => '#CC00CC'),
                 'constant'  => array('fore' => '#AA00AA'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
@@ -785,6 +786,7 @@ class Highlight {
             'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword2']).')\b~i', // ключевые слова
             'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings['php']['function']).')\b\s?(?=\()~i', // встроенные функции
+            'def-call'  => '~\b[_a-z]+\b\s?(?=\()~i', // определение или вызов функции
             'defined'   => '~\b('.implode('|', $this->settings['php']['defined']).')\b~i', // встроенные контстанты
             'constant'  => '~(?<!\$|\\\)\b([_A-Z]+)\b(?!\\\)~', // контстанты
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
