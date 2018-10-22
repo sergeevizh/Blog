@@ -130,12 +130,14 @@ class Highlight {
                 'keyword3'  => array('fore' => '#BB00BB'),
                 'directive' => array('fore' => '#808000'),
                 'code-area' => array('fore' => '#808000'),
+                'area-name' => array('fore' => '#0080FF'),
                 'datetime'  => array('fore' => '#DD00DD'),
+                // 'object'    => array('fore' => '#0080FF'),
+                // 'function'  => array('fore' => '#0080FF'),
+                // 'procedure' => array('fore' => '#0080FF'),
+                'def-call'  => array('fore' => '#0080C0'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
-                'function'  => array('fore' => '#0080FF'),
-                'procedure' => array('fore' => '#0080FF'),
-                'object'    => array('fore' => '#0080FF'),
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
@@ -268,6 +270,7 @@ class Highlight {
                 'def-call'  => array('fore' => '#0080C0'),
                 'defined'   => array('fore' => '#CC00CC'),
                 'constant'  => array('fore' => '#AA00AA'),
+                'super-arr' => array('fore' => '#00AA00'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
@@ -282,7 +285,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'substr', 'str_replace', 'str_split', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'array_keys', 'in_array', 'array_key_exists', 'array_search', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'rtrim', 'ltrim', 'nl2br', 'htmlspecialchars', 'ini_get', 'ini_set', 'session_start', 'session_get_cookie_params', 'session_set_cookie_params', 'setcookie', 'pathinfo', 'base64_encode', 'base64_decode', 'sprintf', 'ord', 'chr', 'fgets', 'bindec', 'sleep', 'usleep', 'socket_create', 'socket_bind', 'socket_set_option', 'socket_listen', 'socket_select', 'socket_accept', 'socket_read', 'socket_write', 'socket_shutdown', 'socket_close', 'socket_getpeername', 'socket_last_error', 'socket_strerror', 'is_callable', 'call_user_func', 'error_reporting', 'set_time_limit', 'ob_implicit_flush', 'pack', 'sha1', 'stream_socket_server', 'stream_select', 'stream_socket_accept', 'stream_socket_get_name', 'is_resource'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'substr', 'str_replace', 'str_split', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'array_keys', 'in_array', 'array_key_exists', 'array_search', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'rtrim', 'ltrim', 'nl2br', 'htmlspecialchars', 'ini_get', 'ini_set', 'session_start', 'session_get_cookie_params', 'session_set_cookie_params', 'setcookie', 'pathinfo', 'base64_encode', 'base64_decode', 'sprintf', 'ord', 'chr', 'fgets', 'bindec', 'sleep', 'usleep', 'socket_create', 'socket_bind', 'socket_set_option', 'socket_listen', 'socket_select', 'socket_accept', 'socket_read', 'socket_write', 'socket_shutdown', 'socket_close', 'socket_getpeername', 'socket_last_error', 'socket_strerror', 'is_callable', 'call_user_func', 'error_reporting', 'set_time_limit', 'ob_implicit_flush', 'pack', 'sha1', 'stream_socket_server', 'stream_select', 'stream_socket_accept', 'stream_socket_get_name', 'is_resource', 'is_string', 'parse_url'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PHP_EOL', 'E_ALL'
@@ -550,14 +553,16 @@ class Highlight {
         $pattern = array(
             'comment'   => '~\/\/.*$~m', // комментарии
             'string'    => '~"[^"]*"~',   // строки
-            'object'    => '~(?<=Новый )[а-яa-z]+\b~ui', // создание объекта
-            'function'  => '~(?<=Функция )[а-яa-z]+\b~ui', // объявление функции
-            'procedure' => '~(?<=Процедура )[а-яa-z]+\b~ui', // объявление процедуры
+            // 'object'    => '~(?<=Новый )[а-яa-z]+\b~ui', // создание объекта
+            // 'function'  => '~(?<=Функция )[а-яa-z]+\b~ui', // объявление функции
+            // 'procedure' => '~(?<=Процедура )[а-яa-z]+\b~ui', // объявление процедуры
             'keyword1'  => '~\b('.implode('|', $this->settings['erp']['keyword1']).')\b~ui',  // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings['erp']['keyword2']).')\b~ui',  // ключевые слова
             'keyword3'  => '~\b('.implode('|', $this->settings['erp']['keyword3']).')\b~ui',  // ключевые слова
+            'def-call'  => '~\b[а-яa-z]+\b\s?(?=\()~ui', // определение или вызов функции или процедуры
             'directive' => '~('.implode('|', $this->settings['erp']['directive']).')~ui', // директивы компиляции
-            'code-area' => '~#(Область|КонецОбласти).*$~umi', // области кода
+            'area-name' => '~(?<=#Область )[а-яa-z]+~ui', // имя области кода
+            'code-area' => '~#(Область|КонецОбласти)~ui', // области кода
             'datetime'  => "~'\d+'~", // дата и время
             'digit'     => '~\b\d+\b~u', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
@@ -773,6 +778,7 @@ class Highlight {
         foreach ($this->settings['php']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
+        $super = '\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE';
         $pattern = array(
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
@@ -786,9 +792,10 @@ class Highlight {
             'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword2']).')\b~i', // ключевые слова
             'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings['php']['function']).')\b\s?(?=\()~i', // встроенные функции
-            'def-call'  => '~\b[_a-z]+\b\s?(?=\()~i', // определение или вызов функции
+            'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
             'defined'   => '~\b('.implode('|', $this->settings['php']['defined']).')\b~i', // встроенные контстанты
-            'constant'  => '~(?<!\$|\\\)\b([_A-Z]+)\b(?!\\\)~', // контстанты
+            'constant'  => '~(?<!\$|\\\)\b([_A-Z][_A-Z0-9]*)\b(?!\\\)~', // контстанты
+            'super-arr' => '~('.$super.')\b~', // супер-массивы
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
@@ -1074,28 +1081,13 @@ class Highlight {
         foreach ($strings as $string) {
             if (iconv_substr($string, 0, 10) === 'Процедура '
                 || iconv_substr($string, 0, 8) === 'Функция '
-                || iconv_substr($string, 0, 4) === 'Для '
-                || iconv_substr($string, 0, 8) === '    Для '
-                || iconv_substr($string, 0, 12) === '        Для '
-                || iconv_substr($string, 0, 5) === 'Пока '
-                || iconv_substr($string, 0, 9) === '    Пока '
-                || iconv_substr($string, 0, 13) === '        Пока '
-                || iconv_substr($string, 0, 5) === 'Если '
-                || iconv_substr($string, 0, 9) === '    Если '
-                || iconv_substr($string, 0, 13) === '        Если ') {
+                || iconv_substr($string, 0, 9) === '#Область '
+                || iconv_substr($string, 0, 13) === '    #Область ') {
                 $result[] = $string . chr(5);
-            } elseif (iconv_substr($string, 0, 5) === 'Иначе'
-                      || iconv_substr($string, 0, 9) === '    Иначе'
-                      || iconv_substr($string, 0, 13) === '        Иначе') {
-                $result[] = chr(6) . $string . chr(5);
             } elseif (iconv_substr($string, 0, 14) === 'КонецПроцедуры'
                       || iconv_substr($string, 0, 12) === 'КонецФункции'
-                      || iconv_substr($string, 0, 10) === 'КонецЦикла'
-                      || iconv_substr($string, 0, 14) === '    КонецЦикла'
-                      || iconv_substr($string, 0, 18) === '        КонецЦикла'
-                      || iconv_substr($string, 0, 9) === 'КонецЕсли'
-                      || iconv_substr($string, 0, 13) === '    КонецЕсли'
-                      || iconv_substr($string, 0, 17) === '        КонецЕсли') {
+                      || iconv_substr($string, 0, 13) === '#КонецОбласти'
+                      || iconv_substr($string, 0, 17) === '    #КонецОбласти') {
                 $result[] = chr(6) . $string . "\n";
             } else {
                 $result[] = $string . "\n";
