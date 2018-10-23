@@ -165,8 +165,8 @@ class Highlight {
                 'string2'   => array('fore' => '#0000FF'),
                 'regexp'    => array('fore' => '#EE8000'),
                 'keyword1'  => array('fore' => '#8000FF'),
-                'keyword2'  => array('fore' => '#CC00DD'),
-                'function'  => array('fore' => '#990099'),
+                'keyword2'  => array('fore' => '#808000'),
+                //'def-call'  => array('fore' => '#808040'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
@@ -176,9 +176,6 @@ class Highlight {
             ),
             'keyword2' => array(
                 'true', 'false', 'boolean', 'int', 'float', 'undefined', 'null'
-            ),
-            'function' => array(
-                'alert', 'prompt', 'confirm', 'setTimeout', 'setInterval'
             ),
             'delimiter' => array(
                 '.', ',', ':', ';', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!', '?', '&'
@@ -207,7 +204,8 @@ class Highlight {
                 'element'   => array('fore' => '#0080C0'),
                 'entity'    => array('fore' => '#8000FF'),
                 'attrname'  => array('fore' => '#808000'),
-                'attrvalue' => array('fore' => '#0080FF'),
+                'attrval1'  => array('fore' => '#0080FF'),
+                'attrval2'  => array('fore' => '#0080FF'),
                 'equal'     => array('fore' => '#EE0000'),
                 'number'    => array('fore' => '#CCCCCC'),
             ),
@@ -626,20 +624,39 @@ class Highlight {
             $offset = $offset + strlen($rand) + 9; // 9 = strlen(</script>)
         }
 
+        // атрибуте тега раскрашиваем отдельно, для этого вырезаем их, вставляем на это место заглушки
+        $os = 0;
+        $src = array();
+        $rpl = array();
+        while (preg_match('~<[a-z0-9]+ ([^>]+)>~', $code, $match, PREG_OFFSET_CAPTURE, $os)) {
+            $item = $match[1][0];
+            $os = $match[1][1];
+            $len = strlen($match[1][0]);
+            
+            $src[] = $this->highlightAttribute($item);
+            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+            $rpl[] = $rand;
+            $code = substr_replace($code, $rand, $os, $len);
+            $os = $os + strlen($rand) + 1;
+        }
+
         /*
          * теперь раскрашиваем html
          */
         $pattern = array(
-            'doctype'   => '~<\!DOCTYPE[^>]*>~i',          // <!DOCTYPE html>
-            'comment'   => '~<\!--.*-->~sU',               // комментарии
-            'entity'    => '~&[a-z]+;~',                   // html-сущности
-            'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',   // имя атрибут тега
-            'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~', // значение атрибут тега
-            //'equal'     => '~(?<=¤)\=(?=¤)~',            // разделитель между атрибутом и значением
-            'element'   => '~</?[a-z0-9]+[^>]*>~',         // открывающие и закрывающие теги
+            'doctype'   => '~<\!DOCTYPE[^>]*>~i',                  // <!DOCTYPE html>
+            'comment'   => '~<\!--.*-->~sU',                       // комментарии
+            'entity'    => '~&[a-z]+;~',                           // html-сущности
+            'element'   => '~</?[a-z0-9]+[^>]*>~',                 // открывающие и закрывающие теги
         );
 
         $code = $this->highlightCodeString($code, $pattern, 'html');
+        
+        $src = array_reverse($src);
+        $rpl = array_reverse($rpl);
+        if (!empty($src)) {
+            $code = str_replace($rpl, $src, $code);
+        }
 
         /*
          * вставляем куски javascript-кода обратно
@@ -652,6 +669,16 @@ class Highlight {
         
         return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
 
+    }
+    
+    private function highlightAttribute($code) {
+        $code = ' '.$code;
+        $pattern = array(
+            'attrval1' => '~"[^"]*"~',                       // значение атрибута тега
+            'attrval2' => "~'[^']*'~",                       // значение атрибута тега
+            'attrname' => '~(?<= )[-a-z0-9:]+(?=(\=|\s))~',  // имя атрибута тега
+        );
+        return substr($this->highlightCodeString($code, $pattern, 'html'), 1);
     }
 
     public function highlightJS($code, $pre = true) {
@@ -671,7 +698,7 @@ class Highlight {
             'regexp'    => "~/[^/]+/[igm]*~", // регулярное выражение
             'keyword1'  => '~\b('.implode('|', $this->settings['js']['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings['js']['keyword2']).')\b~i', // ключевые слова
-            'function'  => '~\b('.implode('|', $this->settings['js']['function']).')\b\s?(?=\()~i', // встроенные функции
+            //'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
             'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
