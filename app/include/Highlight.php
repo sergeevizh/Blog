@@ -102,12 +102,12 @@ class Highlight {
         ),
         'css' => array(
             'colors' => array(
-                'default'     => array('fore' => '#0080C0'),
+                'default'     => array('fore' => '#008080'),
                 'comment'     => array('fore' => '#888888'),
                 'string'      => array('fore' => '#0000FF'),
                 'import'      => array('fore' => '#EE00EE'),
                 'media'       => array('fore' => '#EE00EE'),
-                'prop-name'   => array('fore' => '#008080'),
+                'prop-name'   => array('fore' => '#0080C0'),
                 'prop-value'  => array('fore' => '#0080FF'),
                 'css-uniq'    => array('fore' => '#8000FF'),
                 'css-class'   => array('fore' => '#808000'),
@@ -1051,9 +1051,9 @@ class Highlight {
     
     private function trim($code) {
 
-        $code = trim($code);
         $code = str_replace("\r\n", "\n", $code);
         $code = str_replace("\t", '    ', $code);
+        $code = trim($code, "\n");
 
         return $code;
 
