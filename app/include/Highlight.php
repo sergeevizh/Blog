@@ -512,9 +512,11 @@ class Highlight {
 
     }
 
-    public function highlightCSS($code) {
+    public function highlightCSS($code, $pre = true) {
 
-        $code = $this->trim($code);
+        if ($pre) {
+            $code = $this->trim($code);
+        }
 
         foreach ($this->settings['css']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
@@ -535,6 +537,10 @@ class Highlight {
         );
 
         $code = $this->highlightCodeString($code, $pattern, 'css');
+        
+        if (!$pre) {
+            return $code;
+        }
 
         return '<pre style="color:'.$this->settings['css']['colors']['default']['fore'].'">' . $code . '</pre>';
 
@@ -609,22 +615,43 @@ class Highlight {
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки javascript-кода
          */
         $offset = 0;
-        $source = array();
-        $replace = array();
+        $source_js = array();
+        $replace_js = array();
         while (preg_match('~<script(?: type="(?:text|application)/javascript")?>(.+)</script>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
             $item = $match[1][0];
             $offset = $match[1][1];
             $length = strlen($match[1][0]);
 
             $piece = $this->highlightJS($item, false);
-            $source[] = '<span style="color:'.$this->settings['js']['colors']['default']['fore'].'">' . $piece . '</span>';
+            $source_js[] = '<span style="color:'.$this->settings['js']['colors']['default']['fore'].'">' . $piece . '</span>';
             $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-            $replace[] = $rand;
+            $replace_js[] = $rand;
             $code = substr_replace($code, $rand, $offset, $length);
             $offset = $offset + strlen($rand) + 9; // 9 = strlen(</script>)
         }
+        
+        /*
+         * 1. вырезаем куски css-кода, вставляя на это место заглушки, и раскрашиваем все эти куски
+         * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
+         * 3. вставляем на место заглушек из первого шага раскрашенные кусочки css-кода
+         */
+        $offset = 0;
+        $source_css = array();
+        $replace_css = array();
+        while (preg_match('~<style(?: type="text/css")?>(.+)</style>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
+            $item = $match[1][0];
+            $offset = $match[1][1];
+            $length = strlen($match[1][0]);
 
-        // атрибуте тега раскрашиваем отдельно, для этого вырезаем их, вставляем на это место заглушки
+            $piece = $this->highlightCSS($item, false);
+            $source_css[] = '<span style="color:'.$this->settings['css']['colors']['default']['fore'].'">' . $piece . '</span>';
+            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+            $replace_css[] = $rand;
+            $code = substr_replace($code, $rand, $offset, $length);
+            $offset = $offset + strlen($rand) + 8; // 8 = strlen(</style>)
+        }
+
+        // атрибуты тега раскрашиваем отдельно, для этого вырезаем их, вставляем на это место заглушки
         $os = 0;
         $src = array();
         $rpl = array();
@@ -661,10 +688,19 @@ class Highlight {
         /*
          * вставляем куски javascript-кода обратно
          */
-        $source = array_reverse($source);
-        $replace = array_reverse($replace);
-        if (!empty($source)) {
-            $code = str_replace($replace, $source, $code);
+        $source_js = array_reverse($source_js);
+        $replace_js = array_reverse($replace_js);
+        if (!empty($source_js)) {
+            $code = str_replace($replace_js, $source_js, $code);
+        }
+        
+        /*
+         * вставляем куски css-кода обратно
+         */
+        $source_css = array_reverse($source_css);
+        $replace_css = array_reverse($replace_css);
+        if (!empty($source_css)) {
+            $code = str_replace($replace_css, $source_css, $code);
         }
         
         return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
