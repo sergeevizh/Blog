@@ -274,7 +274,7 @@ class Highlight {
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'if', 'else', 'elseif', 'endif', 'for', 'endfor', 'while', 'endwhile', 'foreach', 'endforeach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case', 'default', 'use', 'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new', 'parent', 'const', 'array', 'int', 'float', 'bool', 'mixed',  'string', 'object', 'list', 'global'
+                'if', 'else', 'elseif', 'endif', 'for', 'endfor', 'while', 'endwhile', 'foreach', 'endforeach', 'as', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'return', 'switch', 'case', 'default', 'namespace', 'use', 'abstract', 'class', 'extends', 'function', 'public', 'protected', 'private', 'static', 'self', 'new', 'parent', 'const', 'array', 'int', 'float', 'bool', 'mixed',  'string', 'object', 'list', 'global'
             ),
             'keyword2' => array(
                 'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include'
@@ -652,19 +652,19 @@ class Highlight {
         }
 
         // атрибуты тега раскрашиваем отдельно, для этого вырезаем их, вставляем на это место заглушки
-        $os = 0;
-        $src = array();
-        $rpl = array();
-        while (preg_match('~<[a-z0-9]+ ([^>]+)>~', $code, $match, PREG_OFFSET_CAPTURE, $os)) {
+        $offset = 0;
+        $source = array();
+        $replace = array();
+        while (preg_match('~<[a-z0-9]+ ([^>]+)>~', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
             $item = $match[1][0];
-            $os = $match[1][1];
+            $offset = $match[1][1];
             $len = strlen($match[1][0]);
             
-            $src[] = $this->highlightAttribute($item);
+            $source[] = $this->highlightAttribute($item);
             $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-            $rpl[] = $rand;
-            $code = substr_replace($code, $rand, $os, $len);
-            $os = $os + strlen($rand) + 1;
+            $replace[] = $rand;
+            $code = substr_replace($code, $rand, $offset, $len);
+            $offset = $offset + strlen($rand) + 1;
         }
 
         /*
@@ -679,10 +679,10 @@ class Highlight {
 
         $code = $this->highlightCodeString($code, $pattern, 'html');
         
-        $src = array_reverse($src);
-        $rpl = array_reverse($rpl);
-        if (!empty($src)) {
-            $code = str_replace($rpl, $src, $code);
+        $source = array_reverse($source);
+        $replace = array_reverse($replace);
+        if (!empty($source)) {
+            $code = str_replace($replace, $source, $code);
         }
 
         /*
@@ -857,7 +857,7 @@ class Highlight {
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings['php']['function']).')\b\s?(?=\()~i', // встроенные функции
             'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
             'defined'   => '~\b('.implode('|', $this->settings['php']['defined']).')\b~i', // встроенные контстанты
-            'constant'  => '~(?<!\$|\\\)\b([_A-Z][_A-Z0-9]*)\b(?!\\\)~', // контстанты
+            'constant'  => '~(?<!\$|\\\|>)\b([_A-Z][_A-Z0-9]*)\b(?!\\\)~', // контстанты
             'super-arr' => '~('.$super.')\b~', // супер-массивы
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
