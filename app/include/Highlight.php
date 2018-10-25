@@ -266,7 +266,7 @@ class Highlight {
                 'keyword3'  => array('fore' => '#CC6600'),
                 'function'  => array('fore' => '#0080FF'),
                 'def-call'  => array('fore' => '#0080C0'),
-                'defined'   => array('fore' => '#CC00CC'),
+                'defined'   => array('fore' => '#EE00EE'),
                 'constant'  => array('fore' => '#AA00AA'),
                 'super-arr' => array('fore' => '#00AA00'),
                 'digit'     => array('fore' => '#FF00FF'),
