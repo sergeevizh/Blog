@@ -55,6 +55,11 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         '~^frontend/article/category/id/(\d+)/page/(\d+)$~i' =>
         'articles/category/$1/page/$2',
         /*
+         * обратная связь
+         */
+        '~^frontend/feedback/index$~i' =>
+        'feedback',
+        /*
          * карта сайта
          */
         '~^frontend/sitemap/index$~i' =>
@@ -111,6 +116,11 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         // список статей выбранной категории, постраничная навигация
         '~^articles/category/(\d+)/page/(\d+)$~i' =>
         'frontend/article/category/id/$1/page/$2',
+        /*
+         * обратная связь
+         */
+        '~^feedback$~i' =>
+        'frontend/feedback/index',
         /*
          * карта сайта
          */

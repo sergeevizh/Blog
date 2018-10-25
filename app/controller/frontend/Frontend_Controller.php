@@ -41,6 +41,11 @@ abstract class Frontend_Controller extends Base_Controller {
     protected $pageFrontendModel;
 
     /**
+     * экземпляр класса модели для работы с формой обратной связи
+     */
+    protected $feedbackFrontendModel;
+
+    /**
      * экземпляр класса модели для работы с картой сайта
      */
     protected $sitemapFrontendModel;
@@ -69,6 +74,10 @@ abstract class Frontend_Controller extends Base_Controller {
         // экземпляр класса модели для работы со страницами сайта
         $this->pageFrontendModel =
             isset($this->register->pageFrontendModel) ? $this->register->pageFrontendModel : new Page_Frontend_Model();
+
+        // экземпляр класса модели для работы с формой обратной связи
+        $this->feedbackFrontendModel =
+            isset($this->register->feedbackFrontendModel) ? $this->register->feedbackFrontendModel : new Feedback_Frontend_Model();
 
         // экземпляр класса модели для работы с картой сайта
         $this->sitemapFrontendModel =

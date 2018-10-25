@@ -46,6 +46,7 @@ class Index_Feedback_Frontend_Controller extends Index_Frontend_Controller {
          */
         $this->centerVars = array(
             'breadcrumbs' => $breadcrumbs,
+            'action' => $this->feedbackFrontendModel->getURL('frontend/feedback/index')
         );
 
         // если были ошибки при заполнении формы, передаем в шаблон массив сообщений об ошибках
@@ -96,19 +97,13 @@ class Index_Feedback_Frontend_Controller extends Index_Frontend_Controller {
         /*
          * Отправляем письмо
          */
-        $subject = '=?utf-8?b?' . base64_encode('Заполнена форма обратной свзяи').'?=';
-        $headers = 'From: =?utf-8?b?' . base64_encode($this->config->site->name) . '?= <' . $this->config->site->email . '>' . "\r\n";
-        $headers = $headers . 'Date: ' . date('r') . "\r\n";
-        $headers = $headers . 'Content-type: text/plain; charset="utf-8"' . "\r\n";
-        $headers = $headers . 'Content-Transfer-Encoding: base64';
+        $result = $this->feedbackFrontendModel->sendMessage($data);
 
-        $message = 'Автор: ' . $data['name'] . "\r\n\r\n";
-        $mesasage = $message . 'E-mail: ' . $data['email'] . "\r\n\r\n";
-        $mesasage = $message . 'Сообщение: ' . "\r\n" . $data['message'];
-
-        $message = chunk_split(base64_encode($message));
-
-        mail($this->config->admin->email, $subject, $message, $headers);
+        if ( ! $result) {
+            $data['errorMessage'] = array('Произошла ошибка при отправке сообщения, попробуйте еще раз');
+            $this->setSessionData('feedback', $data);
+            return false;
+        }
 
         return true;
 

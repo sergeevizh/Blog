@@ -1,7 +1,7 @@
 <?php
 /**
  * Список постов блога для выбранных тегов (или тега),
- * файл view/example/frontend/template/blog/ефпы/center.php,
+ * файл view/example/frontend/template/blog/tags/center.php,
  * общедоступная часть сайта
  *
  * Переменные, которые приходят в шаблон:
@@ -105,7 +105,7 @@
 defined('ZCMS') or die('Access denied');
 ?>
 
-<!-- Начало шаблона view/example/frontend/template/blog/category/center.php -->
+<!-- Начало шаблона view/example/frontend/template/blog/tags/center.php -->
 
 <?php if (!empty($breadcrumbs)): // хлебные крошки ?>
     <div id="breadcrumbs"> <!-- хлебные крошки -->
@@ -207,4 +207,4 @@ if ( ! empty($pager)): /* постраничная навигация */ ?>
     </ul>
 <?php endif; ?>
 
-<!-- Конец шаблона view/example/frontend/template/blog/category/center.php -->
+<!-- Конец шаблона view/example/frontend/template/blog/tags/center.php -->

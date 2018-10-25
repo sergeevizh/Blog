@@ -1158,5 +1158,59 @@ class Highlight {
         }
         return implode('', $result);
     }
+    
+    private function codeBlocks($code) {
+        $lines = explode("\n", $code);
+        $pattrenStart1 = '~^ {4}(foreach|for|while|if|) \(~';
+        $pattrenStart2 = '~^ {4}\} else~';
+        $patternStop1 = '~^ {4}\}~';
+        
+        // первый уровень
+        $result1 = array();
+        $codeblock = false;
+        $matchblock = '';
+        foreach($lines as $line) {
+            $line = rtrim($line);
+            if ($codeblock && preg_match('~^ {4}(КонецЦикла|КонецЕсли|Иначе|Тогда)~', $line)) {
+                $codeblock = false;
+                $matchblock = '';
+            }
+            if ($codeblock) {
+                if (preg_match('~^ {4}~', $line)) {
+                    $line = preg_replace('~^ {4}~', '$0│', $line);
+                } elseif ($line == '') {
+                    $line = '    │';
+                }
+            }
+            if (preg_match('~^ {4}(Для|Пока|Если|Иначе|Тогда)~', $line, $matches)) {
+                $codeblock = true;
+                $matchblock = $matches[1];
+            }
+            $result1[] = $line;
+        }
+        // второй уровень
+        $result2 = array();
+        $codeblock = false;
+        $matchblock = '';
+        foreach($result1 as $line) {
+            if ($codeblock && preg_match('~^ {4}│? {4}(КонецЦикла|КонецЕсли|Иначе|Тогда)~', $line)) {
+                $codeblock = false;
+                $matchblock = '';
+            }
+            if ($codeblock) {
+                if (preg_match('~^ {4}│? {4}~', $line)) {
+                    $line = preg_replace('~^ {4}│? {4}~', '$0│', $line);
+                } elseif ($line == '') {
+                    $line = '        │';
+                }
+            }
+            if (preg_match('~^ {4}│? {4}(Для|Пока|Если|Иначе|Тогда)~', $line, $matches)) {
+                $codeblock = true;
+                $matchblock = $matches[1];
+            }
+            $result2[] = $line;
+        }
+        $code = implode("\n", $result2);
+    }
 
 }
