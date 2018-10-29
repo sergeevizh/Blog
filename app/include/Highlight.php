@@ -243,10 +243,10 @@ class Highlight {
                 'delimiter'=> array('fore' => '#FF0000'),
             ),
             'type' => array(
-                'TINYINT', 'SMALLINT', 'MEDIUMINT', 'INTEGER', 'BIGINT', 'INT', 'FLOAT', 'DOUBLE', 'REAL', 'DECIMAL', 'NUMERIC', 'BIT', 'YEAR', 'DATETIME', 'DATE', 'TIMESTAMP', 'TIME', 'VARCHAR', 'CHAR', 'VARBINARY', 'BINARY', 'TINYBLOB', 'MEDIUMBLOB', 'LONGBLOB', 'BLOB', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'TEXT', 'ENUM', 'SET'
+                'TINYINT', 'SMALLINT', 'MEDIUMINT', 'INTEGER', 'BIGINT', 'INT', 'FLOAT', 'DOUBLE', 'REAL', 'DECIMAL', 'NUMERIC', 'BIT', 'YEAR', 'DATETIME', 'DATE', 'TIMESTAMP', 'TIME', 'VARCHAR', 'CHAR', 'VARBINARY', 'BINARY', 'TINYBLOB', 'MEDIUMBLOB', 'LONGBLOB', 'BLOB', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'TEXT', 'ENUM', 'SET', 'NULL'
             ),
             'delimiter' => array(
-                '.', ',', ';', '=', '(', ')', '@', '*'
+                '.', ',', ';', '=', '(', ')', '@', '*', '>', '<'
             ),
         ),
         'php' => array(
@@ -841,7 +841,7 @@ class Highlight {
         foreach ($this->settings['php']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $super = '\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE';
+        $super = '\$GLOBALS|\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE';
         $pattern = array(
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
