@@ -109,7 +109,10 @@
                 height: 200px;
             }
                 #add-edit-post > div > div:last-child > textarea[name="excerpt"] {
-                    height: 100px;
+                    height: 60px;
+                }
+                #add-edit-post > div > div:last-child > textarea[name="search"] {
+                    height: 60px;
                 }
                 #add-edit-post > div > div:last-child > ul { /* теги блога */
                     list-style: none;

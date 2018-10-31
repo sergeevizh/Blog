@@ -93,3 +93,15 @@
 #5 D:\work\localhost12\www\index.php(33): Base_Controller->request()
 #6 {main}
 
+31.10.2018 10:48:52
+Код: 42000, текст: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '`a`.`excerpt` AS `excerpt`, `a`.`body` AS `body`,
+                      DATE_FO' at line 4
+Файл: D:\work\localhost12\www\app\include\Database.php, строка: 85
+Стек вызовов: 
+#0 D:\work\localhost12\www\app\include\Database.php(85): PDO->prepare('SELECT\r\n       ...')
+#1 D:\work\localhost12\www\app\model\backend\Blog_Backend_Model.php(103): Database->fetch('SELECT\r\n       ...', Array)
+#2 D:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(60): Blog_Backend_Model->getPost(211)
+#3 D:\work\localhost12\www\app\controller\Base_Controller.php(146): Editpost_Blog_Backend_Controller->input()
+#4 D:\work\localhost12\www\index.php(31): Base_Controller->request()
+#5 {main}
+

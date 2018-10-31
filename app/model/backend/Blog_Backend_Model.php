@@ -89,7 +89,7 @@ class Blog_Backend_Model extends Backend_Model {
     public function getPost($id) {
         $query = "SELECT
                       `a`.`name` AS `name`, `a`.`keywords` AS `keywords`,
-                      `a`.`description` AS `description`,
+                      `a`.`description` AS `description`, `a`.`search` AS `search`,
                       `a`.`excerpt` AS `excerpt`, `a`.`body` AS `body`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
@@ -125,6 +125,7 @@ class Blog_Backend_Model extends Backend_Model {
                       `name`,
                       `keywords`,
                       `description`,
+                      `search`,
                       `excerpt`,
                       `body`,
                       `added`,
@@ -136,6 +137,7 @@ class Blog_Backend_Model extends Backend_Model {
                       :name,
                       :keywords,
                       :description,
+                      :search,
                       :excerpt,
                       :body,
                       :added,
@@ -198,6 +200,7 @@ class Blog_Backend_Model extends Backend_Model {
                       `name`        = :name,
                       `keywords`    = :keywords,
                       `description` = :description,
+                      `search`      = :search,
                       `excerpt`     = :excerpt,
                       `body`        = :body,
                       `added`       = :added,

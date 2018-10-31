@@ -103,6 +103,9 @@ class Addpost_Blog_Backend_Controller extends Blog_Backend_Controller {
         // мета-тег description
         $data['description'] = trim(iconv_substr($_POST['description'], 0, 250));
         $data['description'] = str_replace('"', '', $data['description']);
+        // слова для поиска по блогу
+        $data['search']      = trim(iconv_substr($_POST['search'], 0, 1000));
+        $data['search']      = str_replace('"', '', $data['search']);
         // содержание поста
         $data['body']        = trim($_POST['body']);
         // дата добавления

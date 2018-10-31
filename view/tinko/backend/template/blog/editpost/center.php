@@ -52,6 +52,7 @@ defined('ZCMS') or die('Access denied');
     $name        = htmlspecialchars($name);
     $keywords    = htmlspecialchars($keywords);
     $description = htmlspecialchars($description);
+    $search      = htmlspecialchars($search);
     $excerpt     = htmlspecialchars($excerpt);
     $body        = htmlspecialchars($body);
     $date        = htmlspecialchars($date);
@@ -62,6 +63,7 @@ defined('ZCMS') or die('Access denied');
         $category    = $savedFormData['category'];
         $keywords    = htmlspecialchars($savedFormData['keywords']);
         $description = htmlspecialchars($savedFormData['description']);
+        $search      = htmlspecialchars($savedFormData['search']);
         $excerpt     = htmlspecialchars($savedFormData['excerpt']);
         $body        = htmlspecialchars($savedFormData['body']);
         $tags        = $savedFormData['tags'];
@@ -118,11 +120,15 @@ defined('ZCMS') or die('Access denied');
     </div>
     <div>
         <div>Анонс</div>
-        <div><textarea name="excerpt"><?php echo $excerpt; ?></textarea></div>
+        <div><textarea name="excerpt" maxlength="1000"><?php echo $excerpt; ?></textarea></div>
     </div>
     <div>
         <div>Текст (содержание)</div>
         <div><textarea name="body"><?php echo $body; ?></textarea></div>
+    </div>
+    <div>
+        <div>Поиск</div>
+        <div><textarea name="search" maxlength="1000"><?php echo $search; ?></textarea></div>
     </div>
     <div>
         <div>Теги</div>
