@@ -606,7 +606,7 @@ class Highlight {
     }
 
     public function highlightHTML($code) {
-        
+
         $code = $this->trim($code);
 
         /*
@@ -614,58 +614,33 @@ class Highlight {
          * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки javascript-кода
          */
-        $offset = 0;
-        $source_js = array();
-        $replace_js = array();
-        while (preg_match('~<script(?: type="(?:text|application)/javascript")?>(.+)</script>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
-            $item = $match[1][0];
-            $offset = $match[1][1];
-            $length = strlen($match[1][0]);
+        $jsSource_js = $jsReplace = array();
+        $pattern = '~<script(?: type="(?:text|application)/javascript")?>(.+)</script>~Us';
+        $this->replaceStringWithUniqueCode($code, $jsSource, $jsReplace, $pattern, 9, 'js');
 
-            $piece = $this->highlightJS($item, false);
-            $source_js[] = '<span style="color:'.$this->settings['js']['colors']['default']['fore'].'">' . $piece . '</span>';
-            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-            $replace_js[] = $rand;
-            $code = substr_replace($code, $rand, $offset, $length);
-            $offset = $offset + strlen($rand) + 9; // 9 = strlen(</script>)
-        }
-        
         /*
          * 1. вырезаем куски css-кода, вставляя на это место заглушки, и раскрашиваем все эти куски
          * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки css-кода
          */
-        $offset = 0;
-        $source_css = array();
-        $replace_css = array();
-        while (preg_match('~<style(?: type="text/css")?>(.+)</style>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
-            $item = $match[1][0];
-            $offset = $match[1][1];
-            $length = strlen($match[1][0]);
-
-            $piece = $this->highlightCSS($item, false);
-            $source_css[] = '<span style="color:'.$this->settings['css']['colors']['default']['fore'].'">' . $piece . '</span>';
-            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-            $replace_css[] = $rand;
-            $code = substr_replace($code, $rand, $offset, $length);
-            $offset = $offset + strlen($rand) + 8; // 8 = strlen(</style>)
-        }
-
-        // атрибуты тега раскрашиваем отдельно, для этого вырезаем их, вставляем на это место заглушки
-        $offset = 0;
-        $source = array();
-        $replace = array();
-        while (preg_match('~<[a-z0-9]+ ([^>]+)>~', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
-            $item = $match[1][0];
-            $offset = $match[1][1];
-            $len = strlen($match[1][0]);
-            
-            $source[] = $this->highlightAttribute($item);
-            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
-            $replace[] = $rand;
-            $code = substr_replace($code, $rand, $offset, $len);
-            $offset = $offset + strlen($rand) + 1;
-        }
+        $cssSource = $cssReplace = array();
+        $pattern = '~<style(?: type="text/css")?>(.+)</style>~Us';
+        $this->replaceStringWithUniqueCode($code, $cssSource, $cssReplace, $pattern, 8, 'css');
+ 
+        // перед раскраской атрибутов тегов вырезаем из HTML комментарии
+        $cmntSource = $cmntReplace = array();
+        $pattern = '~(<\!--.*-->)~sU';
+        $this->replaceStringWithUniqueCode($code, $cmntSource, $cmntReplace, $pattern, 0, 'cmnt');
+        /*
+         * 1. вырезаем атрибуты тегов, вставляя на это место заглушки, и раскрашиваем атрибуты
+         * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
+         * 3. вставляем на место заглушек из первого шага раскрашенные атрибуты тегов
+         */
+        $attrSource = $attrReplace = array();
+        $pattern = '~<[a-z0-9]+ ([^>]+)>~';
+        $this->replaceStringWithUniqueCode($code, $attrSource, $attrReplace, $pattern, 1, 'attr');
+        // вставляем комментарии обратно
+        $this->replaceUniqueCodeWithString($code, $cmntSource, $cmntReplace);
 
         /*
          * теперь раскрашиваем html
@@ -676,32 +651,22 @@ class Highlight {
             'entity'    => '~&[a-z]+;~',                           // html-сущности
             'element'   => '~</?[a-z0-9]+[^>]*>~',                 // открывающие и закрывающие теги
         );
-
         $code = $this->highlightCodeString($code, $pattern, 'html');
-        
-        $source = array_reverse($source);
-        $replace = array_reverse($replace);
-        if (!empty($source)) {
-            $code = str_replace($replace, $source, $code);
-        }
+
+        /*
+         * вставляем атрибуты тегов обратно
+         */
+        $this->replaceUniqueCodeWithString($code, $attrSource, $attrReplace);
 
         /*
          * вставляем куски javascript-кода обратно
          */
-        $source_js = array_reverse($source_js);
-        $replace_js = array_reverse($replace_js);
-        if (!empty($source_js)) {
-            $code = str_replace($replace_js, $source_js, $code);
-        }
+        $this->replaceUniqueCodeWithString($code, $jsSource, $jsReplace);
         
         /*
          * вставляем куски css-кода обратно
          */
-        $source_css = array_reverse($source_css);
-        $replace_css = array_reverse($replace_css);
-        if (!empty($source_css)) {
-            $code = str_replace($replace_css, $source_css, $code);
-        }
+        $this->replaceUniqueCodeWithString($code, $cssSource, $cssReplace);
         
         return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
 
@@ -1136,6 +1101,45 @@ class Highlight {
         }
         
         return $code;
+    }
+    
+    private function replaceStringWithUniqueCode(&$string, &$source, &$replace, $pattern, $len, $type) {
+        $offset = 0;
+        $source = array();
+        $replace = array();
+        while (preg_match($pattern, $string, $match, PREG_OFFSET_CAPTURE, $offset)) {
+            $item = $match[1][0];
+            $offset = $match[1][1];
+            $length = strlen($match[1][0]);
+
+            if ($type == 'js') {
+                $piece = $this->highlightJS($item, false);
+                $source[] = '<span style="color:'.$this->settings[$type]['colors']['default']['fore'].'">' . $piece . '</span>';
+            }
+            if ($type == 'css') {
+                $piece = $this->highlightCSS($item, false);
+                $source[] = '<span style="color:'.$this->settings[$type]['colors']['default']['fore'].'">' . $piece . '</span>';
+            }
+            if ($type == 'attr') {
+                $source[] = $this->highlightAttribute($item);
+            }
+            if ($type == 'cmnt') {
+                $source[] = $item;
+            }
+
+            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+            $replace[] = $rand;
+            $string = substr_replace($string, $rand, $offset, $length);
+            $offset = $offset + strlen($rand) + $len;
+        }
+    }
+    
+    private function replaceUniqueCodeWithString(&$string, $source, $replace) {
+        $source = array_reverse($source);
+        $replace = array_reverse($replace);
+        if (!empty($source)) {
+            $string = str_replace($replace, $source, $string);
+        }
     }
     
     private function collapse($code) {
