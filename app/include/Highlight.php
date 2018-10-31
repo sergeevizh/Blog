@@ -105,8 +105,7 @@ class Highlight {
                 'default'     => array('fore' => '#008080'),
                 'comment'     => array('fore' => '#888888'),
                 'string'      => array('fore' => '#0000FF'),
-                'import'      => array('fore' => '#EE00EE'),
-                'media'       => array('fore' => '#EE00EE'),
+                'rules'       => array('fore' => '#EE00EE'),
                 'prop-name'   => array('fore' => '#0080C0'),
                 'prop-value'  => array('fore' => '#0080FF'),
                 'css-uniq'    => array('fore' => '#8000FF'),
@@ -521,13 +520,15 @@ class Highlight {
         foreach ($this->settings['css']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
+
+        $rules = 'import|media|charset|page|font-face';
+
         $pattern = array(
             'comment'     => '~/\*.*\*/~sU',                     // комментарии
             'prop-name'   => '~^\s*[-a-z]+\s*(?=:)~m',           // свойство
             'prop-value'  => '~(?<=¤:)\s*[^;¤{]+\s*(?=;)~',      // значение свойства
             'string'      => '~"[^"]*"|\'[^\']*\'~',             // строка
-            'import'      => '~@import~',                        // @import
-            'media'       => '~@media~',                         // @media
+            'rules'      => '~@('.$rules.')\b~',                 // правила
             'css-uniq'    => '~#[-_a-z]+~',                      // селектор, идентификатор
             'css-class'   => '~\.[-_a-z]+~',                     // селектор, класс
             'pseudo-el'   => '~::[-a-z]+~',                      // псевдо-элементы ::first-letter или ::before
