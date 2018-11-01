@@ -36,6 +36,15 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         // список всех тегов блога
         '~^frontend/blog/alltags$~i' =>
         'blog/alltags',
+        // страница поиска по блогу
+        '~^frontend/blog/search$~i'=>
+        'blog/search',
+        // страница результатов поиска по блогу
+        '~^frontend/blog/search/query/([a-z0-9%_.-]+)$~i' =>
+        'blog/search/query/$1',
+        // страница результатов поиска по блогу, постраничная навигация
+        '~^frontend/blog/search/query/([a-z0-9%_.-]+)/page/(\d+)$~i' =>
+        'blog/search/query/$1/page/$2',
         /*
          * статьи
          */
@@ -98,6 +107,15 @@ $routing = array( // поддержка ЧПУ (SEF) для общедоступ
         // список всег тегов блога
         '~^blog/alltags$~i' =>
         'frontend/blog/alltags',
+        // страница поиска по блогу
+        '~^blog/search$~i' =>
+        'frontend/blog/search',
+        // страница результатов поиска по блогу
+        '~^blog/search/query/([a-z0-9%_.-]+)$~i' =>
+        'frontend/blog/search/query/$1',
+        // страница результатов поиска по блогу, постраничная навигация
+        '~^blog/search/query/([a-z0-9%_.-]+)/page/(\d+)$~i' =>
+        'frontend/blog/search/query/$1/page/$2',
         /*
          * статьи
          */

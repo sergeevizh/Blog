@@ -54,6 +54,15 @@ defined('ZCMS') or die('Access denied');
             </ul>
         </div>
     <?php endif; ?>
+    <?php if (!empty($keys)): ?>
+        <p class="post-keys">
+            Ключи:
+            <?php foreach ($keys as $i => $key): ?>
+                <?php if ($i) echo '•'; ?>
+                <a href="<?php echo $key['url']; ?>"><?php echo $key['key']; ?></a>
+            <?php endforeach; ?>
+        </p>
+    <?php endif; ?>
 </div>
 
 <!-- Конец шаблона view/example/frontend/template/blog/post/center.php -->

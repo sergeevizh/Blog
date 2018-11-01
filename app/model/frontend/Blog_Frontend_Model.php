@@ -199,7 +199,7 @@ class Blog_Frontend_Model extends Frontend_Model {
 
         $query = "SELECT
                       `a`.`name` AS `name`, `a`.`keywords` AS `keywords`,
-                      `a`.`description` AS `description`,
+                      `a`.`description` AS `description`, `a`.`search` AS `search`,
                       `a`.`excerpt` AS `excerpt`, `a`.`body` AS `body`,
                       DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
                       DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
@@ -246,6 +246,17 @@ class Blog_Frontend_Model extends Frontend_Model {
                 );
             }
             unset($post['tag_ids'], $post['tag_names']);
+        }
+        // получаем ключи поста в виде массива
+        $post['keys'] = array();
+        if (!empty($post['search'])) {
+            $keys = explode(' ', $post['search']);
+            foreach ($keys as $key) {
+                $post['keys'][] = array(
+                    'key' => $key,
+                    'url' => $this->getURL('frontend/blog/search/query/' . rawurlencode($key))
+                );
+            }
         }
         // получаем похожие посты
         $post['liked'] = $this->getLikedPosts($id);
@@ -490,6 +501,227 @@ class Blog_Frontend_Model extends Frontend_Model {
             $posts[$key]['url'] = $this->getURL('frontend/blog/post/id/' . $value['id']);
         }
         return $posts;
+    }
+
+    /**
+     * Функция возвращает результаты поиска по блогу
+     */
+    public function getSearchResults($search, $start, $ajax) {
+
+        $search = $this->cleanSearchString($search);
+        if (empty($search)) {
+            return array();
+        }
+        $query = $this->getSearchQuery($search);
+        if (empty($query)) {
+            return array();
+        }
+
+        $query = $query . ' LIMIT ' . $start . ', ' . $this->config->pager->frontend->blog->perpage;
+
+        $posts = $this->database->fetchAll($query);
+        // добавляем в массив постов блога информацию об URL поста, картинки, категории
+        $host = $this->config->site->url;
+        foreach($posts as $key => $value) {
+            // URL записи (поста) блога
+            $posts[$key]['url']['post'] = $this->getURL('frontend/blog/post/id/' . $value['id']);
+            // URL превьюшки записи (поста)
+            if (is_file('files/blog/thumb/' . $value['id'] . '.jpg')) {
+                $posts[$key]['url']['image'] = $host . 'files/blog/thumb/' . $value['id'] . '.jpg';
+            } else {
+                $posts[$key]['url']['image'] = $host . 'files/blog/thumb/default.jpg';
+            }
+            // URL категории поста
+            $posts[$key]['url']['category'] = $this->getURL('frontend/blog/category/id/' . $value['ctg_id']);
+            // URL корневой категории поста
+            if (!empty($posts[$key]['parent'])) {
+                $posts[$key]['url']['root'] = $this->getURL('frontend/blog/category/id/' . $value['root_id']);
+                unset($posts[$key]['parent']);
+            } else {
+                unset($posts[$key]['parent'], $posts[$key]['root_id'], $posts[$key]['root_name']);
+            }
+            // теги для каждого поста
+            $posts[$key]['tags'] = array();
+            if (!empty($posts[$key]['tag_ids'])) {
+                $ids = explode('¤', $posts[$key]['tag_ids']);
+                $names = explode('¤', $posts[$key]['tag_names']);
+                $length = 0;
+                foreach ($ids as $k => $v) {
+                    $short = (iconv_strlen($names[$k]) > 15) ? iconv_substr($names[$k], 0, 14) . '…' : $names[$k];
+                    $posts[$key]['tags'][] = array(
+                        'id'    => $v,
+                        'name'  => $names[$k],
+                        'short' => $short,
+                        'url'   => $this->getURL('frontend/blog/tags/ids/' . $v)
+                    );
+                    $length = $length + iconv_strlen($names[$k]);
+                    if ($length > 50) break;
+                }
+                unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
+            }
+        }
+
+        return $posts;
+
+    }
+    
+    /**
+     * Функция возвращает количество результатов поиска по блогу
+     */
+    public function getCountSearchResults($search) {
+        $search = $this->cleanSearchString($search);
+        if (empty($search)) {
+            return 0;
+        }
+        $query = $this->getCountSearchQuery($search);
+        if (empty($query)) {
+            return 0;
+        }
+        return $this->database->fetchOne($query);
+    }
+    
+    /**
+     * Функция возвращает SQL-запрос для поиска по каталогу
+     */
+    private function getSearchQuery($search) {
+
+        if (empty($search)) {
+            return '';
+        }
+        if (iconv_strlen($search) < 2) {
+            return '';
+        }
+
+        $words = explode(' ', $search);
+        $query = "SELECT
+                      `a`.`id` AS `id`, `a`.`name` AS `name`,
+                      `a`.`excerpt` AS `excerpt`,
+                      DATE_FORMAT(`a`.`added`, '%d.%m.%Y') AS `date`,
+                      DATE_FORMAT(`a`.`added`, '%H:%i:%s') AS `time`,
+                      `b`.`id` AS `ctg_id`, `b`.`name` AS `ctg_name`,
+                      `b`.`parent` AS `parent`,
+                      (SELECT `e`.`id` FROM `blog_categories` `e` WHERE `e`.`id` = `b`.`parent`) AS `root_id`,
+                      (SELECT `f`.`name` FROM `blog_categories` `f` WHERE `f`.`id` = `b`.`parent`) AS `root_name`,
+                      GROUP_CONCAT(`d`.`id` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_ids`,
+                      GROUP_CONCAT(`d`.`name` ORDER BY `d`.`name`, `d`.`id` SEPARATOR '¤') AS `tag_names`";
+
+        // учитываем каждое слово поискового запроса на основе его длины, т.е. если совпало короткое
+        // слово (длиной 1-2 символа), то взнос в релевантность такого совпадения невелик (0.1—0.2);
+        // если совпало длинное слово (длиной 4-5 символов), то взнос в релевантность такого совпадения
+        // гораздо выше (0.4—0.5); это позволяет немного уменьшить искажения от случайных совпадений
+        // коротких слов
+        $length = iconv_strlen($words[0]);
+        $weight = 0.5;
+        if ($length < 5) {
+            $weight = 0.1 * $length;
+        }
+        $query = $query.", (IF( `a`.`search` LIKE '%".$words[0]."%', ".$weight.", 0 )";
+        $query = $query." + IF( LOWER(`a`.`search`) REGEXP '[[:<:]]".$words[0]."', 0.05, 0 )";
+        $query = $query." + IF( LOWER(`a`.`search`) REGEXP '".$words[0]."[[:>:]]', 0.05, 0 )";
+        for ($i = 1; $i < count($words); $i++) {
+            $length = iconv_strlen($words[$i]);
+            $weight = 0.5;
+            if ($length < 5) {
+                $weight = 0.1 * $length;
+            }
+            $query = $query." + IF( `a`.`search` LIKE '%".$words[$i]."%', ".$weight.", 0 )";
+            $query = $query." + IF( LOWER(`a`.`search`) REGEXP '[[:<:]]".$words[$i]."', 0.05, 0 )";
+            $query = $query." + IF( LOWER(`a`.`search`) REGEXP '".$words[$i]."[[:>:]]', 0.05, 0 )";
+        }
+
+        $query = $query.") AS `relevance`";
+
+        $query = $query." FROM
+                              `blog_posts` `a`
+                              INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                              LEFT JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
+                              LEFT JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
+                          WHERE (";
+
+        /*
+         * Условие WHERE SQL-запроса
+         */
+        $query = $query."`a`.`search` LIKE '%".$words[0]."%'";
+        $count = count($words);
+        for ($i = 1; $i < $count; $i++) {
+            $query = $query." OR `a`.`search` LIKE '%".$words[$i]."%'";
+        }
+        $query = $query.") AND `a`.`visible` = 1";
+        /*
+         * Группировка результатов SQL-запроса
+         */
+        $query = $query." GROUP BY 1, 2, 3, 4, 5, 6, 7";
+
+        /*
+         * Сортировка результатов SQL-запроса
+         */
+        $query = $query." ORDER BY `relevance` DESC, `a`.`added` DESC";
+
+        return $query;
+
+    }
+    
+    /**
+     * Функция возвращает SQL-запрос для получения кол-ва результатов поиска по блогу
+     */
+    private function getCountSearchQuery($search) {
+
+        if (empty($search)) {
+            return '';
+        }
+        if (iconv_strlen($search) < 2) {
+            return '';
+        }
+
+        $words = explode(' ', $search);
+        $query = "SELECT
+                      COUNT(*)
+                  FROM
+                      `blog_posts` `a`
+                      INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
+                  WHERE (";
+
+        $query = $query."`a`.`search` LIKE '%".$words[0]."%'";
+        $count = count($words);
+        for ($i = 1; $i < $count; $i++) {
+            $query = $query." OR `a`.`search` LIKE '%".$words[$i]."%'";
+        }
+        $query = $query.") AND `a`.`visible` = 1";
+
+        return $query;
+
+    }
+
+    /**
+     * Вспмогательная функция, очищает строку поискового запроса с сайта
+     * от всякого мусора
+     */
+    private function cleanSearchString($search) {
+        $search = iconv_substr($search, 0, 64);
+        // удаляем все, кроме букв и цифр
+        $search = preg_replace('#[^-.$_0-9a-zA-ZА-Яа-яёЁ]#u', ' ', $search);
+        // сжимаем двойные пробелы
+        $search = preg_replace('#\s+#u', ' ', $search);
+        $search = trim($search);
+        $search = $this->stringToLower($search);
+        return $search;
+    }
+
+    /**
+     * Вспомогательная функция, преобразует строку в нижний регистр
+     */
+    private function stringToLower($string) {
+        $upper = array(
+            'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т',
+            'У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я','A','B','C','D','E','F','G',
+            'H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+        );
+        $lower = array(
+            'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п','р','с','т',
+            'у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я','a','b','c','d','e','f','g',
+            'h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
+        );
+        return str_replace($upper, $lower, $string);
     }
 
 
