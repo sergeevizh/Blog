@@ -56,11 +56,8 @@ defined('ZCMS') or die('Access denied');
     <?php endif; ?>
     <?php if (!empty($keys)): ?>
         <p class="post-keys">
-            Ключи:
-            <?php foreach ($keys as $i => $key): ?>
-                <?php if ($i) echo '•'; ?>
-                <a href="<?php echo $key['url']; ?>"><?php echo $key['key']; ?></a>
-            <?php endforeach; ?>
+            Поиск:
+            <?php foreach ($keys as $i => $key): ?><?php if ($i) echo '&nbsp;• '; ?><a href="<?= $key['url']; ?>"><?= $key['key']; ?></a><?php endforeach; ?>
         </p>
     <?php endif; ?>
 </div>
