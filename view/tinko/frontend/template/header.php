@@ -12,6 +12,15 @@ defined('ZCMS') or die('Access denied');
 
 <!-- Начало шаблона view/example/frontend/template/header.php -->
 
-Узелки на память
+<div>
+    <span>Узелки</span>
+    <span>на память</span>
+</div>
+<div>
+    <form>
+        <input type="text" name="query" value="" maxlength="64" placeholder="Поиск по блогу" />
+        <input type="submit" name="submit" value="" />
+    </form>
+</div>
 
 <!-- Конец шаблона view/example/frontend/template/header.php -->

@@ -50,12 +50,66 @@ body > .wrapper {
 #header {
     height: 80px;
     background: #3a6995 url('../img/background.png');
-    color: #5390cc;
-    font-weight: bold;
-    font-size: 50px;
-    line-height: 80px;
-    text-shadow: 0.5px 0.5px 0.5px #fff;
+    overflow: hidden;
 }
+    #header > .wrapper > div {
+        float: left;
+    }
+    #header > .wrapper > div:first-child {
+        width: 15%;
+    }
+    #header > .wrapper > div:last-child {
+        width: 85%;
+    }
+        #header > .wrapper > div:first-child > span {
+            display: block;
+            color: #5390cc;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0.5px 0.5px 0.5px #fff;
+            
+        }
+        #header > .wrapper > div:first-child > span:first-child {
+            font-size: 40px;
+            line-height: 50px;
+        }
+        #header > .wrapper > div:first-child > span:last-child {
+            font-size: 25px;
+            line-height: 20px;
+        }
+        
+        #header > .wrapper form {
+            overflow: hidden;
+            margin-top: 27px;
+        }
+            #header > .wrapper form input {
+                float: left;
+                box-sizing: border-box;
+            }
+            #header > .wrapper form input[name="query"] {
+                font-size: 14px;
+                line-height: 14px;
+                padding: 7px;
+                width: 100%;
+                height: 31px;
+                border: 1px solid #5390cc;
+                background-color: transparent;
+                color: #d1d1d1;
+            }
+            #header > .wrapper form input[name="query"]::-webkit-input-placeholder {color:#d1d1d1;}
+            #header > .wrapper form input[name="query"]::-moz-placeholder          {color:#d1d1d1;}/* Firefox 19+ */
+            #header > .wrapper form input[name="query"]:-moz-placeholder           {color:#d1d1d1;}/* Firefox 18- */
+            #header > .wrapper form input[name="query"]:-ms-input-placeholder      {color:#d1d1d1;}
+
+            #header > .wrapper form input[type="submit"] {
+                background: #5390cc url(../img/search.png) center center no-repeat;
+                width: 31px;
+                height: 31px;
+                border: none;
+                margin-left: -31px;
+                cursor: pointer;
+            }
+
 /* главное меню */
 #main-menu {
     background: #323232;

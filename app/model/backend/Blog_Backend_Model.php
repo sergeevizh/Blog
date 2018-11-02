@@ -118,6 +118,20 @@ class Blog_Backend_Model extends Backend_Model {
         unset($data['date']);
         unset($data['time']);
 
+        if (empty($data['search']) && !empty($tags)) {
+            $ids = implode(',', $tags);
+            $query = "SELECT
+                          1, GROUP_CONCAT(`name` ORDER BY `name` SEPARATOR ', ') AS `search`
+                      FROM
+                          `blog_tags`
+                      WHERE
+                          `id` IN (" . $ids . ")
+                      GROUP BY
+                          1";
+            $result = $this->database->fetch($query);
+            $data['search'] = $result['search'];
+        }
+
         // добавляем пост
         $query = "INSERT INTO `blog_posts`
                   (
@@ -191,6 +205,20 @@ class Blog_Backend_Model extends Backend_Model {
         $data['added'] = $tmp[2].'-'.$tmp[1].'-'.$tmp[0].' '.$data['time']; // дата и время
         unset($data['date']);
         unset($data['time']);
+
+        if (empty($data['search']) && !empty($tags)) {
+            $ids = implode(',', $tags);
+            $query = "SELECT
+                          1, GROUP_CONCAT(`name` ORDER BY `name` SEPARATOR ', ') AS `search`
+                      FROM
+                          `blog_tags`
+                      WHERE
+                          `id` IN (" . $ids . ")
+                      GROUP BY
+                          1";
+            $result = $this->database->fetch($query);
+            $data['search'] = $result['search'];
+        }
 
         // обновляем пост
         $query = "UPDATE

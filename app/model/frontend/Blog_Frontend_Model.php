@@ -250,8 +250,22 @@ class Blog_Frontend_Model extends Frontend_Model {
         // получаем ключи поста в виде массива
         $post['keys'] = array();
         if (!empty($post['search'])) {
-            $keys = explode(' ', $post['search']);
+            $keys = explode(', ', $post['search']);
             foreach ($keys as $key) {
+                if (preg_match('~^[а-яёА-ЯЁ ]+$~u', $key)) {
+                    $key = preg_replace('~([а-яё])([А-ЯЁ])~u', '$1 $2', $key);
+                    $key = preg_replace('~([А-ЯЁ])([А-ЯЁ])~u', '$1 $2', $key);
+                    $words = explode(' ', $key);
+                    $temp = array();
+                    foreach ($words as $i => $word) {
+                        if ($i) {
+                            $temp[] = $this->stringToLower($word);
+                        } else {
+                            $temp[] = $word;
+                        }
+                    }
+                    $key = implode(' ', $temp);
+                }
                 $post['keys'][] = array(
                     'key' => $key,
                     'url' => $this->getURL('frontend/blog/search/query/' . rawurlencode($key))
@@ -397,14 +411,15 @@ class Blog_Frontend_Model extends Frontend_Model {
     public function getCountPostsByTags($ids) {
         $ids = implode(',', $ids);
         $query = "SELECT
-                      COUNT(*)
+                      COUNT(DISTINCT(`a`.`id`))
                   FROM
                       `blog_posts` `a`
                       INNER JOIN `blog_categories` `b` ON `a`.`category` = `b`.`id`
                       INNER JOIN `blog_post_tag` `c` ON `a`.`id` = `c`.`post_id`
                       INNER JOIN `blog_tags` `d` ON `c`.`tag_id` = `d`.`id`
                   WHERE
-                      `d`.`id` IN (" . $ids . ") AND `a`.`visible` = 1";
+                      `a`.`visible` = 1 AND `a`.`id` IN
+                      (SELECT `g`.`post_id` FROM `blog_post_tag` `g` WHERE `g`.`tag_id` IN (" . $ids . "))";
         return $this->database->fetchOne($query);
     }
 
@@ -489,7 +504,8 @@ class Blog_Frontend_Model extends Frontend_Model {
                       AND `b`.`id` <> :id2 AND `b`.`visible` = 1
                   GROUP BY
                       1, 2
-                  HAVING COUNT(*) > 1
+                  HAVING
+                      COUNT(*) > 1
                   ORDER BY
                       COUNT(*) DESC, `b`.`added` DESC
                   LIMIT
