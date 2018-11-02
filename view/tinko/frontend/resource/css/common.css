@@ -75,7 +75,7 @@ body > .wrapper {
         }
         #header > .wrapper > div:first-child > span:last-child {
             font-size: 25px;
-            line-height: 20px;
+            line-height: 1px;
         }
         
         #header > .wrapper form {
