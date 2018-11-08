@@ -104,12 +104,16 @@ class Highlight {
             'colors' => array(
                 'default'     => array('fore' => '#008080'),
                 'comment'     => array('fore' => '#888888'),
+                'url-cont'    => array('fore' => '#0000FF'),
+                'important'   => array('fore' => '#FF8080'),
+                'media-value' => array('fore' => '#0000BB'),
                 'string'      => array('fore' => '#0000FF'),
                 'rules'       => array('fore' => '#EE00EE'),
+                'css-var'     => array('fore' => '#00AA00'),
                 'prop-name'   => array('fore' => '#0080C0'),
-                'prop-value'  => array('fore' => '#0080FF'),
+                'prop-value'  => array('fore' => '#808000'),
                 'css-uniq'    => array('fore' => '#8000FF'),
-                'css-class'   => array('fore' => '#808000'),
+                'css-class'   => array('fore' => '#0080FF'),
                 'pseudo-el'   => array('fore' => '#CC6600'),
                 'pseudo-cl'   => array('fore' => '#CC6600'),
                 'pseudo-cl-n' => array('fore' => '#CC6600'),
@@ -253,7 +257,6 @@ class Highlight {
                 'default'   => array('fore' => '#008080'),
                 'startphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'shortphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
-                'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'stopphp'   => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'comment1'  => array('fore' => '#888888'),
@@ -524,17 +527,21 @@ class Highlight {
         $rules = 'import|media|charset|page|font-face';
 
         $pattern = array(
-            'comment'     => '~/\*.*\*/~sU',                     // комментарии
-            'prop-name'   => '~^\s*[-a-z]+\s*(?=:)~m',           // свойство
-            'prop-value'  => '~(?<=¤:)\s*[^;¤{]+\s*(?=;)~',      // значение свойства
-            'string'      => '~"[^"]*"|\'[^\']*\'~',             // строка
-            'rules'      => '~@('.$rules.')\b~',                 // правила
-            'css-uniq'    => '~#[-_a-z]+~',                      // селектор, идентификатор
-            'css-class'   => '~\.[-_a-z]+~',                     // селектор, класс
-            'pseudo-el'   => '~::[-a-z]+~',                      // псевдо-элементы ::first-letter или ::before
-            'pseudo-cl-n' => '~:[-a-z]+\([^)]*\)~',              // псевдо-классы :not(:first-child) или :nth-child(even)
-            'pseudo-cl'   => '~:[-a-z]+~',                       // псевдо-классы :first-letter или :first-line
-            'delimiter'   => '~'.implode('|', $delimiter).'~',   // разделители
+            'comment'     => '~/\*.*\*/~sU',                      // комментарии
+            'css-var'     => '~--[a-z][-a-z]*~',                  // CSS-переменные
+            'media-value' => '~(?<=@media )[-:)(a-z0-9 ]+(?= {)~',
+            'url-cont'    => '~(?<=url\()[^)]+~',                 // аргумент функции url()
+            'string'      => '~"[^"]*"|\'[^\']*\'~',              // строка
+            'important'   => '~!important~',                      // !important
+            'prop-value'  => '~(?<=:)[^;{]+(?=;)~',               // значение свойства
+            'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
+            'rules'       => '~@('.$rules.')\b~',                 // правила
+            'css-uniq'    => '~#[-_a-z]+~',                       // селектор, идентификатор
+            'css-class'   => '~\.[-_a-z]+~',                      // селектор, класс
+            'pseudo-el'   => '~::[-a-z]+~',                       // псевдо-элементы ::first-letter или ::before
+            'pseudo-cl-n' => '~:[-a-z]+\([^)]*\)~',               // псевдо-классы :not(:first-child) или :nth-child(even)
+            'pseudo-cl'   => '~:[-a-z]+~',                        // псевдо-классы :first-letter или :first-line
+            'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
         );
 
         $code = $this->highlightCodeString($code, $pattern, 'css');
