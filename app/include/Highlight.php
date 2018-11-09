@@ -106,7 +106,6 @@ class Highlight {
                 'comment'     => array('fore' => '#888888'),
                 'url-cont'    => array('fore' => '#0000FF'),
                 'important'   => array('fore' => '#FF8080'),
-                'media-value' => array('fore' => '#0000BB'),
                 'string'      => array('fore' => '#0000FF'),
                 'rules'       => array('fore' => '#EE00EE'),
                 'css-var'     => array('fore' => '#00AA00'),
@@ -231,6 +230,30 @@ class Highlight {
                 'string'   => array('fore' => '#0000FF'),
                 'equal'    => array('fore' => '#FF0000')
             )
+        ),
+        'less' => array(
+            'colors' => array(
+                'default'     => array('fore' => '#008080'),
+                'comment1'    => array('fore' => '#888888'),
+                'comment2'    => array('fore' => '#888888'),
+                'url-cont'    => array('fore' => '#0000FF'),
+                'important'   => array('fore' => '#FF8080'),
+                'string'      => array('fore' => '#0000FF'),
+                'rules'       => array('fore' => '#EE00EE'),
+                'less-var'    => array('fore' => '#00AA00', 'back' => '#FFFFEE'),
+                'css-var'     => array('fore' => '#00AA00'),
+                'prop-name'   => array('fore' => '#0080C0'),
+                'prop-value'  => array('fore' => '#808000'),
+                'css-uniq'    => array('fore' => '#8000FF'),
+                'css-class'   => array('fore' => '#0080FF'),
+                'pseudo-el'   => array('fore' => '#CC6600'),
+                'pseudo-cl'   => array('fore' => '#CC6600'),
+                'pseudo-cl-n' => array('fore' => '#CC6600'),
+                'delimiter'   => array('fore' => '#FF0000'),
+                'number'      => array('fore' => '#CCCCCC'),
+            ),
+            'function' => array('url', 'attr', 'calc', 'rgb'),
+            'delimiter' => array('+', '~', ',', '>', ':', ';', '[', ']', '(', ')', '{', '}', '='),
         ),
         'mysql' => array(
             'colors' => array(
@@ -528,7 +551,7 @@ class Highlight {
 
         $pattern = array(
             'comment'     => '~/\*.*\*/~sU',                      // комментарии
-            'css-var'     => '~--[a-z][-a-z]*~',                  // CSS-переменные
+            'css-var'     => '~--[a-z][-a-z0-9]*~',               // CSS-переменные
             'media-value' => '~(?<=@media )[-:)(a-z0-9 ]+(?= {)~',
             'url-cont'    => '~(?<=url\()[^)]+~',                 // аргумент функции url()
             'string'      => '~"[^"]*"|\'[^\']*\'~',              // строка
@@ -536,8 +559,8 @@ class Highlight {
             'prop-value'  => '~(?<=:)[^;{]+(?=;)~',               // значение свойства
             'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
             'rules'       => '~@('.$rules.')\b~',                 // правила
-            'css-uniq'    => '~#[-_a-z]+~',                       // селектор, идентификатор
-            'css-class'   => '~\.[-_a-z]+~',                      // селектор, класс
+            'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
+            'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
             'pseudo-el'   => '~::[-a-z]+~',                       // псевдо-элементы ::first-letter или ::before
             'pseudo-cl-n' => '~:[-a-z]+\([^)]*\)~',               // псевдо-классы :not(:first-child) или :nth-child(even)
             'pseudo-cl'   => '~:[-a-z]+~',                        // псевдо-классы :first-letter или :first-line
@@ -781,6 +804,42 @@ class Highlight {
         return '<pre style="color:'.$this->settings['ini']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
+    
+    public function highlightLESS($code) {
+        
+        $code = $this->trim($code);
+
+        foreach ($this->settings['less']['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+
+        $rules = 'import|media|charset|page|font-face';
+
+        $pattern = array(
+            'comment1'    => '~\/\/ .*$~m',  // комментарии
+            'comment2'    => '~/\*.*\*/~sU', // комментарии
+            'media-value' => '~(?<=@media )[-:)(a-z0-9 ]+(?= {)~',
+            'rules'       => '~@('.$rules.')\b~',                 // правила
+            'css-var'     => '~--[a-z][-a-z0-9]*~',               // CSS-переменные
+            'less-var'    => '~@[a-z][-a-z0-9]*~',                // LESS-переменные
+            'url-cont'    => '~(?<=url\()[^)]+~',                 // аргумент функции url()
+            'string'      => '~"[^"]*"|\'[^\']*\'~',              // строка
+            'important'   => '~!important~',                      // !important
+            'prop-value'  => '~(?<=:)[^;{]+(?=;)~',               // значение свойства
+            'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
+            'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
+            'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
+            'pseudo-el'   => '~::[-a-z]+~',                       // псевдо-элементы ::first-letter или ::before
+            'pseudo-cl-n' => '~:[-a-z]+\([^)]*\)~',               // псевдо-классы :not(:first-child) или :nth-child(even)
+            'pseudo-cl'   => '~:[-a-z]+~',                        // псевдо-классы :first-letter или :first-line
+            'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
+        );
+
+        $code = $this->highlightCodeString($code, $pattern, 'less');
+
+        return '<pre style="color:'.$this->settings['less']['colors']['default']['fore'].'">' . $code . '</pre>';
+
+    }
 
     public function highlightMySQL($code) {
 
@@ -954,13 +1013,13 @@ class Highlight {
 
     private function highlightCodeString($code, $pattern, $lang) {
 
-        // заменяем экранированный обратный слэш на непечатные символы,, чтобы правильно раскрашивать код
-        $code = str_replace('\\\\', chr(19).chr(19), $code);
-        // заменяем экранированные кавычки на непечатные символы, чтобы правильно раскрашивать код
-        $code = str_replace("\\'", chr(11).chr(11), $code);
-        $code = str_replace('\\"', chr(12).chr(12), $code);
-        // заменяем экранированный прямой слэш на непечатные символы, чтобы правильно раскрашивать код
-        $code = str_replace("\\/", chr(15).chr(15), $code);
+        // заменяем экранированный обратный слэш на экзотические символы,, чтобы правильно раскрашивать код
+        $code = str_replace('\\\\', '♠♠', $code);
+        // заменяем экранированные кавычки на экзотические символы, чтобы правильно раскрашивать код
+        $code = str_replace("\\'", '♣♣', $code);
+        $code = str_replace('\\"', '♥♥', $code);
+        // заменяем экранированный прямой слэш на экзотические символы, чтобы правильно раскрашивать код
+        $code = str_replace("\\/", '♦♦', $code);
         // заменяем одинарные кавычки внутри двойных и двойные внутри одинарных, чтобы правильно раскрашивать код
         $code = $this->replaceQuoteInString($code);
 
@@ -1011,16 +1070,16 @@ class Highlight {
             $code = str_replace($replace, $source, $code);
         }
 
-        // заменяем непечатные символы обратно на экранированный обратный слэш
-        $code = str_replace(chr(19).chr(19), '\\\\', $code);
-        // заменяем непечатные символы обратно на экранированные кавычки
-        $code = str_replace(chr(11).chr(11), "\\'", $code);
-        $code = str_replace(chr(12).chr(12), '\\"', $code);
-        // заменяем непечатные символы обратно на экранированный прямой слэш
-        $code = str_replace(chr(15).chr(15), "\\/", $code);
-        // замена непечатных символов обратно на кавычки, см. метод replaceQuoteInString()
-        $code = str_replace(chr(13), "'", $code);
-        $code = str_replace(chr(14), '"', $code);
+        // заменяем экзотические символы обратно на экранированный обратный слэш
+        $code = str_replace('♠♠', '\\\\', $code);
+        // заменяем экзотические символы обратно на экранированные кавычки
+        $code = str_replace('♣♣', "\\'", $code);
+        $code = str_replace('♥♥', '\\"', $code);
+        // заменяем экзотические символы обратно на экранированный прямой слэш
+        $code = str_replace('♦♦', "\\/", $code);
+        // замена экзотических символов обратно на кавычки, см. метод replaceQuoteInString()
+        $code = str_replace('☺', "'", $code);
+        $code = str_replace('☻', '"', $code);
         
         return $code;
 
@@ -1069,8 +1128,8 @@ class Highlight {
          * находим вторую кавычку, потом от этого места находим третью и так далее. Задача в
          * том, чтобы определить, когда одинарная кавычка находится внутри строки в двойных
          * кавычках. И когда двойная кавычка находится внутри строки в одинарных кавычках.
-         * Кавычки внутри строки заменяем на непечатные символы, чтобы правильно раскрасить
-         * код. А когда раскраска сделана, непечатные символы заменяются обратно на кавычки.
+         * Кавычки внутри строки заменяем на экзотические символы, чтобы правильно раскрасить
+         * код. А когда раскраска сделана, экзотические символы заменяются обратно на кавычки.
          */
         $offset = 0; // сдвиг от начала строки кода, который надо раскрасить
         $singleQuoteString = false; // признак того, что мы внутри строки в одинарных кавычках
@@ -1098,7 +1157,7 @@ class Highlight {
                 }
                 // если мы встретили одинарную кавычку, заменяем ее, чтобы не было коллизий при подсветке
                 if ($quote === "'") {
-                    $code = substr_replace($code, chr(13), $position, 1);
+                    $code = substr_replace($code, '☺', $position, 1);
                 }
             } elseif ($singleQuoteString) { // третий случай, мы внутри строки в одинарных кавычках
                 // если мы встретили одинарную кавычку, это означает, что строка '...' здесь заканчивается
@@ -1107,7 +1166,7 @@ class Highlight {
                 }
                 // если мы встретили двойную кавычку, заменяем ее, чтобы не было коллизий при подсветке
                 if ($quote === '"') {
-                    $code = substr_replace($code, chr(14), $position, 1);
+                    $code = substr_replace($code, '☻', $position, 1);
                 }
             }
             $offset = $position + 1; // следующий поиск кавычки уже с этой позиции
