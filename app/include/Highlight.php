@@ -265,11 +265,12 @@ class Highlight {
                 'string2'  => array('fore' => '#0080FF'),
                 'string3'  => array('fore' => '#0080C0'),
                 'type'     => array('fore' => '#808000'),
+                'value'    => array('fore' => '#CC6600'),
                 'digit'    => array('fore' => '#DD00DD'),
                 'delimiter'=> array('fore' => '#FF0000'),
             ),
             'type' => array(
-                'TINYINT', 'SMALLINT', 'MEDIUMINT', 'INTEGER', 'BIGINT', 'INT', 'FLOAT', 'DOUBLE', 'REAL', 'DECIMAL', 'NUMERIC', 'BIT', 'YEAR', 'DATETIME', 'DATE', 'TIMESTAMP', 'TIME', 'VARCHAR', 'CHAR', 'VARBINARY', 'BINARY', 'TINYBLOB', 'MEDIUMBLOB', 'LONGBLOB', 'BLOB', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'TEXT', 'ENUM', 'SET', 'NULL'
+                'TINYINT', 'SMALLINT', 'MEDIUMINT', 'INTEGER', 'BIGINT', 'INT', 'FLOAT', 'DOUBLE', 'REAL', 'DECIMAL', 'NUMERIC', 'BIT', 'YEAR', 'DATETIME', 'DATE', 'TIMESTAMP', 'TIME', 'VARCHAR', 'CHAR', 'VARBINARY', 'BINARY', 'TINYBLOB', 'MEDIUMBLOB', 'LONGBLOB', 'BLOB', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'TEXT', 'ENUM'
             ),
             'delimiter' => array(
                 '.', ',', ';', '=', '(', ')', '@', '*', '>', '<'
@@ -308,7 +309,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'substr', 'str_replace', 'str_split', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'array_keys', 'in_array', 'array_key_exists', 'array_search', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'rtrim', 'ltrim', 'nl2br', 'htmlspecialchars', 'ini_get', 'ini_set', 'session_start', 'session_get_cookie_params', 'session_set_cookie_params', 'setcookie', 'pathinfo', 'base64_encode', 'base64_decode', 'sprintf', 'ord', 'chr', 'fgets', 'bindec', 'sleep', 'usleep', 'socket_create', 'socket_bind', 'socket_set_option', 'socket_listen', 'socket_select', 'socket_accept', 'socket_read', 'socket_write', 'socket_shutdown', 'socket_close', 'socket_getpeername', 'socket_last_error', 'socket_strerror', 'is_callable', 'call_user_func', 'error_reporting', 'set_time_limit', 'ob_implicit_flush', 'pack', 'sha1', 'stream_socket_server', 'stream_select', 'stream_socket_accept', 'stream_socket_get_name', 'is_resource', 'is_string', 'parse_url', 'dirname', 'preg_replace_callback', 'preg_quote', 'array_push', 'array_pop', 'unserialize', 'serialize',
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'substr', 'str_replace', 'str_split', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'array_keys', 'in_array', 'array_key_exists', 'array_search', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'rtrim', 'ltrim', 'nl2br', 'htmlspecialchars', 'ini_get', 'ini_set', 'session_start', 'session_get_cookie_params', 'session_set_cookie_params', 'setcookie', 'pathinfo', 'base64_encode', 'base64_decode', 'sprintf', 'ord', 'chr', 'fgets', 'bindec', 'sleep', 'usleep', 'socket_create', 'socket_bind', 'socket_set_option', 'socket_listen', 'socket_select', 'socket_accept', 'socket_read', 'socket_write', 'socket_shutdown', 'socket_close', 'socket_getpeername', 'socket_last_error', 'socket_strerror', 'is_callable', 'call_user_func', 'error_reporting', 'set_time_limit', 'ob_implicit_flush', 'pack', 'sha1', 'stream_socket_server', 'stream_select', 'stream_socket_accept', 'stream_socket_get_name', 'is_resource', 'is_string', 'parse_url', 'dirname', 'preg_replace_callback', 'preg_quote', 'array_push', 'array_pop', 'unserialize', 'serialize', 'sort', 'intval'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PATH_SEPARATOR', 'PHP_EOL', 'PHP_OS', 'E_ALL'
@@ -856,6 +857,7 @@ class Highlight {
             'string2'   => "~'[^']*'~",          // строки в одинарных кавычках
             'string3'   => '~`[^`]*`~',          // строки в обратных кавычках
             'type'      => '~\b('.implode('|', $this->settings['mysql']['type']).')\b~i', // типы данных
+            'value'     => '~(?<=(OLLATE|HARSET|ENGINE)(\=| ))\b[a-z][_a-z0-9]+\b~i',
             'digit'     => '~\b\d+(\.\d+)?\b~',  // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
@@ -873,7 +875,7 @@ class Highlight {
         foreach ($this->settings['php']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $super = '\$GLOBALS|\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE';
+        $super = '\$GLOBALS|\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE|\$_ENV';
         $pattern = array(
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
