@@ -875,7 +875,7 @@ class Highlight {
         foreach ($this->settings['php']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
-        $super = '\$GLOBALS|\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE|\$_ENV';
+        $super = '\$GLOBALS|\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE|\$_ENV|\$_FILES';
         $pattern = array(
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
