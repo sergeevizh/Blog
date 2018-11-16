@@ -194,7 +194,7 @@ class Highlight {
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'delimiter' => array(
-                ',', ':', '[', ']', '{', '}'
+                ',', '.', ':', '[', ']', '{', '}'
             ),
         ),
         'html' => array(
