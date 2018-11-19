@@ -309,7 +309,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'substr', 'str_replace', 'str_split', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'array_keys', 'in_array', 'array_key_exists', 'array_search', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'rtrim', 'ltrim', 'nl2br', 'htmlspecialchars', 'ini_get', 'ini_set', 'session_start', 'session_get_cookie_params', 'session_set_cookie_params', 'setcookie', 'pathinfo', 'base64_encode', 'base64_decode', 'sprintf', 'ord', 'chr', 'fgets', 'bindec', 'sleep', 'usleep', 'socket_create', 'socket_bind', 'socket_set_option', 'socket_listen', 'socket_select', 'socket_accept', 'socket_read', 'socket_write', 'socket_shutdown', 'socket_close', 'socket_getpeername', 'socket_last_error', 'socket_strerror', 'is_callable', 'call_user_func', 'error_reporting', 'set_time_limit', 'ob_implicit_flush', 'pack', 'sha1', 'stream_socket_server', 'stream_select', 'stream_socket_accept', 'stream_socket_get_name', 'is_resource', 'is_string', 'parse_url', 'dirname', 'preg_replace_callback', 'preg_quote', 'array_push', 'array_pop', 'unserialize', 'serialize', 'sort', 'intval', 'shell_exec',
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'substr', 'str_replace', 'str_split', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'array_keys', 'in_array', 'array_key_exists', 'array_search', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'rtrim', 'ltrim', 'nl2br', 'htmlspecialchars', 'ini_get', 'ini_set', 'session_start', 'session_get_cookie_params', 'session_set_cookie_params', 'setcookie', 'pathinfo', 'base64_encode', 'base64_decode', 'sprintf', 'ord', 'chr', 'fgets', 'bindec', 'sleep', 'usleep', 'socket_create', 'socket_bind', 'socket_set_option', 'socket_listen', 'socket_select', 'socket_accept', 'socket_read', 'socket_write', 'socket_shutdown', 'socket_close', 'socket_getpeername', 'socket_last_error', 'socket_strerror', 'is_callable', 'call_user_func', 'error_reporting', 'set_time_limit', 'ob_implicit_flush', 'pack', 'sha1', 'stream_socket_server', 'stream_select', 'stream_socket_accept', 'stream_socket_get_name', 'is_resource', 'is_string', 'parse_url', 'dirname', 'preg_replace_callback', 'preg_quote', 'array_push', 'array_pop', 'unserialize', 'serialize', 'sort', 'intval', 'shell_exec', 'scandir', 'getopt', 'array_diff'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PATH_SEPARATOR', 'PHP_EOL', 'PHP_OS', 'E_ALL', 'STDIN', 'STDOUT'
@@ -334,18 +334,20 @@ class Highlight {
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#DD00DD'),
                 'function'  => array('fore' => '#0080FF'),
+                'def-call'  => array('fore' => '#0080C0'),
+                'self'      => array('fore' => '#00AA00'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
             ),
             'keyword1' => array(
-                'def', 'if', 'else', 'elif', 'for', 'in', 'while', 'break', 'continue', 'del', 'try', 'except', 'raise', 'finally', 'from', 'import', 'return', 'pass', 'lambda', 'with', 'as', 'not', 'and', 'or', 'is'
+                'def', 'if', 'else', 'elif', 'for', 'in', 'while', 'break', 'continue', 'del', 'try', 'except', 'raise', 'finally', 'from', 'import', 'return', 'pass', 'lambda', 'with', 'as', 'not', 'and', 'or', 'is', 'class'
             ),
             'keyword2' => array(
                 'True', 'False', 'None'
             ),
             'function' => array(
-                'object', 'dict', 'list', 'tuple', 'set', 'bool', 'float', 'int', 'str', 'slice', 'range', 'len', 'input', 'print', 'min', 'max', 'sum', 'round', 'type', 'open'
+                'object', 'dict', 'list', 'tuple', 'set', 'bool', 'float', 'int', 'str', 'slice', 'range', 'len', 'input', 'print', 'min', 'max', 'sum', 'round', 'type', 'open', 'super'
             ),
             'delimiter' => array(
                 '.', ',', ':', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!'
@@ -957,9 +959,11 @@ class Highlight {
             'string4'   => "~'''.*?'''~s",         // строки в тройных кавычках
             'string1'   => '~[ru]{0,2}"[^"]*"~',   // строки в двойных кавычках
             'string2'   => "~[ru]{0,2}'[^']*'~",   // строки в одинарных кавычках
-            'keyword1'  => '~\b('.implode('|', $this->settings['python']['keyword1']).')\b~i', // ключевые слова
-            'keyword2'  => '~\b('.implode('|', $this->settings['python']['keyword2']).')\b~i', // ключевые слова
+            'keyword1'  => '~\b('.implode('|', $this->settings['python']['keyword1']).')\b~', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings['python']['keyword2']).')\b~', // ключевые слова
+            'self'      => '~\bself\b~', // self
             'function'  => '~(?<!\.)\b('.implode('|', $this->settings['python']['function']).')(?=\()~i', // встроенные функции
+            'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
             'digit'     => '~\b\d+\b~',            // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
