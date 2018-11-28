@@ -5,6 +5,7 @@
  *
  * Переменные, доступные в шаблоне:
  * $indexURL - URL ссылки на главную страницу сайта
+ * $action - атрибут action формы поиска
  */
 
 defined('ZCMS') or die('Access denied');
@@ -17,7 +18,7 @@ defined('ZCMS') or die('Access denied');
     <span>на память</span>
 </div>
 <div>
-    <form>
+    <form action="<?= $action; ?>" method="POST">
         <input type="text" name="query" value="" maxlength="64" placeholder="Поиск по блогу" />
         <input type="submit" name="submit" value="" />
     </form>

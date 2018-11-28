@@ -111,8 +111,8 @@ abstract class Frontend_Controller extends Base_Controller {
         // этот массив еще будет дополнен элементами, см. комментарий
         // в методе Frontend_Controller::output()
         $this->headVars = array(
-            'cssFiles'    => $this->cssFiles,
-            'jsFiles'     => $this->jsFiles,
+            'cssFiles' => $this->cssFiles,
+            'jsFiles'  => $this->jsFiles,
         );
 
         /*
@@ -120,7 +120,9 @@ abstract class Frontend_Controller extends Base_Controller {
          */
         $this->headerVars = array(
             // URL ссылки на главную страницу сайта
-            'indexURL'     => $this->indexFrontendModel->getURL('frontend/index/index'),
+            'indexURL' => $this->indexFrontendModel->getURL('frontend/index/index'),
+            // атрибут action формы поиска в шапке сайта
+            'action'   => $this->indexFrontendModel->getURL('frontend/blog/search'),
         );
 
         /*
