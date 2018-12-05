@@ -1,7 +1,7 @@
 <?php
 /**
  * Класс Search_Blog_Frontend_Controller формирует страницу поиска по блогу,
- * получает данные от модели Идщп_Frontend_Model, общедоступная часть сайта
+ * получает данные от модели Blog_Frontend_Model, общедоступная часть сайта
  */
 class Search_Blog_Frontend_Controller extends Blog_Frontend_Controller {
 

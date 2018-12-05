@@ -5,6 +5,7 @@
  * Blog_Frontend_Model, общедоступная часть сайта
  */
 class Tags_Blog_Frontend_Controller extends Blog_Frontend_Controller {
+
     public function __construct($params = null) {
         parent::__construct($params);
     }

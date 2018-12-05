@@ -95,9 +95,12 @@
         #post-item > .liked-posts > h4 {
             margin: 0 0 10px 0;
         }
-         #post-item > .liked-posts > ul {
+        #post-item > .liked-posts > ul {
             margin: 0 0 0 30px;
         }
+            #post-item > .liked-posts > ul > li {
+                margin-bottom: 0;
+            }
     #post-item > .post-keys {
         margin-top: 20px;
         font-size: 12px;

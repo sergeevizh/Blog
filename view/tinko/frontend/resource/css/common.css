@@ -263,9 +263,15 @@ body > .wrapper {
 #content ul, #content ol {
     margin: 15px 0 15px 35px;
 }
-    #content ul > li > ul, #content ol > li > ol, #content ol > li > ul, #content ul > li > ol {
-        margin: 5px 0 5px 20px;
+    #content ul > li, #content ol > li {
+        margin-bottom: 10px;
     }
+    #content ul > li:last-child, #content ol > li:last-child {
+        margin-bottom: 0;
+    }
+        #content ul > li > ul, #content ol > li > ol, #content ol > li > ul, #content ul > li > ol {
+            margin: 5px 0 5px 20px;
+        }
 #content img {
     max-width: 100%;
 }
