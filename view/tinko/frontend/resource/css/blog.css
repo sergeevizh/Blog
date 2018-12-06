@@ -98,9 +98,6 @@
         #post-item > .liked-posts > ul {
             margin: 0 0 0 30px;
         }
-            #post-item > .liked-posts > ul > li {
-                margin-bottom: 0;
-            }
     #post-item > .post-keys {
         margin-top: 20px;
         font-size: 12px;
@@ -119,7 +116,6 @@
         padding: 0;
         -webkit-column-count: 4;
         -moz-column-count: 4;
-        ;
     }
         #all-tags > ul > li {
             white-space: nowrap;
