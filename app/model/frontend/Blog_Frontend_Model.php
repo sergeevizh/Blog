@@ -469,7 +469,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                   GROUP BY
                       1, 2
                   HAVING
-                      COUNT(*) > 6
+                      COUNT(*) > 7
                   ORDER BY
                       `a`.`name`";
         $tags = $this->database->fetchAll($query);
