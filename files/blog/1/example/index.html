@@ -4,50 +4,53 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Закладки: CSS и фоновое изображение</title>
 <style type="text/css">
-ul, li {
+.tab, .tab li {
     border: 0;
     margin: 0;
     padding: 0;
     list-style: none;
 }
-ul {
+.tab {
     border-bottom: solid 1px #DEDEDE;
     height: 29px;
     padding-left: 20px;
 }
-li {
+.tab li {
     float: left;
-    margin-right: 2px;
+    margin-right: 4px;
     height: 30px;
     overflow: hidden;
 }
-.tab a:link, .tab a:visited {
+/* обычное состояние */
+.tab a {
     background: url(../tab.png) right 60px;
-    color: #666;
+    color: #666666;
     display: block;
     font-weight: bold;
     line-height: 30px;
     text-decoration: none;
 }
-.tab a span{
+.tab a span {
     background: url(../tab.png) left 60px;
     display: block;
     margin-right: 14px;
     padding-left: 14px;
 }
-.tab a:hover{
+/* при наведении указателя */
+.tab a:hover {
     background: url(../tab.png) right 30px;
     display: block;
 }
-.tab a:hover span{
+.tab a:hover span {
     background: url(../tab.png) left 30px;
     display: block;
 }
-.active a:link, .active a:visited, .active a:visited, .active a:hover {
-    background: url(../tab.png) right 0 no-repeat;
+/* активная закладка */
+.active a {
+    background: url(../tab.png) right top;
 }
-.active a span, .active a:hover span {
-    background: url(../tab.png) left 0 no-repeat;
+.active a span {
+    background: url(../tab.png) left top;
 }
 </style>
 </head>
