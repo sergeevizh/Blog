@@ -113,9 +113,7 @@ class Highlight {
                 'prop-value'  => array('fore' => '#808000'),
                 'css-uniq'    => array('fore' => '#8000FF'),
                 'css-class'   => array('fore' => '#0080FF'),
-                'pseudo-el'   => array('fore' => '#CC6600'),
-                'pseudo-cl'   => array('fore' => '#CC6600'),
-                'pseudo-cl-n' => array('fore' => '#CC6600'),
+                'pseudo'      => array('fore' => '#CC6600'),
                 'delimiter'   => array('fore' => '#FF0000'),
                 'number'      => array('fore' => '#CCCCCC'),
             ),
@@ -246,9 +244,7 @@ class Highlight {
                 'prop-value'  => array('fore' => '#808000'),
                 'css-uniq'    => array('fore' => '#8000FF'),
                 'css-class'   => array('fore' => '#0080FF'),
-                'pseudo-el'   => array('fore' => '#CC6600'),
-                'pseudo-cl'   => array('fore' => '#CC6600'),
-                'pseudo-cl-n' => array('fore' => '#CC6600'),
+                'pseudo'      => array('fore' => '#CC6600'),
                 'delimiter'   => array('fore' => '#FF0000'),
                 'number'      => array('fore' => '#CCCCCC'),
             ),
@@ -564,9 +560,7 @@ class Highlight {
             'rules'       => '~@('.$rules.')\b~',                 // правила
             'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
             'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
-            'pseudo-el'   => '~::[-a-z]+~',                       // псевдо-элементы ::first-letter или ::before
-            'pseudo-cl-n' => '~:[-a-z]+\([^)]*\)~',               // псевдо-классы :not(:first-child) или :nth-child(even)
-            'pseudo-cl'   => '~:[-a-z]+~',                        // псевдо-классы :first-letter или :first-line
+            'pseudo'      => '~::?[a-z][-a-z)(+0-9]+~',           // псевдо-элементы и псевдо-классы
             'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
         );
 
@@ -832,9 +826,7 @@ class Highlight {
             'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
             'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
             'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
-            'pseudo-el'   => '~::[-a-z]+~',                       // псевдо-элементы ::first-letter или ::before
-            'pseudo-cl-n' => '~:[-a-z]+\([^)]*\)~',               // псевдо-классы :not(:first-child) или :nth-child(even)
-            'pseudo-cl'   => '~:[-a-z]+~',                        // псевдо-классы :first-letter или :first-line
+            'pseudo'      => '~::?[a-z][-a-z)(+0-9]+~',           // псевдо-элементы и псевдо-классы
             'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
         );
 

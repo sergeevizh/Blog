@@ -1,0 +1,48 @@
+27.12.2018 10:32:34
+Код: 22001, текст: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'body' at row 1
+Файл: C:\work\localhost12\www\app\include\Database.php, строка: 63
+Стек вызовов: 
+#0 C:\work\localhost12\www\app\include\Database.php(63): PDOStatement->execute(Array)
+#1 C:\work\localhost12\www\app\model\backend\Blog_Backend_Model.php(238): Database->execute('UPDATE\r\n       ...', Array)
+#2 C:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(218): Blog_Backend_Model->updatePost(Array)
+#3 C:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(38): Editpost_Blog_Backend_Controller->validateForm()
+#4 C:\work\localhost12\www\app\controller\Base_Controller.php(146): Editpost_Blog_Backend_Controller->input()
+#5 C:\work\localhost12\www\index.php(31): Base_Controller->request()
+#6 {main}
+
+27.12.2018 10:32:56
+Код: 22001, текст: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'body' at row 1
+Файл: C:\work\localhost12\www\app\include\Database.php, строка: 63
+Стек вызовов: 
+#0 C:\work\localhost12\www\app\include\Database.php(63): PDOStatement->execute(Array)
+#1 C:\work\localhost12\www\app\model\backend\Blog_Backend_Model.php(238): Database->execute('UPDATE\r\n       ...', Array)
+#2 C:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(218): Blog_Backend_Model->updatePost(Array)
+#3 C:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(38): Editpost_Blog_Backend_Controller->validateForm()
+#4 C:\work\localhost12\www\app\controller\Base_Controller.php(146): Editpost_Blog_Backend_Controller->input()
+#5 C:\work\localhost12\www\index.php(31): Base_Controller->request()
+#6 {main}
+
+27.12.2018 10:32:59
+Код: 22001, текст: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'body' at row 1
+Файл: C:\work\localhost12\www\app\include\Database.php, строка: 63
+Стек вызовов: 
+#0 C:\work\localhost12\www\app\include\Database.php(63): PDOStatement->execute(Array)
+#1 C:\work\localhost12\www\app\model\backend\Blog_Backend_Model.php(238): Database->execute('UPDATE\r\n       ...', Array)
+#2 C:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(218): Blog_Backend_Model->updatePost(Array)
+#3 C:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(38): Editpost_Blog_Backend_Controller->validateForm()
+#4 C:\work\localhost12\www\app\controller\Base_Controller.php(146): Editpost_Blog_Backend_Controller->input()
+#5 C:\work\localhost12\www\index.php(31): Base_Controller->request()
+#6 {main}
+
+27.12.2018 10:33:37
+Код: 22001, текст: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'body' at row 1
+Файл: C:\work\localhost12\www\app\include\Database.php, строка: 63
+Стек вызовов: 
+#0 C:\work\localhost12\www\app\include\Database.php(63): PDOStatement->execute(Array)
+#1 C:\work\localhost12\www\app\model\backend\Blog_Backend_Model.php(238): Database->execute('UPDATE\r\n       ...', Array)
+#2 C:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(218): Blog_Backend_Model->updatePost(Array)
+#3 C:\work\localhost12\www\app\controller\backend\blog\Editpost_Blog_Backend_Controller.php(38): Editpost_Blog_Backend_Controller->validateForm()
+#4 C:\work\localhost12\www\app\controller\Base_Controller.php(146): Editpost_Blog_Backend_Controller->input()
+#5 C:\work\localhost12\www\index.php(31): Base_Controller->request()
+#6 {main}
+
