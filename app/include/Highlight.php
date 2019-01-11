@@ -642,7 +642,7 @@ class Highlight {
          * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки javascript-кода
          */
-        $jsSource_js = $jsReplace = array();
+        $jsSource = $jsReplace = array();
         $pattern = '~<script(?: type="(?:text|application)/javascript")?>(.+)</script>~Us';
         $this->replaceStringWithUniqueCode($code, $jsSource, $jsReplace, $pattern, 9, 'js');
 
@@ -906,7 +906,7 @@ class Highlight {
         $code = $this->trim($code);
 
         /*
-         * Сначала врезаем куски php-кода, потом раскрашиваем все эти куски, потом вставляем обратно
+         * Сначала врезаем куски php-кода, раскрашиваем все эти куски, потом вставляем обратно
          */
         $offset = 0;
         $source = array();
@@ -1173,14 +1173,32 @@ class Highlight {
         return $code;
     }
     
+    /*
+     * Функция вырезает из кода кусочки кода и заменяет их на заглушки. Например, из
+     * HTML вырезается CSS или JavaScript
+     * $string это исходный код, который раскрашиваем
+     * $source это массив кусочков кода, которые вырезаем
+     * $replace это массив заглушек, которые вставляются на место
+     * вырезанных кусочков кода; потом эти заглушки заменяются обратно на код
+     * $pattern это шаблон, по которому вырезаются кусочки кода
+     */
+    // $this->replaceStringWithUniqueCode($code, $jsSource, $jsReplace, $pattern, 9, 'js');
     private function replaceStringWithUniqueCode(&$string, &$source, &$replace, $pattern, $len, $type) {
         $offset = 0;
         $source = array();
         $replace = array();
         while (preg_match($pattern, $string, $match, PREG_OFFSET_CAPTURE, $offset)) {
-            $item = $match[1][0];
+            $item = $match[1][0]; // это кусочек кода внутри <stript>...</script>
+            
             $offset = $match[1][1];
-            $length = strlen($match[1][0]);
+            //$offset = $match[0][1];
+            //$codeOffset = $match[1][1];
+            //$totalOffset = $match[0][1];
+            $startReplace = $match[1][1];
+            
+            $codeLength = strlen($match[1][0]); // длина кусочка кода внутри <stript>...</script>
+            $totalLength = strlen($match[0][0]); // длина кусочка кода внутри <stript>...</script> + длина <stript> + длина </script>
+            $tagLength = $totalLength - $codeLength; // длина <stript> + длина </script>
 
             if ($type == 'js') {
                 $piece = $this->highlightJS($item, false);
@@ -1199,8 +1217,9 @@ class Highlight {
 
             $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
             $replace[] = $rand;
-            $string = substr_replace($string, $rand, $offset, $length);
+            $string = substr_replace($string, $rand, $startReplace, $codeLength);
             $offset = $offset + strlen($rand) + $len;
+            // $offset = $offset + strlen($rand) + $tagLength;
         }
     }
     
