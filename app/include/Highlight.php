@@ -391,7 +391,9 @@ class Highlight {
 
     );
 
-
+    /**
+     * Функция для подсветки конфигурации Apache
+     */
     public function highlightApache($code) {
 
         $code = $this->trim($code);
@@ -414,6 +416,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки AWK
+     */
     public function highlightAWK($code) {
 
         $code = $this->trim($code);
@@ -488,6 +493,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки CLI (Windows и Linux)
+     */
     public function highlightCLI($code) {
 
         $code = $this->trim($code);
@@ -513,6 +521,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция не подсвечивает код, но позводяет в коде выделить цветом отдельные фрагменты
+     */
     public function highlightCode($code) {
 
         $code = $this->trim($code);
@@ -536,6 +547,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки CSS
+     */
     public function highlightCSS($code, $pre = true) {
 
         if ($pre) {
@@ -574,6 +588,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки языка 1С: Предприятие
+     */
     public function highlightERP($code) {
 
         $code = $this->trim($code);
@@ -613,26 +630,11 @@ class Highlight {
         return '<pre style="color:'.$this->settings['erp']['colors']['default']['fore'].'" class="erp">' . $code . '</pre>';
 
     }
-    
-    public function highlightHTMLOld($code) {
 
-        $code = $this->trim($code);
-
-        $pattern = array(
-            'doctype'   => '~<\!DOCTYPE[^>]*>~i',          // <!DOCTYPE html>
-            'comment'   => '~<\!--.*-->~sU',               // комментарии
-            'entity'    => '~&[a-z]+;~',                   // html-сущности
-            'attrname'  => '~(?<= )[-a-z0-9:]+(?=\=")~',   // имя атрибут тега
-            'attrvalue' => '~(?<=\=)"[^"]*"(?=(\s|/|>))~', // значение атрибут тега
-            //'equal'     => '~(?<=¤)\=(?=¤)~',            // разделитель между атрибутом и значением
-            'element'   => '~</?[a-z0-9]+[^>]*>~',         // открывающие и закрывающие теги
-        );
-
-        $code = $this->highlightCodeString($code, $pattern, 'html');
-
-        return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
-    }
-
+    /**
+     * Функция для подсветки HTML-кода. Она несколько сложнее остальных, потому что внутри html
+     * могут встречаться кусочки js- и css-кода
+     */
     public function highlightHTML($code) {
 
         $code = $this->trim($code);
@@ -644,7 +646,7 @@ class Highlight {
          */
         $jsSource = $jsReplace = array();
         $pattern = '~<script(?: type="(?:text|application)/javascript")?>(.+)</script>~Us';
-        $this->replaceStringWithUniqueCode($code, $jsSource, $jsReplace, $pattern, 9, 'js');
+        $this->replaceCodeWithStub($code, $jsSource, $jsReplace, $pattern, 'js');
 
         /*
          * 1. вырезаем куски css-кода, вставляя на это место заглушки, и раскрашиваем все эти куски
@@ -653,63 +655,57 @@ class Highlight {
          */
         $cssSource = $cssReplace = array();
         $pattern = '~<style(?: type="text/css")?>(.+)</style>~Us';
-        $this->replaceStringWithUniqueCode($code, $cssSource, $cssReplace, $pattern, 8, 'css');
+        $this->replaceCodeWithStub($code, $cssSource, $cssReplace, $pattern, 'css');
  
-        // перед раскраской атрибутов тегов вырезаем из HTML комментарии
+        // вспомогательная операция перед раскраской атрибутов тегов: вырезаем из html-кода
+        // комментарии, иначе будут раскрашены атрибуты тегов закомментированного html-кода
         $cmntSource = $cmntReplace = array();
         $pattern = '~(<\!--.*-->)~sU';
-        $this->replaceStringWithUniqueCode($code, $cmntSource, $cmntReplace, $pattern, 0, 'cmnt');
+        $this->replaceCodeWithStub($code, $cmntSource, $cmntReplace, $pattern, 'cmnt');
         /*
          * 1. вырезаем атрибуты тегов, вставляя на это место заглушки, и раскрашиваем атрибуты
          * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
          * 3. вставляем на место заглушек из первого шага раскрашенные атрибуты тегов
          */
         $attrSource = $attrReplace = array();
-        $pattern = '~<[a-z0-9]+ ([^>]+)>~';
-        $this->replaceStringWithUniqueCode($code, $attrSource, $attrReplace, $pattern, 1, 'attr');
+        $pattern = '~<[a-z]+\s+([^>]+)>~';
+        $this->replaceCodeWithStub($code, $attrSource, $attrReplace, $pattern, 'attr');
         // вставляем комментарии обратно
-        $this->replaceUniqueCodeWithString($code, $cmntSource, $cmntReplace);
+        $this->replaceStubWithCode($code, $cmntSource, $cmntReplace);
 
         /*
          * теперь раскрашиваем html
          */
         $pattern = array(
-            'doctype'   => '~<\!DOCTYPE[^>]*>~i',                  // <!DOCTYPE html>
-            'comment'   => '~<\!--.*-->~sU',                       // комментарии
-            'entity'    => '~&[a-z]+;~',                           // html-сущности
-            'element'   => '~</?[a-z0-9]+[^>]*>~',                 // открывающие и закрывающие теги
+            'doctype'   => '~<\!DOCTYPE[^>]*>~i',  // <!DOCTYPE html>
+            'comment'   => '~<\!--.*-->~sU',       // комментарии
+            'entity'    => '~&[a-z]+;~',           // html-сущности
+            'element'   => '~</?[a-z]+[^>]*>~',    // открывающие и закрывающие теги
         );
         $code = $this->highlightCodeString($code, $pattern, 'html');
 
         /*
          * вставляем атрибуты тегов обратно
          */
-        $this->replaceUniqueCodeWithString($code, $attrSource, $attrReplace);
+        $this->replaceStubWithCode($code, $attrSource, $attrReplace);
+
+        /*
+         * вставляем куски css-кода обратно
+         */
+        $this->replaceStubWithCode($code, $cssSource, $cssReplace);
 
         /*
          * вставляем куски javascript-кода обратно
          */
-        $this->replaceUniqueCodeWithString($code, $jsSource, $jsReplace);
-        
-        /*
-         * вставляем куски css-кода обратно
-         */
-        $this->replaceUniqueCodeWithString($code, $cssSource, $cssReplace);
+        $this->replaceStubWithCode($code, $jsSource, $jsReplace);
         
         return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
-    
-    private function highlightAttribute($code) {
-        $code = ' '.$code;
-        $pattern = array(
-            'attrval1' => '~"[^"]*"~',                       // значение атрибута тега
-            'attrval2' => "~'[^']*'~",                       // значение атрибута тега
-            'attrname' => '~(?<= )[-a-z0-9:]+(?=(\=|\s))~',  // имя атрибута тега
-        );
-        return substr($this->highlightCodeString($code, $pattern, 'html'), 1);
-    }
 
+    /**
+     * Функция для подсветки JS-кода
+     */
     public function highlightJS($code, $pre = true) {
 
         if ($pre) {
@@ -742,6 +738,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки JSON
+     */
     public function highlightJSON($code) {
 
         $code = $this->trim($code);
@@ -763,6 +762,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки IDLE (Python)
+     */
     public function highlightIDLE($code) {
 
         $code = $this->trim($code);
@@ -784,6 +786,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки INI
+     */
     public function highlightINI($code) {
 
         $code = $this->trim($code);
@@ -801,7 +806,10 @@ class Highlight {
         return '<pre style="color:'.$this->settings['ini']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
-    
+
+    /**
+     * Функция для подсветки LESS
+     */
     public function highlightLESS($code) {
         
         $code = $this->trim($code);
@@ -836,6 +844,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки MySQL-запросов
+     */
     public function highlightMySQL($code) {
 
         $code = $this->trim($code);
@@ -862,6 +873,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки PHP
+     */
     public function highlightPHP($code, $pre = true) {
 
         $code = $this->trim($code);
@@ -901,33 +915,49 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки PHP + HTML
+     */
     public function highlightPHTML($code) {
 
         $code = $this->trim($code);
 
         /*
-         * Сначала врезаем куски php-кода, раскрашиваем все эти куски, потом вставляем обратно
+         * Сначала врезаем кусочки php-кода, вставляем на это место заглушки, раскрашиваем все эти кусочки.
+         * Потом раскрашиваем оставшийся чистый HTML и вставляем обратно вырезанные ренее кусочки PHP-кода
+         * на место заглушек.
+         */
+         
+        // TODO: код ниже можно заменить на вызов replaceCodeWithStub()
+
+        /*
+         * ищем кусочки php-кода, вырезаем, вставляем на эти места заглушки
          */
         $offset = 0;
-        $source = array();
-        $replace = array();
+        $source = array(); // массив кусочков php-кода
+        $replace = array(); // массив заглушек
         while (preg_match('~<\?(=|php)?.*\?>~Us', $code, $match, PREG_OFFSET_CAPTURE, $offset)) {
-            $item = $match[0][0];
+            $item = $match[0][0]; // очередной кусочек php-кода
             $offset = $match[0][1];
             $length = strlen($match[0][0]);
 
-            $piece = $this->highlightPHP($item, false);
+            $piece = $this->highlightPHP($item, false); // раскрашиваем кусочек php-кода
             $source[] = '<span style="color:'.$this->settings['php']['colors']['default']['fore'].'">' . $piece . '</span>';
-            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
+            $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤'; // заглушка
             $replace[] = $rand;
+            // вырезаем кусочек php-кода и вставляем на это место заглушку
             $code = substr_replace($code, $rand, $offset, $length);
             $offset = $offset + strlen($rand);
         }
 
-        // теперь раскрашиваем html
+        /*
+         * раскрашиваем чистый html
+         */
         $code = $this->highlightHTML($code);
 
-        // вставляем куски php-кода обратно
+        /*
+         * вставляем кусочки php-кода на место заглушек
+         */
         $source = array_reverse($source);
         $replace = array_reverse($replace);
         if (!empty($source)) {
@@ -938,6 +968,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки Python
+     */
     public function highlightPython($code) {
 
         $code = $this->trim($code);
@@ -966,6 +999,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки языка запросов 1С:Предприятие
+     */
     public function highlightQuery($code) {
 
         $code = $this->trim($code);
@@ -991,6 +1027,9 @@ class Highlight {
 
     }
 
+    /**
+     * Функция для подсветки XML
+     */
     public function highlightXML($code) {
 
         $code = $this->trim($code);
@@ -1009,6 +1048,9 @@ class Highlight {
         return '<pre style="color:'.$this->settings['xml']['colors']['default']['fore'].'">' . $code . '</pre>';
     }
 
+    /**
+     * Основная функция для подсветки кода
+     */
     private function highlightCodeString($code, $pattern, $lang) {
 
         // заменяем экранированный обратный слэш на экзотические символы,, чтобы правильно раскрашивать код
@@ -1019,7 +1061,7 @@ class Highlight {
         // заменяем экранированный прямой слэш на экзотические символы, чтобы правильно раскрашивать код
         $code = str_replace("\\/", '♦♦', $code);
         // заменяем одинарные кавычки внутри двойных и двойные внутри одинарных, чтобы правильно раскрашивать код
-        $code = $this->replaceQuoteInString($code);
+        $code = $this->replaceQuoteWithStub($code);
 
         $source = array();
         $replace = array();
@@ -1076,50 +1118,26 @@ class Highlight {
         // заменяем экзотические символы обратно на экранированный прямой слэш
         $code = str_replace('♦♦', "\\/", $code);
         // замена экзотических символов обратно на кавычки, см. метод replaceQuoteInString()
-        $code = str_replace('☺', "'", $code);
-        $code = str_replace('☻', '"', $code);
+        $code = $this->replaceStubWithQuote($code);
         
         return $code;
 
     }
-    
-    private function trim($code) {
 
+    /**
+     * Вспомогательная фунция, которая удаляет лишние пробелы
+     */
+    private function trim($code) {
         $code = str_replace("\r\n", "\n", $code);
         $code = str_replace("\t", '    ', $code);
         $code = trim($code, "\n");
-
         return $code;
-
     }
 
     /**
-     * Нумерация строк кода
+     * Заменяет двойную/одинарную кавычку на заглушку внутри строки в одинарных/двойных кавычках
      */
-    private function number() {
-
-        $lines = explode("\n", $this->code);
-        $res = array();
-        $number = 1;
-        foreach($lines as $line) {
-            $num = $number;
-            if (strlen($number) == 1) {
-                $num = '  '.$number;
-            }
-            if (strlen($number) == 2) {
-                $num = ' '.$number;
-            }
-            $res[] = '<span style="color:'.$this->settings[$this->lang]['colors']['number'].'; font-size:12px">'.($num).'</span>  '.$line;
-            $number++;
-        }
-        $this->code = implode("\r\n", $res);
-
-    }
-
-    /**
-     * Заменяет двойную/одинарную кавычку внутри строки в одинарных/двойных кавычках
-     */
-    private function replaceQuoteInString($code) {
+    private function replaceQuoteWithStub($code) {
         // TODO: кавычка в комментарии ломает работу подсветки кода
         /*
          * Находим в строке кода первую кавычку (одинарную или двойную), потом от этого места
@@ -1172,28 +1190,33 @@ class Highlight {
         
         return $code;
     }
+
+    /**
+     * Заменяет заглушку на двойную/одинарную кавычку внутри строки в одинарных/двойных кавычках,
+     * см. функцию replaceQuoteWithStub() выше
+     */
+    private function replaceStubWithQuote($code) {
+        $code = str_replace('☺', "'", $code);
+        $code = str_replace('☻', '"', $code);
+        return $code;
+    }
     
-    /*
-     * Функция вырезает из кода кусочки кода и заменяет их на заглушки. Например, из
-     * HTML вырезается CSS или JavaScript
+    /**
+     * Вспомогательная функция, вырезает из html-кода кусочки js- и css-кода и заменяет их на заглушки.
      * $string это исходный код, который раскрашиваем
      * $source это массив кусочков кода, которые вырезаем
-     * $replace это массив заглушек, которые вставляются на место
-     * вырезанных кусочков кода; потом эти заглушки заменяются обратно на код
+     * $replace это массив заглушек, которые вставляются на место вырезанных кусочков кода
      * $pattern это шаблон, по которому вырезаются кусочки кода
+     * $type это тип кода, который вырезаем: js, css, attr, cmnt
      */
-    // $this->replaceStringWithUniqueCode($code, $jsSource, $jsReplace, $pattern, 9, 'js');
-    private function replaceStringWithUniqueCode(&$string, &$source, &$replace, $pattern, $len, $type) {
-        $offset = 0;
+    private function replaceCodeWithStub(&$string, &$source, &$replace, $pattern, $type) {
+        $offset = 0; // смещение относительно начала строки кода, с которого начинается поиск очередного кусочка ja или css
         $source = array();
         $replace = array();
         while (preg_match($pattern, $string, $match, PREG_OFFSET_CAPTURE, $offset)) {
             $item = $match[1][0]; // это кусочек кода внутри <stript>...</script>
-            
-            $offset = $match[1][1];
-            //$offset = $match[0][1];
-            //$codeOffset = $match[1][1];
-            //$totalOffset = $match[0][1];
+
+            $offset = $match[0][1];
             $startReplace = $match[1][1];
             
             $codeLength = strlen($match[1][0]); // длина кусочка кода внутри <stript>...</script>
@@ -1218,17 +1241,54 @@ class Highlight {
             $rand = '¤'.md5(uniqid(mt_rand(), true)).'¤';
             $replace[] = $rand;
             $string = substr_replace($string, $rand, $startReplace, $codeLength);
-            $offset = $offset + strlen($rand) + $len;
-            // $offset = $offset + strlen($rand) + $tagLength;
+            $offset = $offset + strlen($rand) + $tagLength;
         }
     }
-    
-    private function replaceUniqueCodeWithString(&$string, $source, $replace) {
+
+    /**
+     * Вспомогательная функция, заменяет заглушки на раскрашенный код. См. функцию
+     * replaceCodeWithStub() выше
+     */
+    private function replaceStubWithCode(&$string, $source, $replace) {
         $source = array_reverse($source);
         $replace = array_reverse($replace);
         if (!empty($source)) {
             $string = str_replace($replace, $source, $string);
         }
+    }
+    
+    /**
+     * Вспомогательная функция, которая раскрашивает атрибуты тегов в html-коде
+     */
+    private function highlightAttribute($code) {
+        $code = ' '.$code;
+        $pattern = array(
+            'attrval1' => '~"[^"]*"~',                       // значение атрибута тега
+            'attrval2' => "~'[^']*'~",                       // значение атрибута тега
+            'attrname' => '~(?<= )[-a-z0-9:]+(?=(\=|\s))~',  // имя атрибута тега
+        );
+        return substr($this->highlightCodeString($code, $pattern, 'html'), 1);
+    }
+
+    /**
+     * Нумерация строк кода
+     */
+    private function number() {
+        $lines = explode("\n", $this->code);
+        $res = array();
+        $number = 1;
+        foreach($lines as $line) {
+            $num = $number;
+            if (strlen($number) == 1) {
+                $num = '  '.$number;
+            }
+            if (strlen($number) == 2) {
+                $num = ' '.$number;
+            }
+            $res[] = '<span style="color:'.$this->settings[$this->lang]['colors']['number'].'; font-size:12px">'.($num).'</span>  '.$line;
+            $number++;
+        }
+        $this->code = implode("\r\n", $res);
     }
     
     private function collapse($code) {
