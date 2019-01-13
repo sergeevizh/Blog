@@ -379,7 +379,7 @@ class Highlight {
         'xml' => array(
             'colors' => array(
                 'default'   => array('fore' => '#222222'),
-                'xmldecl'   => array('fore' => '#8000FF'),
+                'xmldecl'   => array('fore' => '#7777FF'),
                 'comment'   => array('fore' => '#888888'),
                 'element'   => array('fore' => '#0080C0'),
                 'attrname'  => array('fore' => '#808000'),
