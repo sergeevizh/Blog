@@ -52,7 +52,7 @@ abstract class Frontend_Model extends Base_Model {
      * Функция «подсвечивает» блоки кода, которые встречаются в HTML-тексте
      */
     protected function highlightCodeBlocks($html) {
-        $langs = array('apache', 'awk', 'html', 'css', 'less', 'js', 'json', 'ini', 'php', 'phtml', 'mysql', 'язык', 'запрос', 'python', 'idle', 'bash', 'cli', 'xml', 'code');
+        $langs = array('apache', 'awk', 'bash', 'cli', 'code', 'css', 'html', 'less', 'js', 'json', 'ini', 'php', 'phtml', 'mysql', 'python', 'idle', 'scss', 'xml', 'запрос', 'язык');
         if (preg_match_all('~\[('.implode('|', $langs).')\](.+)\[/\1\]~Us', $html, $matches)) {
             foreach($matches[0] as $key => $value) {
                 $lang = $matches[1][$key];
@@ -71,8 +71,11 @@ abstract class Frontend_Model extends Base_Model {
         switch ($lang) {
             case 'apache': return $hl->highlightApache($code);
             case 'awk'   : return $hl->highlightAWK($code);
-            case 'html'  : return $hl->highlightHTML($code);
+            case 'bash'  : return $hl->highlightBash($code);
+            case 'cli'   : return $hl->highlightCLI($code);
+            case 'code'  : return $hl->highlightCode($code);
             case 'css'   : return $hl->highlightCSS($code);
+            case 'html'  : return $hl->highlightHTML($code);
             case 'less'  : return $hl->highlightLESS($code);
             case 'js'    : return $hl->highlightJS($code);
             case 'json'  : return $hl->highlightJSON($code);
@@ -80,14 +83,12 @@ abstract class Frontend_Model extends Base_Model {
             case 'php'   : return $hl->highlightPHP($code);
             case 'phtml' : return $hl->highlightPHTML($code);
             case 'mysql' : return $hl->highlightMySQL($code);
-            case 'язык'  : return $hl->highlightERP($code);
-            case 'запрос': return $hl->highlightQuery($code);
             case 'python': return $hl->highlightPython($code);
             case 'idle'  : return $hl->highlightIDLE($code);
-            case 'bash'  : return $hl->highlightBash($code);
-            case 'cli'   : return $hl->highlightCLI($code);
+            case 'scss'  : return $hl->highlightSCSS($code);
             case 'xml'   : return $hl->highlightXML($code);
-            case 'code'  : return $hl->highlightCode($code);
+            case 'запрос': return $hl->highlightQuery($code);
+            case 'язык'  : return $hl->highlightERP($code);
         }
     }
 

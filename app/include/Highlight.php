@@ -376,6 +376,29 @@ class Highlight {
                 '.', ',', '=', '(', ')', '{', '}', '>', '<', '!', '*'
             ),
         ),
+        'scss' => array(
+            'colors' => array(
+                'default'     => array('fore' => '#008080'),
+                'comment1'    => array('fore' => '#888888'),
+                'comment2'    => array('fore' => '#888888'),
+                'url-cont'    => array('fore' => '#0000FF'),
+                'important'   => array('fore' => '#FF8080'),
+                'string'      => array('fore' => '#0000FF'),
+                'rules'       => array('fore' => '#EE00EE'),
+                'scss-var'    => array('fore' => '#00AA00', 'back' => '#FFFFEE'),
+                'css-var'     => array('fore' => '#00AA00'),
+                'if-mix-inc'  => array('fore' => '#EE00EE'),
+                'prop-name'   => array('fore' => '#0080C0'),
+                'prop-value'  => array('fore' => '#808000'),
+                'css-uniq'    => array('fore' => '#8000FF'),
+                'css-class'   => array('fore' => '#0080FF'),
+                'pseudo'      => array('fore' => '#CC6600'),
+                'delimiter'   => array('fore' => '#FF0000'),
+                'number'      => array('fore' => '#CCCCCC'),
+            ),
+            'function' => array('url', 'attr', 'calc', 'rgb'),
+            'delimiter' => array('+', '~', ',', '>', ':', ';', '[', ']', '(', ')', '{', '}', '='),
+        ),
         'xml' => array(
             'colors' => array(
                 'default'   => array('fore' => '#222222'),
@@ -832,7 +855,7 @@ class Highlight {
             'important'   => '~!important~',                      // !important
             'prop-value'  => '~(?<=:)[^;{]+(?=;)~',               // значение свойства
             'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
-            'pseudo'      => '~::?[a-z][-a-z)(+0-9]+~',           // псевдо-элементы и псевдо-классы
+            'pseudo'      => '~::?[a-z][-.a-z)(+0-9]+~',          // псевдо-элементы и псевдо-классы
             'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
             'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
             'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
@@ -1024,6 +1047,43 @@ class Highlight {
         $code = $this->highlightCodeString($code, $pattern, 'query');
 
         return '<pre style="color:'.$this->settings['query']['colors']['default']['fore'].'">' . $code . '</pre>';
+
+    }
+
+    /**
+     * Функция для подсветки SCSS
+     */
+    public function highlightSCSS($code) {
+        
+        $code = $this->trim($code);
+
+        foreach ($this->settings['scss']['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+
+        $rules = 'import|media|charset|page|font-face';
+
+        $pattern = array(
+            'comment1'    => '~\/\/ .*$~m',                       // комментарии
+            'comment2'    => '~/\*.*\*/~sU',                      // комментарии
+            'css-var'     => '~--[a-z][-a-z0-9]*~',               // CSS-переменные
+            'rules'       => '~@('.$rules.')\b~',                 // правила
+            'scss-var'    => '~\$[a-z][-a-z0-9]*~',               // SCSS-переменные
+            'url-cont'    => '~(?<=url\()[^)"\']+~',              // аргумент функции url()
+            'string'      => '~"[^"]*"|\'[^\']*\'~',              // строка
+            'important'   => '~!important~',                      // !important
+            'if-mix-inc'  => '~@(if|else|each|mixin|include)\b~', // if, mixin и include
+            'prop-value'  => '~(?<=:)[^;{]+(?=;)~',               // значение свойства
+            'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
+            'pseudo'      => '~::?[a-z][-.a-z)(+0-9]+~',          // псевдо-элементы и псевдо-классы
+            'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
+            'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
+            'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
+        );
+
+        $code = $this->highlightCodeString($code, $pattern, 'scss');
+
+        return '<pre style="color:'.$this->settings['less']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
