@@ -691,7 +691,7 @@ class Highlight {
          * 3. вставляем на место заглушек из первого шага раскрашенные атрибуты тегов
          */
         $attrSource = $attrReplace = array();
-        $pattern = '~<[a-z]+\s+([^>]+)>~';
+        $pattern = '~<[a-z][a-z0-9]*\s+([^>]+)>~i';
         $this->replaceCodeWithStub($code, $attrSource, $attrReplace, $pattern, 'attr');
         // вставляем комментарии обратно
         $this->replaceStubWithCode($code, $cmntSource, $cmntReplace);
@@ -703,7 +703,7 @@ class Highlight {
             'doctype'   => '~<\!DOCTYPE[^>]*>~i',  // <!DOCTYPE html>
             'comment'   => '~<\!--.*-->~sU',       // комментарии
             'entity'    => '~&[a-z]+;~',           // html-сущности
-            'element'   => '~</?[a-z]+[^>]*>~',    // открывающие и закрывающие теги
+            'element'   => '~</?[a-z]+[^>]*>~i',   // открывающие и закрывающие теги
         );
         $code = $this->highlightCodeString($code, $pattern, 'html');
 
