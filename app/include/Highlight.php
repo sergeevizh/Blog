@@ -1323,9 +1323,9 @@ class Highlight {
     private function highlightAttribute($code) {
         $code = ' '.$code;
         $pattern = array(
-            'attrval1' => '~"[^"]*"~',                       // значение атрибута тега
-            'attrval2' => "~'[^']*'~",                       // значение атрибута тега
-            'attrname' => '~(?<= )[-a-z0-9:]+(?=(\=|\s))~',  // имя атрибута тега
+            'attrval1' => '~"[^"]*"~',                        // значение атрибута тега
+            'attrval2' => "~'[^']*'~",                        // значение атрибута тега
+            'attrname' => '~(?<= )[-a-z0-9:]+(?=(\=|\s|$))~', // имя атрибута тега
         );
         return substr($this->highlightCodeString($code, $pattern, 'html'), 1);
     }
