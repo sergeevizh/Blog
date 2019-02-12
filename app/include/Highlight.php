@@ -111,8 +111,10 @@ class Highlight {
                 'css-var'     => array('fore' => '#00AA00'),
                 'prop-name'   => array('fore' => '#0080C0'),
                 'prop-value'  => array('fore' => '#808000'),
+                'css-attr'    => array('fore' => '#808000'),
                 'css-uniq'    => array('fore' => '#8000FF'),
                 'css-class'   => array('fore' => '#0080FF'),
+                'css-not-tag' => array('fore' => '#008080'),
                 'pseudo'      => array('fore' => '#CC6600'),
                 'delimiter'   => array('fore' => '#FF0000'),
                 'number'      => array('fore' => '#CCCCCC'),
@@ -242,8 +244,10 @@ class Highlight {
                 'css-var'     => array('fore' => '#00AA00'),
                 'prop-name'   => array('fore' => '#0080C0'),
                 'prop-value'  => array('fore' => '#808000'),
+                'css-attr'    => array('fore' => '#808000'),
                 'css-uniq'    => array('fore' => '#8000FF'),
                 'css-class'   => array('fore' => '#0080FF'),
+                'css-not-tag' => array('fore' => '#008080'),
                 'pseudo'      => array('fore' => '#CC6600'),
                 'delimiter'   => array('fore' => '#FF0000'),
                 'number'      => array('fore' => '#CCCCCC'),
@@ -390,8 +394,10 @@ class Highlight {
                 'if-mix-inc'  => array('fore' => '#EE00EE'),
                 'prop-name'   => array('fore' => '#0080C0'),
                 'prop-value'  => array('fore' => '#808000'),
+                'css-attr'    => array('fore' => '#808000'),
                 'css-uniq'    => array('fore' => '#8000FF'),
                 'css-class'   => array('fore' => '#0080FF'),
+                'css-not-tag' => array('fore' => '#008080'),
                 'pseudo'      => array('fore' => '#CC6600'),
                 'delimiter'   => array('fore' => '#FF0000'),
                 'number'      => array('fore' => '#CCCCCC'),
@@ -586,19 +592,21 @@ class Highlight {
         $rules = 'import|media|charset|page|font-face';
 
         $pattern = array(
-            'comment'     => '~/\*.*\*/~sU',                      // комментарии
-            'css-var'     => '~--[a-z][-a-z0-9]*~',               // CSS-переменные
+            'comment'     => '~/\*.*\*/~sU',                            // комментарии
+            'css-var'     => '~--[a-z][-a-z0-9]*~',                     // CSS-переменные
             'media-value' => '~(?<=@media )[-:)(a-z0-9 ]+(?= {)~',
-            'rules'       => '~@('.$rules.')\b~',                 // правила
-            'url-cont'    => '~(?<=url\()[^)"\']+~',              // аргумент функции url()
-            'string'      => '~"[^"]*"|\'[^\']*\'~',              // строка
-            'important'   => '~!important~',                      // !important
-            'prop-value'  => '~(?<=:)[^;{]+(?=;)~',               // значение свойства
-            'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
-            'pseudo'      => '~::?[a-z][-.a-z)(+0-9]+~',          // псевдо-элементы и псевдо-классы
-            'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
-            'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
-            'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
+            'rules'       => '~@('.$rules.')\b~',                       // правила
+            'url-cont'    => '~(?<=url\()[^)"\']+~',                    // аргумент функции url()
+            'important'   => '~!important~',                            // !important
+            'string'      => '~"[^"]*"|\'[^\']*\'~',                    // строка
+            'prop-value'  => '~(?<=:)[^;{]+(?=;)~',                     // значение свойства
+            'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',                // CSS-свойство
+            'css-attr'    => '~\[[^\]]+\]~i',                           // селектор, атрибут
+            'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',                    // селектор, идентификатор
+            'css-class'   => '~\.[a-z][-_a-z0-9]+~i',                   // селектор, класс
+            'css-not-tag' => '~(?<=:not\()[a-z]+(?=\))+~i',             // когда :not() содержит тег
+            'pseudo'      => '~::?[a-z][-.a-z)(+0-9¤]+~',               // псевдо-элементы и псевдо-классы
+            'delimiter'   => '~'.implode('|', $delimiter).'~',          // разделители
         );
 
         $code = $this->highlightCodeString($code, $pattern, 'css');
@@ -844,21 +852,23 @@ class Highlight {
         $rules = 'import|media|charset|page|font-face';
 
         $pattern = array(
-            'comment1'    => '~\/\/ .*$~m',                       // комментарии
-            'comment2'    => '~/\*.*\*/~sU',                      // комментарии
-            'css-var'     => '~--[a-z][-a-z0-9]*~',               // CSS-переменные
+            'comment1'    => '~\/\/ .*$~m',                             // комментарии
+            'comment2'    => '~/\*.*\*/~sU',                            // комментарии
+            'css-var'     => '~--[a-z][-a-z0-9]*~',                     // CSS-переменные
             'media-value' => '~(?<=@media )[-:)(a-z0-9 ]+(?= {)~',
-            'rules'       => '~@('.$rules.')\b~',                 // правила
-            'less-var'    => '~@[a-z][-a-z0-9]*~',                // LESS-переменные
-            'url-cont'    => '~(?<=url\()[^)"\']+~',              // аргумент функции url()
-            'string'      => '~"[^"]*"|\'[^\']*\'~',              // строка
-            'important'   => '~!important~',                      // !important
-            'prop-value'  => '~(?<=:)[^;{]+(?=;)~',               // значение свойства
-            'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
-            'pseudo'      => '~::?[a-z][-.a-z)(+0-9]+~',          // псевдо-элементы и псевдо-классы
-            'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
-            'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
-            'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
+            'rules'       => '~@('.$rules.')\b~',                       // правила
+            'less-var'    => '~@[a-z][-a-z0-9]*~',                      // LESS-переменные
+            'url-cont'    => '~(?<=url\()[^)"\']+~',                    // аргумент функции url()
+            'important'   => '~!important~',                            // !important
+            'string'      => '~"[^"]*"|\'[^\']*\'~',                    // строка
+            'prop-value'  => '~(?<=:)[^;{]+(?=;)~',                     // значение свойства
+            'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',                // CSS-свойство
+            'css-attr'    => '~\[[^\]]+\]~i',                           // селектор, атрибут
+            'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',                    // селектор, идентификатор
+            'css-class'   => '~\.[a-z][-_a-z0-9]+~i',                   // селектор, класс
+            'css-not-tag' => '~(?<=:not\()[a-z]+(?=\))+~i',             // когда :not() содержит тег
+            'pseudo'      => '~::?[a-z][-.a-z)(+0-9¤]+~',               // псевдо-элементы и псевдо-классы
+            'delimiter'   => '~'.implode('|', $delimiter).'~',          // разделители
         );
 
         $code = $this->highlightCodeString($code, $pattern, 'less');
@@ -1070,14 +1080,16 @@ class Highlight {
             'rules'       => '~@('.$rules.')\b~',                 // правила
             'scss-var'    => '~\$[a-z][-a-z0-9]*~',               // SCSS-переменные
             'url-cont'    => '~(?<=url\()[^)"\']+~',              // аргумент функции url()
-            'string'      => '~"[^"]*"|\'[^\']*\'~',              // строка
             'important'   => '~!important~',                      // !important
-            'if-mix-inc'  => '~@(if|else|each|mixin|include)\b~', // if, mixin и include
+            'string'      => '~"[^"]*"|\'[^\']*\'~',              // строка
+            'if-mix-inc'  => '~@(if|else|each|mixin|include)\b~', // if, mixin, each и include
             'prop-value'  => '~(?<=:)[^;{]+(?=;)~',               // значение свойства
             'prop-name'   => '~[a-z][-a-z]+\s*(?=:¤)~m',          // CSS-свойство
-            'pseudo'      => '~::?[a-z][-.a-z)(+0-9]+~',          // псевдо-элементы и псевдо-классы
+            'css-attr'    => '~\[[^\]]+\]~i',                     // селектор, атрибут
             'css-uniq'    => '~#[a-z][-_a-z0-9]+~i',              // селектор, идентификатор
             'css-class'   => '~\.[a-z][-_a-z0-9]+~i',             // селектор, класс
+            'css-not-tag' => '~(?<=:not\()[a-z]+(?=\))+~i',             // когда :not() содержит тег
+            'pseudo'      => '~::?[a-z][-.a-z)(+0-9¤]+~',         // псевдо-элементы и псевдо-классы
             'delimiter'   => '~'.implode('|', $delimiter).'~',    // разделители
         );
 
