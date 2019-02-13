@@ -12,6 +12,11 @@ class Router {
     private static $instance;
 
     /**
+     * запрос с использованием XmlHttpRequest?
+     */
+    private $xhr = false;
+
+    /**
      * имя контроллера, по умолчанию index
      */
     private $controller = 'index';
@@ -56,9 +61,9 @@ class Router {
      * Функция возвращает ссылку на экземпляр данного класса,
      * реализация шаблона проектирования «Одиночка»
      */
-    public static function getInstance($class = null, $params = array()){
+    public static function getInstance(){
         if (is_null(self::$instance)) {
-            self::$instance = new self($class, $params);
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -67,7 +72,7 @@ class Router {
      * Закрытый конструктор, необходим для реализации шаблона
      * проектирования «Одиночка».
      */
-    private function __construct($class, $params) {
+    private function __construct() {
 
         // все объекты приложения, экземпляр класса Register
         $this->register = Register::getInstance();
@@ -75,6 +80,11 @@ class Router {
         $this->config = Config::getInstance();
         // экземпляр класса базы данных
         $this->database = Database::getInstance();
+
+        // запрос с использованием XmlHttpRequest?
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+            $this->xhr = true;
+        }
 
         /*
          * Для того, чтобы через виртуальные адреса controller/action/params
@@ -92,7 +102,7 @@ class Router {
     private function parseURL($path) {
 
         $path = trim($path, '/');
-        if ('index.php' == strtolower($path) || '' == $path) {
+        if ('index.php' == strtolower($path) || '' == $path) { // главная страница сайта
             return;
         }
         // в админке путь всегда начинается с backend
@@ -129,6 +139,15 @@ class Router {
         // составляем имя класса из четырех частей, разделенных символом подчеркивания
         $this->controllerClassName =
             ucfirst($this->action).'_'.ucfirst($this->controller).'_'.$frontback.'_Controller';
+        if ( ! class_exists($this->controllerClassName)) { // такой класс существует?
+            $this->setNotFound();
+            return;
+        }
+
+        // контроллер обрабытывает запрос типа XmlHttpRequest?
+        if ($this->xhr) {
+            $this->controllerClassName = 'Xhr_' . $this->controllerClassName;
+        }
         if ( ! class_exists($this->controllerClassName)) { // такой класс существует?
             $this->setNotFound();
             return;

@@ -50,16 +50,16 @@ body > .wrapper {
 #header {
     height: 80px;
     background: #3a6995 url('../img/background.png');
-    overflow: hidden;
 }
     #header > .wrapper > div {
         float: left;
     }
-    #header > .wrapper > div:first-child {
+    #header > .wrapper > div:first-child { /* название сайта */
         width: 15%;
     }
-    #header > .wrapper > div:last-child {
+    #header > .wrapper > div:last-child { /* поиск по блогу */
         width: 85%;
+        position: relative;
     }
         #header > .wrapper > div:first-child > span {
             display: block;
@@ -109,6 +109,56 @@ body > .wrapper {
                 margin-left: -31px;
                 cursor: pointer;
             }
+            
+        /* результаты поиска, запрос с использованием XmlHttpRequest */
+        #top-search > div {
+            position: absolute;
+            left: 0;
+            top: 65px;
+            width: 100%;
+        }
+            #top-search > div > div {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 5px 10px;
+                background: #323232;
+                position: absolute;
+                z-index: 3;
+                box-shadow: 0 0 10px #000;
+            }
+                #top-search > div > div > span {
+                    display: block;
+                    position: absolute;
+                    background: url('../img/close.png');
+                    width: 20px;
+                    height: 20px;
+                    right: 4px;
+                    top: 4px;
+                    border: 1px solid #fff;
+                    cursor: pointer;
+                }
+                #top-search > div > div > div { /* отдельная строчка результатов поиска */
+                    border-bottom: 1px dashed #d1d1d1;
+                    padding: 1px 0;
+                }
+                    #top-search > div > div > div > a {
+                        display: block;
+                        font-size: 14px;
+                        line-height: 14px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        color: #d1d1d1;
+                        padding: 5px 0;
+                    }
+                    #top-search > div > div > div:first-of-type > a {
+                        margin-right: 25px;
+                    }
+                        #top-search > div > div > div > a > strong {
+                            color: #fff;
+                        }
+                #top-search > div > div > div:last-child {
+                    border-bottom: none;
+                }
 
 /* главное меню */
 #main-menu {
