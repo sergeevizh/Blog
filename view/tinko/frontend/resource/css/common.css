@@ -120,7 +120,7 @@ body > .wrapper {
             #top-search > div > div {
                 width: 100%;
                 box-sizing: border-box;
-                padding: 5px 10px;
+                padding: 3px 10px;
                 background: #323232;
                 position: absolute;
                 z-index: 3;
@@ -139,23 +139,24 @@ body > .wrapper {
                 }
                 #top-search > div > div > div { /* отдельная строчка результатов поиска */
                     border-bottom: 1px dashed #d1d1d1;
-                    padding: 1px 0;
+                    padding: 7px 0;
                 }
                     #top-search > div > div > div > a {
                         display: block;
-                        font-size: 14px;
-                        line-height: 14px;
+                        font-size: 12px;
+                        line-height: 12px;
                         white-space: nowrap;
                         overflow: hidden;
+                        color: #8dc5fd;
+                        padding-bottom: 5px;
+                    }
+                    #top-search > div > div > div > p {
                         color: #d1d1d1;
-                        padding: 5px 0;
+                        font-size: 12px;
                     }
                     #top-search > div > div > div:first-of-type > a {
                         margin-right: 25px;
                     }
-                        #top-search > div > div > div > a > strong {
-                            color: #fff;
-                        }
                 #top-search > div > div > div:last-child {
                     border-bottom: none;
                 }
@@ -577,6 +578,11 @@ hr {
             line-height: 26px;
             color: #fff;
         }
+
+.top-search-loader {
+    min-height: 34px;
+    background: #323232 url('../img/ajax-search-loader.gif') center center no-repeat !important;
+}
 
 /*
  * ЛЕВАЯ И ПРАВАЯ КОЛОНКА

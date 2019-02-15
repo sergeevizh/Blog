@@ -576,6 +576,10 @@ class Blog_Frontend_Model extends Frontend_Model {
                 unset($posts[$key]['tag_ids'], $posts[$key]['tag_names']);
             }
         }
+        
+        if ($ajax) {
+            return array_slice($posts, 0, 7);
+        }
 
         return $posts;
 
