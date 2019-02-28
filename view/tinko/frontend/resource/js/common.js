@@ -24,5 +24,20 @@ $(document).ready(function() {
         $('#top-search > form > input[name="query"]').val('');
         $('#top-search > div').empty();
     });
+    
+    /*
+     * Сворачивание-разворачивание кода функций и процедур 1С:Предприятие
+     */
+    $('.collapse > i').click(function() {
+        _this = $(this);
+        $(this).next().slideToggle('normal', function() {
+            if (_this.hasClass('fa-minus-square-o')) {
+                _this.removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+            } else {
+                _this.removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+            }
+            _this.next().next().slideToggle();
+        });
+    });
 
 });
