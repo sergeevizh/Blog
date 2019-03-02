@@ -283,6 +283,7 @@ class Highlight {
                 'shortphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'stopphp'   => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
+                'here-doc'  => array('fore' => '#000099'),
                 'comment1'  => array('fore' => '#888888'),
                 'comment2'  => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000EE'),
@@ -918,6 +919,7 @@ class Highlight {
         }
         $super = '\$GLOBALS|\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE|\$_ENV|\$_FILES';
         $pattern = array(
+            'here-doc'  => '~(?<=\<\<\<) ?([_A-Z]+)$.*?^\1(?=;$)~sm', // here doc
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
