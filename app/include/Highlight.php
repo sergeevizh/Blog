@@ -928,9 +928,9 @@ class Highlight {
             'startecho' => '~<\?=~',       // начало php-кода
             'shortphp'  => '~<\?~',        // начало php-кода
             'stopphp'   => '~\?>~',        // конец php-кода
-            'keyword1'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword1']).')\b~i', // ключевые слова
-            'keyword2'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword2']).')\b~i', // ключевые слова
-            'keyword3'  => '~(?<!\$)\b('.implode('|', $this->settings['php']['keyword3']).')\b~i', // ключевые слова
+            'keyword1'  => '~(?<!(\$|>))\b('.implode('|', $this->settings['php']['keyword1']).')\b~i', // ключевые слова
+            'keyword2'  => '~(?<!(\$|>))\b('.implode('|', $this->settings['php']['keyword2']).')\b~i', // ключевые слова
+            'keyword3'  => '~(?<!(\$|>))\b('.implode('|', $this->settings['php']['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings['php']['function']).')\b\s?(?=\()~i', // встроенные функции
             'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
             'defined'   => '~(?<!(::|t ))\b('.implode('|', $this->settings['php']['defined']).')\b(?! =)~i', // встроенные контстанты
