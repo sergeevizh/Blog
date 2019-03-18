@@ -933,7 +933,7 @@ class Highlight {
             'keyword3'  => '~(?<!(\$|>))\b('.implode('|', $this->settings['php']['keyword3']).')\b~i', // ключевые слова
             'function'  => '~(?<!\->)\b('.implode('|', $this->settings['php']['function']).')\b\s?(?=\()~i', // встроенные функции
             'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
-            'defined'   => '~(?<!(::|t ))\b('.implode('|', $this->settings['php']['defined']).')\b(?! =)~i', // встроенные контстанты
+            'defined'   => '~(?<!(::|t ))\b('.implode('|', $this->settings['php']['defined']).')\b(?! =)~i', // встроенные константы
             'constant'  => '~(?<!\$|\\\|>)\b([_A-Z][_A-Z0-9]*)\b(?!\\\)~', // контстанты
             'super-arr' => '~('.$super.')\b~', // супер-массивы
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
