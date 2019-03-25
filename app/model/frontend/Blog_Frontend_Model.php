@@ -132,7 +132,7 @@ class Blog_Frontend_Model extends Frontend_Model {
         );
         /*
          * добавляем в массив постов блога информацию об URL записи (поста), картинки,
-         * категории и корнево категории
+         * категории и корневой категории
          */
         $host = $this->config->site->url;
         foreach($posts as $key => $value) {
@@ -469,7 +469,7 @@ class Blog_Frontend_Model extends Frontend_Model {
                   GROUP BY
                       1, 2
                   HAVING
-                      COUNT(*) > 7
+                      COUNT(*) > 9
                   ORDER BY
                       `a`.`name`";
         $tags = $this->database->fetchAll($query);

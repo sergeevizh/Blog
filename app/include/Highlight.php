@@ -711,7 +711,7 @@ class Highlight {
         $pattern = array(
             'doctype'   => '~<\!DOCTYPE[^>]*>~i',  // <!DOCTYPE html>
             'comment'   => '~<\!--.*-->~sU',       // комментарии
-            'entity'    => '~&[a-z]+;~',           // html-сущности
+            'entity'    => '~&([a-z]+|#\d+);~',    // html-сущности
             'element'   => '~</?[a-z]+[^>]*>~i',   // открывающие и закрывающие теги
         );
         $code = $this->highlightCodeString($code, $pattern, 'html');
