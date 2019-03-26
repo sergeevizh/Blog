@@ -51,7 +51,7 @@ defined('ZCMS') or die('Access denied');
     </div>
     <div>
         <div>E-mail</div>
-        <div><input type="text" name="name" maxlength="50" value="<?= $email; ?>" /></div>
+        <div><input type="text" name="email" maxlength="50" value="<?= $email; ?>" /></div>
     </div>
     <div>
         <div>Сообщение</div>

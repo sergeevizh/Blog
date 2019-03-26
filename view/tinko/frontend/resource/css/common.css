@@ -51,64 +51,67 @@ body > .wrapper {
     height: 80px;
     background: #3a6995 url('../img/background.png');
 }
-    #header > .wrapper > div {
-        float: left;
+    #header > .wrapper {
+        overflow: hidden;
+        height: 80px;
     }
-    #header > .wrapper > div:first-child { /* название сайта */
-        width: 15%;
-    }
-    #header > .wrapper > div:last-child { /* поиск по блогу */
-        width: 85%;
-        position: relative;
-    }
-        #header > .wrapper > div:first-child > span {
-            display: block;
-            color: #5390cc;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-shadow: 0.5px 0.5px 0.5px #fff;
+        #header > .wrapper > div {
+            float: left;
+            height: 80px;
+        }
+        #header > .wrapper > div:first-child { /* название сайта */
+            width: 15%;
+        }
+        #header > .wrapper > div:last-child { /* поиск по блогу */
+            width: 85%;
+            position: relative;
+        }
+            #header > .wrapper > div:first-child > span {
+                display: block;
+                color: #5390cc;
+                font-weight: bold;
+                letter-spacing: 2px;
+                text-shadow: 0.5px 0.5px 0.5px #fff;
+                height: 40px;
+            }
+            #header > .wrapper > div:first-child > span:first-child {
+                font-size: 40px;
+            }
+            #header > .wrapper > div:first-child > span:last-child {
+                font-size: 25px;
+            }
             
-        }
-        #header > .wrapper > div:first-child > span:first-child {
-            font-size: 40px;
-            line-height: 50px;
-        }
-        #header > .wrapper > div:first-child > span:last-child {
-            font-size: 25px;
-            line-height: 1px;
-        }
-        
-        #header > .wrapper form {
-            overflow: hidden;
-            margin-top: 27px;
-        }
-            #header > .wrapper form input {
-                float: left;
-                box-sizing: border-box;
+            #header > .wrapper form {
+                overflow: hidden;
+                margin-top: 27px;
             }
-            #header > .wrapper form input[name="query"] {
-                font-size: 14px;
-                line-height: 14px;
-                padding: 7px;
-                width: 100%;
-                height: 31px;
-                border: 1px solid #5390cc;
-                background-color: transparent;
-                color: #d1d1d1;
-            }
-            #header > .wrapper form input[name="query"]::-webkit-input-placeholder {color:#d1d1d1;}
-            #header > .wrapper form input[name="query"]::-moz-placeholder          {color:#d1d1d1;}/* Firefox 19+ */
-            #header > .wrapper form input[name="query"]:-moz-placeholder           {color:#d1d1d1;}/* Firefox 18- */
-            #header > .wrapper form input[name="query"]:-ms-input-placeholder      {color:#d1d1d1;}
+                #header > .wrapper form input {
+                    float: left;
+                    box-sizing: border-box;
+                }
+                #header > .wrapper form input[name="query"] {
+                    font-size: 14px;
+                    line-height: 14px;
+                    padding: 7px;
+                    width: 100%;
+                    height: 31px;
+                    border: 1px solid #5390cc;
+                    background-color: transparent;
+                    color: #d1d1d1;
+                }
+                #header > .wrapper form input[name="query"]::-webkit-input-placeholder {color:#d1d1d1;}
+                #header > .wrapper form input[name="query"]::-moz-placeholder          {color:#d1d1d1;}/* Firefox 19+ */
+                #header > .wrapper form input[name="query"]:-moz-placeholder           {color:#d1d1d1;}/* Firefox 18- */
+                #header > .wrapper form input[name="query"]:-ms-input-placeholder      {color:#d1d1d1;}
 
-            #header > .wrapper form input[type="submit"] {
-                background: #5390cc url(../img/search.png) center center no-repeat;
-                width: 31px;
-                height: 31px;
-                border: none;
-                margin-left: -31px;
-                cursor: pointer;
-            }
+                #header > .wrapper form input[type="submit"] {
+                    background: #5390cc url(../img/search.png) center center no-repeat;
+                    width: 31px;
+                    height: 31px;
+                    border: none;
+                    margin-left: -31px;
+                    cursor: pointer;
+                }
             
         /* результаты поиска, запрос с использованием XmlHttpRequest */
         #top-search > div {
@@ -678,6 +681,24 @@ hr {
 /*
  * MEDIA-ЗАПРОСЫ
  */
+ 
+@media screen and (max-width: 1200px) {
+    #header > .wrapper > div:first-child, #header > .wrapper > div:last-child {
+        float: none;
+        width: 100%;
+        height: 40px;
+    }
+        #header > .wrapper > div:first-child > span {
+            display: inline;
+        }
+            #header > .wrapper > div:first-child > span:first-child {
+                font-size: 30px;
+            }
+        #header > .wrapper form {
+            margin-top: 0;
+        }
+}
+
 @media screen and (max-width: 800px) {
     #content { /* перемещаем правую колонку вниз */
         margin: 0;

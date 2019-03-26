@@ -29,6 +29,7 @@ $css = array(
             'page/contacts.css',
             'fancybox/jquery.fancybox.css',
         ),
+        'feedback'         => 'feedback.css',   // форма обратной связи
         /*
          * ПРИМЕР ПОДКЛЮЧЕНИЯ ФАЙЛОВ, НЕ УДАЛЯТЬ!
          * 'base' => array(                // css-файлы, подключаемые ко всем страницам сайта
