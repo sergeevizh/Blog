@@ -52,7 +52,6 @@ body > .wrapper {
     background: #3a6995 url('../img/background.png');
 }
     #header > .wrapper {
-        overflow: hidden;
         height: 80px;
     }
         #header > .wrapper > div {
