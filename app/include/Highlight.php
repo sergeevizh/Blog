@@ -278,8 +278,7 @@ class Highlight {
         ),
         'php' => array(
             'colors' => array(
-                'default'   => array('fore' => '#008080'),
-                //'default'   => array('fore' => '#3c7700'),
+                'default'   => array('fore' => '#339900'),
                 'startphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'shortphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
@@ -294,9 +293,9 @@ class Highlight {
                 'keyword3'  => array('fore' => '#CC6600'),
                 'function'  => array('fore' => '#0080FF'),
                 'def-call'  => array('fore' => '#0080C0'),
-                'defined'   => array('fore' => '#CC00CC'),
-                'constant'  => array('fore' => '#990099'),
-                'super-arr' => array('fore' => '#00AA00'),
+                'defined'   => array('fore' => '#DD00DD'),
+                'super-arr' => array('fore' => '#33BB00'),
+                'variable'  => array('fore' => '#008080'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
@@ -678,7 +677,7 @@ class Highlight {
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки javascript-кода
          */
         $jsSource = $jsReplace = array();
-        $pattern = '~<script(?: type="(?:text|application)/javascript")?>(.+)</script>~Us';
+        $pattern = '~<script(?:[^>]+)?>(.*)</script>~Us';
         $this->replaceCodeWithStub($code, $jsSource, $jsReplace, $pattern, 'js');
 
         /*
@@ -687,7 +686,7 @@ class Highlight {
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки css-кода
          */
         $cssSource = $cssReplace = array();
-        $pattern = '~<style(?: type="text/css")?>(.+)</style>~Us';
+        $pattern = '~<style(?:[^>]+)?>(.*)</style>~Us';
         $this->replaceCodeWithStub($code, $cssSource, $cssReplace, $pattern, 'css');
  
         // вспомогательная операция перед раскраской атрибутов тегов: вырезаем из html-кода
@@ -936,8 +935,8 @@ class Highlight {
             'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
             // встроенные константы (t в просмотре назад это от const; аналогично, пробел и равно в просмотре вперед)
             'defined'   => '~(?<!(::|t ))\b('.implode('|', $this->settings['php']['defined']).')\b(?! =)~i',
-            'constant'  => '~(?<!\$|\\\|>)\b([_A-Z][_A-Z0-9]*)\b(?!\\\)~', // контстанты
             'super-arr' => '~('.$super.')\b~', // супер-массивы
+            'variable'  => '~\$[_a-z][_a-z0-9]*\b~i', // переменные
             'digit'     => '~\b\d+(\.\d+)?\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );

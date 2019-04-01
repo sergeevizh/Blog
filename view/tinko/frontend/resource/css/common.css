@@ -49,7 +49,10 @@ body > .wrapper {
 /* шапка */
 #header {
     height: 80px;
-    background: #3a6995 url('../img/background.png');
+    background-color: #395985;
+    background-image: url('../img/bg-header-2.png');
+    background-size: cover;
+    background-position: center;
 }
     #header > .wrapper {
         height: 80px;
@@ -94,14 +97,14 @@ body > .wrapper {
                     padding: 7px;
                     width: 100%;
                     height: 31px;
-                    border: 1px solid #5390cc;
+                    border: 2px solid #5390cc;
                     background-color: transparent;
-                    color: #d1d1d1;
+                    color: #FFFFFF;
                 }
-                #header > .wrapper form input[name="query"]::-webkit-input-placeholder {color:#d1d1d1;}
-                #header > .wrapper form input[name="query"]::-moz-placeholder          {color:#d1d1d1;}/* Firefox 19+ */
-                #header > .wrapper form input[name="query"]:-moz-placeholder           {color:#d1d1d1;}/* Firefox 18- */
-                #header > .wrapper form input[name="query"]:-ms-input-placeholder      {color:#d1d1d1;}
+                #header > .wrapper form input[name="query"]::-webkit-input-placeholder {color:#FFFFFF;}
+                #header > .wrapper form input[name="query"]::-moz-placeholder          {color:#FFFFFF;}/* Firefox 19+ */
+                #header > .wrapper form input[name="query"]:-moz-placeholder           {color:#FFFFFF;}/* Firefox 18- */
+                #header > .wrapper form input[name="query"]:-ms-input-placeholder      {color:#FFFFFF;}
 
                 #header > .wrapper form input[type="submit"] {
                     background: #5390cc url(../img/search.png) center center no-repeat;
@@ -692,9 +695,13 @@ hr {
         }
             #header > .wrapper > div:first-child > span:first-child {
                 font-size: 30px;
+                margin-right: 8px;
             }
         #header > .wrapper form {
             margin-top: 0;
+        }
+        #top-search > div {
+            top: 38px;
         }
 }
 
