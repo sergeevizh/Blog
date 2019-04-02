@@ -50,7 +50,8 @@ body > .wrapper {
 #header {
     height: 80px;
     background-color: #395985;
-    background-image: url('../img/bg-header-2.png');
+    /* background-image: url('../img/bg-header.png'); */
+    background-image: url('../img/bg-header-2.jpg');
     background-size: cover;
     background-position: center;
 }
