@@ -283,7 +283,10 @@ class Highlight {
                 'shortphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'stopphp'   => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
-                'here-doc'  => array('fore' => '#000099'),
+                'start-hd'  => array('fore' => '#FF6600', 'back' => '#FFFFEE'),
+                'stop-hd'   => array('fore' => '#FF6600', 'back' => '#FFFFEE'),
+                'var-in-hd' => array('fore' => '#008080'),
+                'here-doc'  => array('fore' => '#339900'),
                 'comment1'  => array('fore' => '#888888'),
                 'comment2'  => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000EE'),
@@ -913,13 +916,15 @@ class Highlight {
     public function highlightPHP($code, $pre = true) {
 
         $code = $this->trim($code);
-
+        
         foreach ($this->settings['php']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
         $super = '\$GLOBALS|\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE|\$_ENV|\$_FILES';
         $pattern = array(
-            'here-doc'  => '~(?<=\<\<\<) ?([_A-Z]+)$.*?^\1(?=;$)~sm', // here doc
+            'start-hd'  => '~\<\<\< ?[_A-Z]+$~m', // начало here doc
+            'stop-hd'   => '~^[_A-Z]+(?=;$)~m', // конец here doc
+            'here-doc'  => '~(?<=¤[a-f0-9]{32}¤).+(?=¤[a-f0-9]{32}¤;$)~sm', // here doc
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
