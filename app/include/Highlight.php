@@ -285,8 +285,8 @@ class Highlight {
                 'stopphp'   => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'start-hd'  => array('fore' => '#FF6600', 'back' => '#FFFFEE'),
                 'stop-hd'   => array('fore' => '#FF6600', 'back' => '#FFFFEE'),
-                'var-in-hd' => array('fore' => '#008080'),
-                'here-doc'  => array('fore' => '#339900'),
+                'var-hd-1'  => array('fore' => '#800080'),
+                'var-hd-2'  => array('fore' => '#800080'),
                 'comment1'  => array('fore' => '#888888'),
                 'comment2'  => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000EE'),
@@ -299,6 +299,7 @@ class Highlight {
                 'defined'   => array('fore' => '#DD00DD'),
                 'super-arr' => array('fore' => '#33BB00'),
                 'variable'  => array('fore' => '#008080'),
+                'var-brace' => array('fore' => '#008080'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
@@ -680,7 +681,7 @@ class Highlight {
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки javascript-кода
          */
         $jsSource = $jsReplace = array();
-        $pattern = '~<script(?:[^>]+)?>(.*)</script>~Us';
+        $pattern = '~<script(?:[^>]+)?>(?P<code>.*)</script>~Us';
         $this->replaceCodeWithStub($code, $jsSource, $jsReplace, $pattern, 'js');
 
         /*
@@ -689,13 +690,13 @@ class Highlight {
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки css-кода
          */
         $cssSource = $cssReplace = array();
-        $pattern = '~<style(?:[^>]+)?>(.*)</style>~Us';
+        $pattern = '~<style(?:[^>]+)?>(?P<code>.*)</style>~Us';
         $this->replaceCodeWithStub($code, $cssSource, $cssReplace, $pattern, 'css');
  
         // вспомогательная операция перед раскраской атрибутов тегов: вырезаем из html-кода
         // комментарии, иначе будут раскрашены атрибуты тегов закомментированного html-кода
         $cmntSource = $cmntReplace = array();
-        $pattern = '~(<\!--.*-->)~sU';
+        $pattern = '~(?P<code><\!--.*-->)~sU';
         $this->replaceCodeWithStub($code, $cmntSource, $cmntReplace, $pattern, 'cmnt');
         /*
          * 1. вырезаем атрибуты тегов, вставляя на это место заглушки, и раскрашиваем атрибуты
@@ -703,7 +704,7 @@ class Highlight {
          * 3. вставляем на место заглушек из первого шага раскрашенные атрибуты тегов
          */
         $attrSource = $attrReplace = array();
-        $pattern = '~<[a-z][a-z0-9]*\s+([^>]+)>~i';
+        $pattern = '~<[a-z][a-z0-9]*\s+(?P<code>[^>]+)>~i';
         $this->replaceCodeWithStub($code, $attrSource, $attrReplace, $pattern, 'attr');
         // вставляем комментарии обратно
         $this->replaceStubWithCode($code, $cmntSource, $cmntReplace);
@@ -916,15 +917,25 @@ class Highlight {
     public function highlightPHP($code, $pre = true) {
 
         $code = $this->trim($code);
-        
+
+        /*
+         * 1. вырезаем куски here-doc-кода, вставляя на это место заглушки, и раскрашиваем все эти куски
+         * 2. потом раскрашиваем оставшийся php-код, действуя как обычно
+         * 3. вставляем на место заглушек из первого шага раскрашенные кусочки here-doc-кода
+         */
+        $hdSource = $hdReplace = array();
+        $pattern = '~(?<=\<\<\<) ?([_A-Z]+)$(?P<code>.*?)^\1(?=;$)~sm';
+        if (preg_match($pattern, $code, $match, PREG_OFFSET_CAPTURE)) {
+            $this->replaceCodeWithStub($code, $hdSource, $hdReplace, $pattern, 'hdphp');
+        }
+
         foreach ($this->settings['php']['delimiter'] as $value) {
             $delimiter[] = '\\'.$value;
         }
         $super = '\$GLOBALS|\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_SISSION|\$_COOKIE|\$_ENV|\$_FILES';
         $pattern = array(
-            'start-hd'  => '~\<\<\< ?[_A-Z]+$~m', // начало here doc
-            'stop-hd'   => '~^[_A-Z]+(?=;$)~m', // конец here doc
-            'here-doc'  => '~(?<=¤[a-f0-9]{32}¤).+(?=¤[a-f0-9]{32}¤;$)~sm', // here doc
+            'start-hd'  => '~\<\<\< ?[_A-Z]+(?=¤)~m', // начало here doc
+            'stop-hd'   => '~(?<=¤)[_A-Z]+(?=;$)~m', // конец here doc
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
@@ -947,6 +958,11 @@ class Highlight {
         );
 
         $code = $this->highlightCodeString($code, $pattern, 'php');
+        
+        /*
+         * вставляем куски here-doc-кода обратно
+         */
+        $this->replaceStubWithCode($code, $hdSource, $hdReplace);
         
         if (!$pre) {
             return $code;
@@ -1311,12 +1327,12 @@ class Highlight {
         $source = array();
         $replace = array();
         while (preg_match($pattern, $string, $match, PREG_OFFSET_CAPTURE, $offset)) {
-            $item = $match[1][0]; // это кусочек кода внутри <stript>...</script>
+            $item = $match['code'][0]; // это кусочек кода внутри <stript>...</script>
 
             $offset = $match[0][1];
-            $startReplace = $match[1][1];
+            $startReplace = $match['code'][1];
             
-            $codeLength = strlen($match[1][0]); // длина кусочка кода внутри <stript>...</script>
+            $codeLength = strlen($match['code'][0]); // длина кусочка кода внутри <stript>...</script>
             $totalLength = strlen($match[0][0]); // длина кусочка кода внутри <stript>...</script> + длина <stript> + длина </script>
             $tagLength = $totalLength - $codeLength; // длина <stript> + длина </script>
 
@@ -1330,6 +1346,9 @@ class Highlight {
             }
             if ($type == 'attr') {
                 $source[] = $this->highlightAttribute($item);
+            }
+            if ($type == 'hdphp') {
+                $source[] = $this->highlightHereDocPHP($item);
             }
             if ($type == 'cmnt') {
                 $source[] = $item;
@@ -1365,6 +1384,18 @@ class Highlight {
             'attrname' => '~(?<= )[-a-z0-9:]+(?=(\=|\s|$))~', // имя атрибута тега
         );
         return substr($this->highlightCodeString($code, $pattern, 'html'), 1);
+    }
+
+    /**
+     * Вспомогательная функция, которая раскрашивает PHP here-doc
+     */
+    private function highlightHereDocPHP($code) {
+        $pattern = array(
+            'var-hd-1' => '~\$[_a-z]+~i', // переменная
+            'var-hd-2' => '~\$\{[^}]+\}~i', // переменная
+        );
+        $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $code);
+        return $this->highlightCodeString($code, $pattern, 'php');
     }
 
     /**
