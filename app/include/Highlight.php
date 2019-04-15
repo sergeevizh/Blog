@@ -978,6 +978,13 @@ class Highlight {
     public function highlightPHTML($code) {
 
         $code = $this->trim($code);
+        
+        /* если кол-во открывающих <? больше кол-ва закрывающих ?> */
+        $noMatch = 0;
+        if (substr_count($code, '<?') > substr_count($code, '?>')) {
+            $noMatch = true;
+            $code = $code . '?>';
+        }
 
         /*
          * Сначала врезаем кусочки PHP-кода, вставляем на это место заглушки, раскрашиваем все эти кусочки.
@@ -1019,6 +1026,26 @@ class Highlight {
         $replace = array_reverse($replace);
         if (!empty($source)) {
             $code = str_replace($replace, $source, $code);
+        }
+
+        if ($noMatch) {
+            // удаляем последнее вхождение <span style="color:#FF0000;background:#FFFFEE">?&gt;</span>
+            if (isset($this->settings['php']['colors']['stopphp']['fore'])) {
+                $styles[] = 'color:'.$this->settings['php']['colors']['stopphp']['fore'];
+            }
+            if (isset($this->settings['php']['colors']['stopphp']['back'])) {
+                $styles[] = 'background:'.$this->settings['php']['colors']['stopphp']['back'];
+            }
+            $style = '';
+            if (!empty($styles)) {
+                $style = implode(';', $styles);
+            }
+            $search = '?&gt;';
+            if (!empty($style)) {
+                $search = '<span style="' . $style . '">?&gt;</span>';
+            }
+            $position = strripos($code, $search);
+            $code = substr_replace($code, '', $position, strlen($search));
         }
 
         return $code;
