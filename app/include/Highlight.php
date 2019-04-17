@@ -169,6 +169,8 @@ class Highlight {
                 'keyword1'  => array('fore' => '#8000FF'),
                 'keyword2'  => array('fore' => '#808000'),
                 //'def-call'  => array('fore' => '#808040'),
+                'startjs'   => array('fore' => '#ff5555', 'back' => '#ccffff'),
+                'stopjs'    => array('fore' => '#ff5555', 'back' => '#ccffff'),
                 'digit'     => array('fore' => '#FF00FF'),
                 'delimiter' => array('fore' => '#FF0000'),
                 'number'    => array('fore' => '#CCCCCC'),
@@ -202,7 +204,7 @@ class Highlight {
                 'default'   => array('fore' => '#333333'),
                 'doctype'   => array('fore' => '#0080C0', 'back' => '#FFFFFF'),
                 'comment'   => array('fore' => '#888888'),
-                'string'    => array('fore' => '#0080FF'),
+                'string'    => array('fore' => '#0080FF'), // скорее всего, не используется
                 'element'   => array('fore' => '#0080C0'),
                 'entity'    => array('fore' => '#8000FF'),
                 'attrname'  => array('fore' => '#808000'),
@@ -279,10 +281,10 @@ class Highlight {
         'php' => array(
             'colors' => array(
                 'default'   => array('fore' => '#339900'),
-                'startphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
-                'shortphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
-                'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
-                'stopphp'   => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
+                'startphp'  => array('fore' => '#ff5555', 'back' => '#FFFFEE'),
+                'shortphp'  => array('fore' => '#ff5555', 'back' => '#FFFFEE'),
+                'startecho' => array('fore' => '#ff5555', 'back' => '#FFFFEE'),
+                'stopphp'   => array('fore' => '#ff5555', 'back' => '#FFFFEE'),
                 'start-hd'  => array('fore' => '#FF6600', 'back' => '#FFFFEE'),
                 'stop-hd'   => array('fore' => '#FF6600', 'back' => '#FFFFEE'),
                 'var-hd-1'  => array('fore' => '#800080'),
@@ -685,6 +687,15 @@ class Highlight {
         $this->replaceCodeWithStub($code, $jsSource, $jsReplace, $pattern, 'js');
 
         /*
+         * 1. вырезаем куски underscore-шаблонов, вставляя на это место заглушки, и раскрашиваем все эти куски
+         * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
+         * 3. вставляем на место заглушек из первого шага раскрашенные кусочки underscore-шаблонов
+         */
+        $tmplSource = $tmplReplace = array();
+        $pattern = '~(?P<code><(%|#).*\2>)~Us';
+        $this->replaceCodeWithStub($code, $tmplSource, $tmplReplace, $pattern, 'js');
+
+        /*
          * 1. вырезаем куски css-кода, вставляя на это место заглушки, и раскрашиваем все эти куски
          * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки css-кода
@@ -731,10 +742,15 @@ class Highlight {
         $this->replaceStubWithCode($code, $cssSource, $cssReplace);
 
         /*
+         * вставляем куски underscore-шаблонов обратно
+         */
+        $this->replaceStubWithCode($code, $tmplSource, $tmplReplace);
+
+        /*
          * вставляем куски javascript-кода обратно
          */
         $this->replaceStubWithCode($code, $jsSource, $jsReplace);
-        
+
         return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
@@ -760,6 +776,8 @@ class Highlight {
             'keyword1'  => '~\b('.implode('|', $this->settings['js']['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings['js']['keyword2']).')\b~i', // ключевые слова
             //'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
+            'startjs'   => '~<(%|#)~', // начало шаблона
+            'stopjs'    => '~(%|#)>~', // конец шаблона
             'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
         );
@@ -1418,8 +1436,8 @@ class Highlight {
      */
     private function highlightHereDocPHP($code) {
         $pattern = array(
+            'var-hd-2' => '~\{\$[^}]+\}~i', // переменная
             'var-hd-1' => '~\$[_a-z]+~i', // переменная
-            'var-hd-2' => '~\$\{[^}]+\}~i', // переменная
         );
         $code = str_replace(array('&', '>', '<'), array('&amp;', '&gt;', '&lt;'), $code);
         return $this->highlightCodeString($code, $pattern, 'php');
