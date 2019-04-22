@@ -5,12 +5,14 @@
  *
  * Переменные, которые приходят в шаблон:
  * $breadcrumbs - хлебные крошки
+ * $action - атрибут action тега form
+ * $success - доступна только в том случае, если данные формы успешно отправлены
  */
 
 defined('ZCMS') or die('Access denied');
 ?>
 
-<!-- Начало шаблона view/example/frontend/template/page/center.php -->
+<!-- Начало шаблона view/example/frontend/template/feedback/center.php -->
 
 <?php if (!empty($breadcrumbs)): // хлебные крошки ?>
     <div id="breadcrumbs">
@@ -21,6 +23,11 @@ defined('ZCMS') or die('Access denied');
 <?php endif; ?>
 
 <h1>Обратная связь</h1>
+
+<?php if (isset($success)): ?>
+    <p>Спасибо, Ваше сообщение успешно отправлено.</p>
+    <?php return; ?>
+<?php endif; ?>
 
 <?php if (!empty($errorMessage)): ?>
     <div class="error-message">

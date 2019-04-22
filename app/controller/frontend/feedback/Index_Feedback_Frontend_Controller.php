@@ -24,7 +24,6 @@ class Index_Feedback_Frontend_Controller extends Index_Frontend_Controller {
          */
         parent::input();
 
-
         // если данные формы были отправлены
         if ($this->isPostMethod()) {
             $this->validateForm();
@@ -46,7 +45,7 @@ class Index_Feedback_Frontend_Controller extends Index_Frontend_Controller {
          */
         $this->centerVars = array(
             'breadcrumbs' => $breadcrumbs,
-            'action' => $this->feedbackFrontendModel->getURL('frontend/feedback/index')
+            'action' => $this->feedbackFrontendModel->getURL('frontend/feedback/index'),
         );
 
         // если были ошибки при заполнении формы, передаем в шаблон массив сообщений об ошибках
@@ -55,6 +54,12 @@ class Index_Feedback_Frontend_Controller extends Index_Frontend_Controller {
             $this->centerVars['errorMessage'] = $this->centerVars['savedFormData']['errorMessage'];
             unset($this->centerVars['savedFormData']['errorMessage']);
             $this->unsetSessionData('feedback');
+        }
+        
+        // данные формы успешно отправлены
+        if ($this->issetSessionData('success')) {
+            $this->centerVars['success'] = true;
+            $this->unsetSessionData('success');
         }
 
     }
@@ -105,6 +110,7 @@ class Index_Feedback_Frontend_Controller extends Index_Frontend_Controller {
             return false;
         }
 
+        $this->setSessionData('success', true);
         return true;
 
     }

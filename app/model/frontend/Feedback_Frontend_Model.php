@@ -21,8 +21,8 @@ class Feedback_Frontend_Model extends Frontend_Model {
         $headers = $headers . 'Content-Transfer-Encoding: base64';
 
         $message = 'Автор: ' . $data['name'] . "\r\n\r\n";
-        $mesasage = $message . 'E-mail: ' . $data['email'] . "\r\n\r\n";
-        $mesasage = $message . 'Сообщение: ' . "\r\n" . $data['message'];
+        $message = $message . 'E-mail: ' . $data['email'] . "\r\n\r\n";
+        $message = $message . 'Сообщение: ' . "\r\n" . $data['message'];
 
         $message = chunk_split(base64_encode($message));
 
