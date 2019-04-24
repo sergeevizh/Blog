@@ -202,10 +202,10 @@ class Highlight {
         'html' => array(
             'colors' => array(
                 'default'   => array('fore' => '#333333'),
-                'doctype'   => array('fore' => '#0080C0', 'back' => '#FFFFFF'),
+                'doctype'   => array('fore' => '#669900', 'back' => '#FFFFFF'),
                 'comment'   => array('fore' => '#888888'),
                 'string'    => array('fore' => '#0080FF'), // скорее всего, не используется
-                'element'   => array('fore' => '#0080C0'),
+                'element'   => array('fore' => '#669900'),
                 'entity'    => array('fore' => '#8000FF'),
                 'attrname'  => array('fore' => '#808000'),
                 'attrval1'  => array('fore' => '#0080FF'),
@@ -280,7 +280,7 @@ class Highlight {
         ),
         'php' => array(
             'colors' => array(
-                'default'   => array('fore' => '#339900'),
+                'default'   => array('fore' => '#669900'),
                 'startphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'shortphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
