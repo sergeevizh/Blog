@@ -202,10 +202,10 @@ class Highlight {
         'html' => array(
             'colors' => array(
                 'default'   => array('fore' => '#333333'),
-                'doctype'   => array('fore' => '#669900', 'back' => '#FFFFFF'),
+                'doctype'   => array('fore' => '#0080C0', 'back' => '#FFFFFF'),
                 'comment'   => array('fore' => '#888888'),
                 'string'    => array('fore' => '#0080FF'), // скорее всего, не используется
-                'element'   => array('fore' => '#669900'),
+                'element'   => array('fore' => '#0080C0'),
                 'entity'    => array('fore' => '#8000FF'),
                 'attrname'  => array('fore' => '#808000'),
                 'attrval1'  => array('fore' => '#0080FF'),
@@ -280,7 +280,7 @@ class Highlight {
         ),
         'php' => array(
             'colors' => array(
-                'default'   => array('fore' => '#669900'),
+                'default'   => array('fore' => '#009900'),
                 'startphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'shortphp'  => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
                 'startecho' => array('fore' => '#FF0000', 'back' => '#FFFFEE'),
@@ -297,7 +297,7 @@ class Highlight {
                 'keyword2'  => array('fore' => '#808000'),
                 'keyword3'  => array('fore' => '#CC6600'),
                 'function'  => array('fore' => '#0080FF'),
-                'def-call'  => array('fore' => '#0080C0'),
+                'def-call'  => array('fore' => '#338800'),
                 'defined'   => array('fore' => '#DD00DD'),
                 'super-arr' => array('fore' => '#33BB00'),
                 'variable'  => array('fore' => '#008080'),
