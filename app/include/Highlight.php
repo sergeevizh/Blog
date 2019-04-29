@@ -297,7 +297,7 @@ class Highlight {
                 'keyword2'  => array('fore' => '#808000'),
                 'keyword3'  => array('fore' => '#CC6600'),
                 'function'  => array('fore' => '#0080FF'),
-                'def-call'  => array('fore' => '#338800'),
+                'def-call'  => array('fore' => '#0080C0'),
                 'defined'   => array('fore' => '#DD00DD'),
                 'super-arr' => array('fore' => '#33BB00'),
                 'variable'  => array('fore' => '#008080'),

@@ -320,6 +320,9 @@ body > .wrapper {
 #content ul, #content ol {
     margin: 15px 0 15px 35px;
 }
+#content ul.space > li, #content ol.space > li {
+    margin: 15px 0 15px 35px;
+}
         #content ul > li > ul, #content ol > li > ol, #content ol > li > ul, #content ul > li > ol {
             margin: 5px 0 5px 20px;
         }
