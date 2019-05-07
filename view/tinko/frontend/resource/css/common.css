@@ -345,7 +345,10 @@ hr {
     height: 1px; /* Толщина линии */
 }
 
-#content .note, #content .post-scriptum, #content .post-post-scriptum {
+#content .note,
+#content .post-scriptum,
+#content .post-post-scriptum,
+#content .liked-posts {
     font-size: 13px;
     color: #646464;
     margin: 25px 0;
@@ -354,10 +357,14 @@ hr {
     padding: 17px 10px 10px 10px;
     position: relative;
 }
+#content .liked-posts {
+    border: 0.5px solid #5390cc;
+    background: #fff;
+}
 #content .note:before,
 #content .post-scriptum:before,
-#content .post-post-scriptum:before {
-    content: "Post Scriptum";
+#content .post-post-scriptum:before,
+#content .liked-posts:before {
     color: #969696;
     font-size: 14px;
     background: #ffffff;
@@ -367,6 +374,10 @@ hr {
     position: absolute;
     top: -11px;
 }
+#content .liked-posts:before {
+    color: #5390cc;
+    border: 0.5px solid #5390cc;
+}
 #content .note:before {
     content: "Примечание";
 }
@@ -375,6 +386,9 @@ hr {
 }
 #content .post-post-scriptum:before {
     content: "Post Post Scriptum";
+}
+#content .liked-posts:before {
+    content: "Похожие записи";
 }
     #content .note pre,
     #content .post-scriptum pre,
@@ -397,12 +411,14 @@ hr {
     }
     #content .note :first-child,
     #content .post-scriptum :first-child,
-    #content .post-post-scriptum :first-child {
+    #content .post-post-scriptum :first-child,
+    #content .liked-posts :first-child {
         margin-top: 1px;
     }
     #content .note :last-child,
     #content .post-scriptum :last-child,
-    #content .post-post-scriptum :last-child {
+    #content .post-post-scriptum :last-child,
+    #content .liked-posts :last-child {
         margin-bottom: 0;
     }
 

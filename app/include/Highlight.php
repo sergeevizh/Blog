@@ -316,7 +316,7 @@ class Highlight {
                 'true', 'false', 'null'
             ),
             'function' => array(
-                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'substr', 'str_replace', 'str_split', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'array_keys', 'in_array', 'array_key_exists', 'array_search', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'rtrim', 'ltrim', 'nl2br', 'htmlspecialchars', 'ini_get', 'ini_set', 'session_start', 'session_get_cookie_params', 'session_set_cookie_params', 'setcookie', 'pathinfo', 'base64_encode', 'base64_decode', 'sprintf', 'ord', 'chr', 'fgets', 'bindec', 'sleep', 'usleep', 'socket_create', 'socket_bind', 'socket_set_option', 'socket_listen', 'socket_select', 'socket_accept', 'socket_read', 'socket_write', 'socket_shutdown', 'socket_close', 'socket_getpeername', 'socket_last_error', 'socket_strerror', 'is_callable', 'call_user_func', 'error_reporting', 'set_time_limit', 'ob_implicit_flush', 'pack', 'sha1', 'stream_socket_server', 'stream_select', 'stream_socket_accept', 'stream_socket_get_name', 'is_resource', 'is_string', 'parse_url', 'dirname', 'preg_replace_callback', 'preg_quote', 'array_push', 'array_pop', 'unserialize', 'serialize', 'sort', 'intval', 'shell_exec', 'scandir', 'getopt', 'array_diff', 'is_link', 'unlink', 'opendir', 'readdir', 'closedir', 'rmdir', 'fileperms', 'array_map', 'func_num_args', 'func_get_arg', 'strpos', 'rand', 'strncasecmp', 'join', 'is_numeric'
+                'echo', 'exit', 'die', 'require_once', 'require', 'include_once', 'include', 'isset', 'unset', 'implode', 'explode', 'get_class', 'lcfirst', 'ucfirst', 'iconv', 'empty', 'is_null', 'count', 'print_r', 'var_dump', 'header', 'readfile', 'filesize', 'date', 'time', 'fopen', 'fsockopen', 'feof', 'fread', 'fwrite', 'fclose', 'urlencode', 'urldecode', 'file_get_contents', 'file_put_contents', 'md5', 'uniqid', 'move_uploaded_file', 'strlen', 'substr', 'str_replace', 'str_split', 'str_repeat', 'iconv_strlen', 'iconv_substr', 'iconv_strpos', 'realpath', 'ctype_digit', 'file_exists', 'define', 'is_file', 'is_dir', 'basename', 'fseek', 'filemtime', 'fpassthru', 'defined', 'is_object', 'is_array', 'json_encode', 'json_decode', 'array_merge', 'array_keys', 'in_array', 'array_key_exists', 'array_search', 'stream_context_create', 'ob_start', 'ob_get_clean', 'preg_replace', 'preg_match', 'preg_match_all', 'strtolower', 'strtoupper', 'trim', 'rtrim', 'ltrim', 'nl2br', 'htmlspecialchars', 'ini_get', 'ini_set', 'session_start', 'session_get_cookie_params', 'session_set_cookie_params', 'setcookie', 'pathinfo', 'base64_encode', 'base64_decode', 'sprintf', 'ord', 'chr', 'fgets', 'bindec', 'sleep', 'usleep', 'socket_create', 'socket_bind', 'socket_set_option', 'socket_listen', 'socket_select', 'socket_accept', 'socket_read', 'socket_write', 'socket_shutdown', 'socket_close', 'socket_getpeername', 'socket_last_error', 'socket_strerror', 'is_callable', 'call_user_func', 'error_reporting', 'set_time_limit', 'ob_implicit_flush', 'pack', 'sha1', 'stream_socket_server', 'stream_select', 'stream_socket_accept', 'stream_socket_get_name', 'is_resource', 'is_string', 'parse_url', 'dirname', 'preg_replace_callback', 'preg_quote', 'array_push', 'array_pop', 'unserialize', 'serialize', 'sort', 'intval', 'shell_exec', 'scandir', 'getopt', 'array_diff', 'is_link', 'unlink', 'opendir', 'readdir', 'closedir', 'rmdir', 'fileperms', 'array_map', 'func_num_args', 'func_get_arg', 'strpos', 'rand', 'strncasecmp', 'join', 'is_numeric', 'compact'
             ),
             'defined' => array(
                 '__LINE__', '__FILE__', '__DIR__', '__FUNCTION__', '__CLASS__', '__METHOD__', '__TRAIT__', 'DIRECTORY_SEPARATOR', 'PATH_SEPARATOR', 'PHP_EOL', 'PHP_OS', 'E_ALL', 'STDIN', 'STDOUT'
@@ -996,12 +996,44 @@ class Highlight {
     public function highlightPHTML($code) {
 
         $code = $this->trim($code);
-        
-        /* если кол-во открывающих <? больше кол-ва закрывающих ?> */
-        $noMatch = 0;
-        if (substr_count($code, '<?') > substr_count($code, '?>')) {
-            $noMatch = true;
-            $code = $code . '?>';
+
+        /*
+         * Возможные некорректные ситуации:
+         * 1. Позиция первого закрывающего ?> меньше позиции первого открывающего <?, значит пропущен
+         *    открывающий <? в начале кода, и его надо добавить в самое начало: $code = '<?' . $code;
+         * 2. Позиция последнего открывающего <? больше позиции последнего закрывающего ?>, значит пропущен
+         *    закрывающий ?> в конце кода, и его надо добавить в самый конец: $code = $code . '?>';
+         */
+        $open = $close = false;
+        if (substr_count($code, '<?') && substr_count($code, '?>')) {
+            // первый случай
+            $openPos = $closePos = 0;
+            $pos = strpos($code, '<?');
+            if ($pos !== false) {
+                $openPos = $pos;
+            }
+            $pos = strpos($code, '?>');
+            if ($pos !== false) {
+                $closePos = $pos;
+            }
+            if ($closePos < $openPos) {
+                $code = '<?' . $code;
+                $open = true;
+            }
+            // второй случай
+            $openPos = $closePos = 0;
+            $pos = strrpos($code, '<?');
+            if ($pos !== false) {
+                $openPos = $pos;
+            }
+            $pos = strrpos($code, '?>');
+            if ($pos !== false) {
+                $closePos = $pos;
+            }
+            if ($closePos < $openPos) {
+                $code = $code . '?>';
+                $close = true;
+            }
         }
 
         /*
@@ -1046,8 +1078,29 @@ class Highlight {
             $code = str_replace($replace, $source, $code);
         }
 
-        if ($noMatch) {
+        if ($open) {
+            // удаляем первое вхождение <span style="color:#FF0000;background:#FFFFEE">&lt;?</span>
+            $styles = [];
+            if (isset($this->settings['php']['colors']['shortphp']['fore'])) {
+                $styles[] = 'color:'.$this->settings['php']['colors']['shortphp']['fore'];
+            }
+            if (isset($this->settings['php']['colors']['shortphp']['back'])) {
+                $styles[] = 'background:'.$this->settings['php']['colors']['shortphp']['back'];
+            }
+            $style = '';
+            if (!empty($styles)) {
+                $style = implode(';', $styles);
+            }
+            $search = '&lt;?';
+            if (!empty($style)) {
+                $search = '<span style="' . $style . '">&lt;?</span>';
+            }
+            $position = stripos($code, $search);
+            $code = substr_replace($code, '', $position, strlen($search));
+        }
+        if ($close) {
             // удаляем последнее вхождение <span style="color:#FF0000;background:#FFFFEE">?&gt;</span>
+            $styles = [];
             if (isset($this->settings['php']['colors']['stopphp']['fore'])) {
                 $styles[] = 'color:'.$this->settings['php']['colors']['stopphp']['fore'];
             }

@@ -46,7 +46,6 @@ defined('ZCMS') or die('Access denied');
     <?php echo $body; ?>
     <?php if (!empty($liked)): ?>
         <div class="liked-posts">
-            <h4>Похожие записи</h4>
             <ul>
             <?php foreach ($liked as $item): ?>
                 <li><a href="<?php echo $item['url']; ?>"><?php echo $item['name']; ?></a></li>
