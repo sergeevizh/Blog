@@ -22,7 +22,7 @@ require 'app/config/pager.php';
 
 $config = array(
     'site' => array(
-        'url'   => '//www.host12.ru/', /* //server.com/ или http://server.com/ или https://server.com/ */
+        'url'   => 'http://www.host12.ru/', /* //server.com/ или http://server.com/ или https://server.com/ */
         'name'  => 'Записки программиста',
         'email' => 'tokmakov.e@mail.ru', // с этого e-mail будет отправляться почта
         'theme' => 'view/tinko', // путь к папке с темой
