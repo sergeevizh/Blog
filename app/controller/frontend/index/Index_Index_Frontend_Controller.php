@@ -38,7 +38,7 @@ class Index_Index_Frontend_Controller extends Index_Frontend_Controller {
          */
         $this->centerVars = array(
             // заголовок h1 главной страницы
-            'name'        => 'Записки программиста',
+            'name'     => $this->config->site->name,
             // массив последних постов блога
             'posts'    => $posts,
             // массив последних опубликованных статей

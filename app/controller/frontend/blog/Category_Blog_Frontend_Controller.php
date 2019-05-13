@@ -45,6 +45,11 @@ class Category_Blog_Frontend_Controller extends Blog_Frontend_Controller {
          * заголовок страницы (тег <title>), мета-теги keywords и description
          */
         $this->title = $category['name'];
+        if (!empty($category['parent'])) {
+            $this->title = $this->title . '. ' . $category['root_name'];
+        } else {
+            $this->title = $this->title . '. ' . $this->config->site->name;
+        }
         if ( ! empty($category['keywords'])) {
             $this->keywords = $category['keywords'];
         }

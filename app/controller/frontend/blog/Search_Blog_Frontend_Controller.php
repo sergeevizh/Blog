@@ -7,6 +7,7 @@ class Search_Blog_Frontend_Controller extends Blog_Frontend_Controller {
 
     public function __construct($params = null) {
         parent::__construct($params);
+        $this->robots = false;
     }
 
     /**
@@ -46,7 +47,7 @@ class Search_Blog_Frontend_Controller extends Blog_Frontend_Controller {
             }
         }
 
-        $this->title = 'Поиск по блогу. ' . $this->title;
+        $this->title = 'Поиск по блогу';
 
         $this->keywords = 'поиск ' . $this->keywords;
         $this->description = 'Поиск по блогу. ' . $this->description;
