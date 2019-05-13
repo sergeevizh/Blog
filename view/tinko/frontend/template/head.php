@@ -21,6 +21,7 @@ defined('ZCMS') or die('Access denied');
 <title><?php echo $title; ?></title>
 <meta name="keywords" content="<?php echo $keywords; ?>" />
 <meta name="description" content="<?php echo $description; ?>" />
+<link rel="icon" href="/favicon.png"/>
 
 <?php if ($robots): ?>
     <meta name="robots" content="all" />
