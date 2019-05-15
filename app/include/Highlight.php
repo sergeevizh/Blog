@@ -299,7 +299,7 @@ class Highlight {
                 'function'  => array('fore' => '#0080FF'),
                 'def-call'  => array('fore' => '#0080C0'),
                 'defined'   => array('fore' => '#DD00DD'),
-                'super-arr' => array('fore' => '#33BB00'),
+                'super-arr' => array('fore' => '#009999'),
                 'variable'  => array('fore' => '#008080'),
                 'var-brace' => array('fore' => '#008080'),
                 'digit'     => array('fore' => '#FF00FF'),
