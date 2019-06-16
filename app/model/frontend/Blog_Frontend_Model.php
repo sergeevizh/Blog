@@ -254,6 +254,7 @@ class Blog_Frontend_Model extends Frontend_Model {
             foreach ($keys as $key) {
                 if (preg_match('~^[а-яёА-ЯЁ]+$~u', $key)) {
                     $key = preg_replace('~([а-яё])([А-ЯЁ])([а-яё])~u', '$1 $2$3', $key);
+                    $key = preg_replace('~([А-ЯЁ])([а-яё])([А-ЯЁ])([а-яё])~u', '$1$2 $3$4', $key);
                     $key = preg_replace('~([а-яё])([А-ЯЁ])([А-ЯЁ])([а-яё])~u', '$1 $2 $3$4', $key);
                     $words = explode(' ', $key);
                     $temp = array();
