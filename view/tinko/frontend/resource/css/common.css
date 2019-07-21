@@ -323,7 +323,7 @@ body > .wrapper {
     margin: 15px 0 15px 35px;
 }
 #content ul.space > li, #content ol.space > li {
-    margin: 15px 0 15px 35px;
+    margin: 15px 0 15px 0;
 }
         #content ul > li > ul, #content ol > li > ol, #content ol > li > ul, #content ul > li > ol {
             margin: 5px 0 5px 20px;
