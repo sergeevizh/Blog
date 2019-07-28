@@ -13,10 +13,10 @@ defined('ZCMS') or die('Access denied');
 
 <!-- Начало шаблона view/example/frontend/template/right.php -->
 
+<?php if (!empty($blogCategories)): ?>
 <div>
     <div>Категории блога</div>
     <div>
-    <?php if (!empty($blogCategories)): ?>
         <ul>
         <?php foreach($blogCategories as $item): ?>
             <li>
@@ -31,30 +31,45 @@ defined('ZCMS') or die('Access denied');
             </li>
         <?php endforeach; ?>
         </ul>
-    <?php endif; ?>
     </div>
 </div>
+<?php endif; ?>
 
+<?php if (!empty($popularPosts)): ?>
+<div>
+    <div>Популярные записи</div>
+    <div>
+        <ul class="side-popular">
+        <?php foreach($popularPosts as $item): ?>
+            <li>
+                <a href="<?php echo $item['url'] ?>"><?php echo $item['name']; ?></a>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if (!empty($blogTags)): ?>
 <div>
     <div>Облако тегов</div>
     <div>
-        <?php if (!empty($blogTags)): ?>
-            <ul class="side-tags">
-            <?php foreach($blogTags as $item): ?>
-                <li>
-                    <a href="<?php echo $item['url'] ?>" title="<?php echo htmlspecialchars($item['name']); ?>"><?php echo $item['short']; ?></a>&nbsp;(<?php echo $item['count']; ?>)
-                </li>
-            <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+        <ul class="side-tags">
+        <?php foreach($blogTags as $item): ?>
+            <li>
+                <a href="<?php echo $item['url'] ?>" title="<?php echo htmlspecialchars($item['name']); ?>"><?php echo $item['short']; ?></a>&nbsp;(<?php echo $item['count']; ?>)
+            </li>
+        <?php endforeach; ?>
+        </ul>
         <a href="<?php echo $allTagsURL; ?>" class="all-tags">Все теги</a>
     </div>
 </div>
+<?php endif; ?>
 
+<?php if (!empty($articleCategories)): ?>
 <div>
     <div>Категории статей</div>
     <div>
-    <?php if (!empty($articleCategories)): ?>
         <ul>
         <?php foreach($articleCategories as $item): ?>
             <li>
@@ -69,15 +84,8 @@ defined('ZCMS') or die('Access denied');
             </li>
         <?php endforeach; ?>
         </ul>
-    <?php endif; ?>
     </div>
 </div>
-<!--
-<div>
-    <div>Вы уже смотрели</div>
-    <div>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    </div>
-</div>
--->
+<?php endif; ?>
+
 <!-- Конец шаблона view/example/frontend/template/right.php -->

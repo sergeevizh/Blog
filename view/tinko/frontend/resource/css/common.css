@@ -670,6 +670,9 @@ hr {
 #right {
 
 }
+    #right ul.side-popular li a {
+        font-size: 13px !important;
+    }
     #right ul.side-tags {
         -webkit-column-count: 2;
         -moz-column-count: 2;

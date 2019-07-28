@@ -277,6 +277,9 @@ class Blog_Frontend_Model extends Frontend_Model {
         $post['liked'] = $this->getLikedPosts($id);
         // подсвечиваем код
         $post['body'] = $this->highlightCodeBlocks($post['body']);
+        // обновляем кол-во просмотров
+        $query = "UPDATE `blog_posts` SET `views` = `views` + 1 WHERE `id` = :id";
+        $this->database->execute($query, array('id' => $id));
 
         return $post;
 
@@ -585,7 +588,30 @@ class Blog_Frontend_Model extends Frontend_Model {
         return $posts;
 
     }
-    
+
+    /**
+     * Вызвращает массив популярных постов блога для боковой колонки
+     */
+    public function getPopularPosts() {
+        $query = "SELECT
+                      `id`, `name`
+                  FROM
+                      `blog_posts`
+                  WHERE
+                      `visible` = 1
+                  ORDER BY
+                      `views` DESC, `added` DESC
+                  LIMIT
+                      5";
+        $posts = $this->database->fetchAll($query);
+        // добавляем в массив постов блога информацию об URL поста
+        foreach($posts as $key => $value) {
+            // URL записи (поста) блога
+            $posts[$key]['url'] = $this->getURL('frontend/blog/post/id/' . $value['id']);
+        }
+        return [] /*$posts*/;
+   }
+
     /**
      * Функция возвращает количество результатов поиска по блогу
      */

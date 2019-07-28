@@ -145,6 +145,7 @@ abstract class Frontend_Controller extends Base_Controller {
          * массив переменных, которые будут переданы в шаблон right.php
          */
         $this->rightVars = array(
+            'popularPosts'      => $this->blogFrontendModel->getPopularPosts(),
             'blogCategories'    => $this->blogFrontendModel->getCategories(),
             'articleCategories' => $this->articleFrontendModel->getCategories(),
             'blogTags'          => $this->blogFrontendModel->getSideTags(),
