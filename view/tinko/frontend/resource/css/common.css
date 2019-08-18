@@ -301,7 +301,6 @@ body > .wrapper {
     margin: 15px 0;
     color: #5390cc;
     font-weight: normal;
-    text-shadow: 0.5px 0.5px 0.5px #ccc;
 }
 #content h1 {
     font-size: 25px;
@@ -310,11 +309,10 @@ body > .wrapper {
     font-size: 21px;
 }
 #content h3 {
-    font-size: 15px;
+    font-size: 17px;
 }
 #content h4 {
-    font-size: 14px;
-    color: #000000;
+    font-size: 15px;
 }
 #content p {
     margin: 15px 0;
@@ -441,6 +439,37 @@ hr {
     overflow: auto;
     max-height: 400px;
     margin: 15px 0;
+    position: relative;
+}
+/*
+#content pre:before {
+    color: #969696;
+    font-size: 12px;
+    background: #ffffff;
+    border: 0.5px solid #d1d1d1;
+    padding: 2px 5px;
+    border-radius: 10px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    content: "Скопировать";
+}
+*/
+/* стиль для ссылки Скопировать код */
+#content .copy {
+    color: #969696;
+    font-size: 12px;
+    background: #ffffff;
+    border: 0.5px solid #d1d1d1;
+    padding: 2px 5px;
+    border-radius: 10px;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    cursor: pointer;
+    width: 80px;
+    text-align: center;
 }
 #content pre.erp {
     padding-left: 15px;

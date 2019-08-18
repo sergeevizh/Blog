@@ -39,5 +39,30 @@ $(document).ready(function() {
             _this.next().next().slideToggle();
         });
     });
+    
+    /*
+     * Копирование кода в буфер обмена
+     */
+    $('<span>')
+        .text('Копировать')
+        .addClass('copy')
+        .appendTo('#content pre');
+    $('span.copy').on('click', function () {
+        var $code = $(this).parent();
+        $(this).text('');
+        console.log($code.text());
+        var $tmp = $('<textarea>').appendTo('body');
+        $tmp.val($code.text()).select();
+        document.execCommand('copy');
+        $tmp.remove();
+        $(this).text('Копировать');
+        $(this).slideUp(200, function () {
+            $(this).text('Код в буфере').slideDown(200, function () {
+                $(this).delay(1500).slideUp(200, function () {
+                    $(this).text('Копировать').slideDown(200);
+                });
+            });
+        });
+    });
 
 });
