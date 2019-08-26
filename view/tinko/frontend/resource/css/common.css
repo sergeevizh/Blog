@@ -323,9 +323,9 @@ body > .wrapper {
 #content ul.space > li, #content ol.space > li {
     margin: 15px 0 15px 0;
 }
-        #content ul > li > ul, #content ol > li > ol, #content ol > li > ul, #content ul > li > ol {
-            margin: 5px 0 5px 20px;
-        }
+    #content ul > li > ul, #content ol > li > ol, #content ol > li > ul, #content ul > li > ol {
+        margin: 5px 0 5px 20px;
+    }
 #content img {
     max-width: 100%;
 }
@@ -336,6 +336,38 @@ body > .wrapper {
     color: #000000;
     font-weight: normal;
     text-shadow: 1px 1px 1px #ccc;
+}
+
+#content blockquote {
+    border-left: 6px solid #5390cc;
+    font-size: 13px;
+    margin: 1em 0 1em 3em;
+    padding-left: 24px;
+    position: relative;
+    color: #5390cc;
+}
+#content blockquote:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -6px;
+    height: 25px;
+    background-color: #fff;
+    width: 6px;
+    margin-top: -1em;
+}
+#content blockquote:after {
+    content: "”";
+    position: absolute;
+    top: 50%;
+    left: -13px;
+    color: #5390cc;
+    font-size: 40px;
+    font-weight: bold;
+    line-height: 20px;
+}
+#content blockquote ul {
+    margin-left: 1em;
 }
 
 hr {
