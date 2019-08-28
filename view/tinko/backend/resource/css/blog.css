@@ -108,6 +108,12 @@
             #add-edit-post > div > div:last-child > textarea {
                 height: 200px;
             }
+                #add-edit-post > div > div:last-child > textarea[name="keywords"] {
+                    height: 45px;
+                }
+                #add-edit-post > div > div:last-child > textarea[name="description"] {
+                    height: 45px;
+                }
                 #add-edit-post > div > div:last-child > textarea[name="excerpt"] {
                     height: 60px;
                 }

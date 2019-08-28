@@ -96,12 +96,12 @@ defined('ZCMS') or die('Access denied');
         </div>
     </div>
     <div>
-        <div>Ключевые слова (meta)</div>
-        <div><input type="text" name="keywords" maxlength="250" value="<?php echo $keywords; ?>" /></div>
+        <div>Описание (meta)</div>
+        <div><textarea name="description" maxlength="250"></textarea></div>
     </div>
     <div>
-        <div>Описание (meta)</div>
-        <div><input type="text" name="description" maxlength="250" value="<?php echo $description; ?>" /></div>
+        <div>Ключевые слова (meta)</div>
+        <div><textarea name="keywords" maxlength="250"><?php echo $keywords; ?></textarea></div>
     </div>
     <div>
         <div>Изображение</div>
