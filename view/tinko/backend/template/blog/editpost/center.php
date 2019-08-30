@@ -102,7 +102,7 @@ defined('ZCMS') or die('Access denied');
     </div>
     <div>
         <div>Описание (meta)</div>
-        <div><textarea name="description" maxlength="250"></textarea></div>
+        <div><textarea name="description" maxlength="250"><?php echo $description; ?></textarea></div>
     </div>
     <div>
         <div>Ключевые слова (meta)</div>
