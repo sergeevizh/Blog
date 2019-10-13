@@ -199,6 +199,32 @@ class Highlight {
                 ',', '.', ':', '[', ']', '{', '}'
             ),
         ),
+        'jsx' => array(
+            'colors' => array(
+                'default'   => array('fore' => '#333333'),
+                'comment1'  => array('fore' => '#888888'),
+                'comment2'  => array('fore' => '#888888'),
+                'string1'   => array('fore' => '#0080FF'),
+                'string2'   => array('fore' => '#0080FF'),
+                'keyword1'  => array('fore' => '#8000FF'),
+                'keyword2'  => array('fore' => '#808000'),
+                'attribute' => array('fore' => '#808000'),
+                'html-1'    => array('fore' => '#009900'),
+                'html-2'    => array('fore' => '#009900'),
+                'regexp'    => array('fore' => '#EE8000'),
+                'digit'     => array('fore' => '#CC00CC'),
+                'delimiter' => array('fore' => '#009900'),
+            ),
+            'keyword1' => array(
+                'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'return', 'switch', 'case', 'default', 'do', 'with', 'in', 'abstract', 'class', 'extends', 'function', 'final', 'public', 'protected', 'private', 'static', 'self', 'new', 'instanceof', 'interface', 'this', 'try', 'throw', 'throws', 'finally', 'implements', 'super', 'var',  'typeof', 'void', 'const'
+            ),
+            'keyword2' => array(
+                'true', 'false', 'boolean', 'int', 'float', 'undefined', 'null'
+            ),
+            'delimiter' => array(
+                '=', '\[', '\]', '\(', '\)', '\{', '\}', '</', '/>', '>', '<'
+            ),
+        ),
         'html' => array(
             'colors' => array(
                 'default'   => array('fore' => '#333333'),
@@ -289,6 +315,7 @@ class Highlight {
                 'stop-hd'   => array('fore' => '#FF6600', 'back' => '#FFFFEE'),
                 'var-hd-1'  => array('fore' => '#800080'),
                 'var-hd-2'  => array('fore' => '#800080'),
+                'todo-com'  => array('fore' => '#888888', 'back' => '#FFFFEE'),
                 'comment1'  => array('fore' => '#888888'),
                 'comment2'  => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000EE'),
@@ -676,6 +703,15 @@ class Highlight {
     public function highlightHTML($code) {
 
         $code = $this->trim($code);
+        
+        /*
+         * 1. вырезаем куски jsx-кода, вставляя на это место заглушки, и раскрашиваем все эти куски
+         * 2. потом раскрашиваем оставшийся html-код, действуя как обычно
+         * 3. вставляем на место заглушек из первого шага раскрашенные кусочки jsx-кода
+         */
+        $jsxSource = $jsxReplace = array();
+        $pattern = '~<script type="text/babel">(?P<code>.*)</script>~Us';
+        $this->replaceCodeWithStub($code, $jsxSource, $jsxReplace, $pattern, 'jsx');
 
         /*
          * 1. вырезаем куски javascript-кода, вставляя на это место заглушки, и раскрашиваем все эти куски
@@ -683,7 +719,7 @@ class Highlight {
          * 3. вставляем на место заглушек из первого шага раскрашенные кусочки javascript-кода
          */
         $jsSource = $jsReplace = array();
-        $pattern = '~<script(?:[^>]+)?>(?P<code>.*)</script>~Us';
+        $pattern = '~<script(?:[^>]+)?>(?P<code>[^¤]*)</script>~Us';
         $this->replaceCodeWithStub($code, $jsSource, $jsReplace, $pattern, 'js');
 
         /*
@@ -750,6 +786,11 @@ class Highlight {
          * вставляем куски javascript-кода обратно
          */
         $this->replaceStubWithCode($code, $jsSource, $jsReplace);
+        
+        /*
+         * вставляем куски jsx-кода обратно
+         */
+        $this->replaceStubWithCode($code, $jsxSource, $jsxReplace);
 
         return '<pre style="color:'.$this->settings['html']['colors']['default']['fore'].'">' . $code . '</pre>';
 
@@ -772,7 +813,7 @@ class Highlight {
             'comment2'  => '~/\*.*\*/~sU',    // комментарии
             'string1'   => '~"[^"]*"~',       // строки в двойных кавычках
             'string2'   => "~'[^']*'~",       // строки в одинарных кавычках
-            'regexp'    => "~/[^/]+/[igm]*~", // регулярное выражение
+            'regexp'    => "~/[^/\n]+/[igmy]*~", // регулярное выражение
             'keyword1'  => '~\b('.implode('|', $this->settings['js']['keyword1']).')\b~i', // ключевые слова
             'keyword2'  => '~\b('.implode('|', $this->settings['js']['keyword2']).')\b~i', // ключевые слова
             //'def-call'  => '~\b[_a-z][_a-z0-9]*\b\s?(?=\()~i', // определение или вызов функции
@@ -813,6 +854,40 @@ class Highlight {
         $code = $this->highlightCodeString($code, $pattern, 'json');
 
         return '<pre style="color:'.$this->settings['json']['colors']['default']['fore'].'">' . $code . '</pre>';
+
+    }
+
+    /**
+     * Функция для подсветки JSX-кода
+     */
+    public function highlightJSX($code, $pre = true) {
+
+        if ($pre) {
+            $code = $this->trim($code);
+        }
+
+        $pattern = array(
+            'comment1'  => '~\/\/ .*$~m',     // комментарии
+            'comment2'  => '~/\*.*\*/~sU',    // комментарии
+            'attribute' => '~(?<=\s)[a-z]+(?=\=(\{|"))~i', // атрибут тега
+            'string1'   => '~"[^"]*"~',       // строки в двойных кавычках
+            'string2'   => "~'[^']*'~",       // строки в одинарных кавычках
+            'keyword1'  => '~\b('.implode('|', $this->settings['jsx']['keyword1']).')\b~i', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings['jsx']['keyword2']).')\b~i', // ключевые слова
+            'html-1'    => '~<[a-z][a-z0-9]*(?=\s)~i', // начало html-элемента
+            'html-2'    => '~<[/]?[a-z][a-z0-9]*[ ]?[/]?>~i', // html-элемент целиком
+            'regexp'    => "~/[^/\n]+/[igmy]*~", // регулярное выражение
+            'digit'     => '~\b\d+\b~', // цифры
+            'delimiter' => '~'.implode('|', $this->settings['jsx']['delimiter']).'~', // разделители
+        );
+
+        $code = $this->highlightCodeString($code, $pattern, 'jsx');
+        
+        if (!$pre) {
+            return $code;
+        }
+
+        return '<pre style="color:'.$this->settings['jsx']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
@@ -954,6 +1029,7 @@ class Highlight {
         $pattern = array(
             'start-hd'  => '~\<\<\< ?[_A-Z]+(?=¤)~m', // начало here doc
             'stop-hd'   => '~(?<=¤)[_A-Z]+(?=;$)~m', // конец here doc
+            'todo-com'  => '~\/\/ TODO.*$~m',  // TODO
             'comment1'  => '~\/\/ .*$~m',  // комментарии
             'comment2'  => '~/\*.*\*/~sU', // комментарии
             'string1'   => '~"[^"]*"~',    // строки в двойных кавычках
@@ -1434,6 +1510,10 @@ class Highlight {
             $totalLength = strlen($match[0][0]); // длина кусочка кода внутри <stript>...</script> + длина <stript> + длина </script>
             $tagLength = $totalLength - $codeLength; // длина <stript> + длина </script>
 
+            if ($type == 'jsx') {
+                $piece = $this->highlightJSX($item, false);
+                $source[] = '<span style="color:'.$this->settings[$type]['colors']['default']['fore'].'">' . $piece . '</span>';
+            }
             if ($type == 'js') {
                 $piece = $this->highlightJS($item, false);
                 $source[] = '<span style="color:'.$this->settings[$type]['colors']['default']['fore'].'">' . $piece . '</span>';
