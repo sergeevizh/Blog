@@ -216,7 +216,7 @@ class Highlight {
                 'delimiter' => array('fore' => '#009900'),
             ),
             'keyword1' => array(
-                'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'return', 'switch', 'case', 'default', 'do', 'with', 'in', 'abstract', 'class', 'extends', 'function', 'final', 'public', 'protected', 'private', 'static', 'new', 'instanceof', 'interface', 'this', 'try', 'throw', 'throws', 'finally', 'implements', 'super', 'var',  'typeof', 'void', 'const'
+                'if', 'else', 'elseif', 'for', 'while', 'foreach', 'as', 'break', 'continue', 'return', 'switch', 'case', 'default', 'do', 'with', 'in', 'abstract', 'class', 'extends', 'function', 'final', 'public', 'protected', 'private', 'static', 'new', 'instanceof', 'interface', 'this', 'try', 'throw', 'throws', 'finally', 'implements', 'super', 'var',  'typeof', 'void', 'const', 'import', 'export', 'from'
             ),
             'keyword2' => array(
                 'true', 'false', 'boolean', 'int', 'float', 'undefined', 'null'
@@ -869,7 +869,7 @@ class Highlight {
         $pattern = array(
             'comment1'  => '~\/\/ .*$~m',     // комментарии
             'comment2'  => '~/\*.*\*/~sU',    // комментарии
-            'attribute' => '~(?<=\s)[a-z]+(?=\=(\{|"))~i', // атрибут тега
+            'attribute' => '~(?<=\s)[a-z_]+(?=\=(\{|"))~i', // атрибут тега
             'string1'   => '~"[^"]*"~',       // строки в двойных кавычках
             'string2'   => "~'[^']*'~",       // строки в одинарных кавычках
             'keyword1'  => '~\b('.implode('|', $this->settings['jsx']['keyword1']).')\b~i', // ключевые слова
