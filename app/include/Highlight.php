@@ -211,6 +211,7 @@ class Highlight {
                 'attribute' => array('fore' => '#808000'),
                 'html-1'    => array('fore' => '#009900'),
                 'html-2'    => array('fore' => '#009900'),
+                'entity'    => array('fore' => '#8000FF'),
                 'regexp'    => array('fore' => '#EE8000'),
                 'digit'     => array('fore' => '#CC00CC'),
                 'delimiter' => array('fore' => '#009900'),
@@ -876,6 +877,7 @@ class Highlight {
             'keyword2'  => '~\b('.implode('|', $this->settings['jsx']['keyword2']).')\b~i', // ключевые слова
             'html-1'    => '~<[a-z][a-z0-9]*(?=\s)~i', // начало html-элемента
             'html-2'    => '~<[/]?[a-z][a-z0-9]*[ ]?[/]?>~i', // html-элемент целиком
+            'entity'    => '~&([a-z]+|#\d+);~',    // html-сущности
             'regexp'    => "~/[^/\n]+/[igmy]*~", // регулярное выражение
             'digit'     => '~\b\d+\b~', // цифры
             'delimiter' => '~'.implode('|', $this->settings['jsx']['delimiter']).'~', // разделители
