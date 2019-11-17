@@ -93,6 +93,7 @@ class Highlight {
             'colors' => array(
                 'default'   => array('fore' => '#0080FF'),
                 'cliprompt' => array('fore' => '#AAAAAA'),
+                'cliproot'  => array('fore' => '#FF9999'),
                 'command'   => array('fore' => '#8000FF'),
                 'comment'   => array('fore' => '#888888'),
                 'selected1' => array('fore' => '#EE0000'),
@@ -572,8 +573,9 @@ class Highlight {
             'selected1' => '~\[red\].*\[/red\]~sU',         // выделить текст
             'selected2' => '~\[grn\].*\[/grn\]~sU',         // выделить текст
             'comment'   => '~(?<= )# .*$~m',                // комментарий
-            'command'   => '~(?<=^(\$|\>) ).*$~m',          // команда
+            'command'   => '~(?<=^(\$|\>|#) ).*$~m',        // команда
             'cliprompt' => '~^(\$|\>)(?= |$)~m',            // приглашение
+            'cliproot'  => '~^#(?= |$)~m',                  // приглашение root
             'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
         );
 
