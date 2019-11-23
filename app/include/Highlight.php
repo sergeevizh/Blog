@@ -306,6 +306,17 @@ class Highlight {
                 '.', ',', ';', '=', '(', ')', '@', '*', '>', '<'
             ),
         ),
+        'nginx' => array(
+            'colors' => array(
+                'default'  => array('fore' => '#0080FF'),
+                'comment'  => array('fore' => '#888888'),
+                'variable' => array('fore' => '#808000'),
+                'string'   => array('fore' => '#0000FF'),
+                'endline'  => array('fore' => '#FF0000'),
+                'section'  => array('fore' => '#FF0000'),
+                'command'  => array('fore' => '#008080'),
+            ),
+        ),
         'php' => array(
             'colors' => array(
                 'default'   => array('fore' => '#009900'),
@@ -384,6 +395,28 @@ class Highlight {
             ),
             'function' => array(
                 'object', 'dict', 'list', 'tuple', 'set', 'bool', 'float', 'int', 'str', 'slice', 'range', 'len', 'input', 'print', 'min', 'max', 'sum', 'round', 'type', 'open', 'super'
+            ),
+            'delimiter' => array(
+                '.', ',', ':', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!'
+            ),
+        ),
+        'ruby' => array(
+            'colors' => array(
+                'default'   => array('fore' => '#008080'),
+                'comment'   => array('fore' => '#888888'),
+                'string1'   => array('fore' => '#0000FF'),
+                'string2'   => array('fore' => '#0000FF'),
+                'keyword1'  => array('fore' => '#8000FF'),
+                'keyword2'  => array('fore' => '#DD00DD'),
+                'digit'     => array('fore' => '#FF00FF'),
+                'delimiter' => array('fore' => '#FF0000'),
+                'number'    => array('fore' => '#CCCCCC'),
+            ),
+            'keyword1' => array(
+                'BEGIN', 'END', 'alias', 'and', 'begin', 'break', 'case', 'class', 'def', 'defined', 'do', 'else', 'elsif', 'end', 'ensure', 'for',  'if',     'in',     'module', 'next', 'not',  'or', 'redo', 'rescue', 'retry', 'return', 'self', 'super','then', 'undef', 'unless', 'until', 'when', 'while', 'yield'
+            ),
+            'keyword2' => array(
+                'true', 'false', 'nil'
             ),
             'delimiter' => array(
                 '.', ',', ':', '=', '+', '-', '/', '*', '%', '[', ']', '(', ')', '{', '}', '>', '<', '|', '!'
@@ -1007,6 +1040,28 @@ class Highlight {
         return '<pre style="color:'.$this->settings['mysql']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
+    
+    /**
+     * Функция для подсветки файла конфигурации Nginx
+     */
+    public function highlightNginx($code) {
+
+        $code = $this->trim($code);
+
+        $pattern = array(
+            'comment'  => '~# .*$~m',            // комментарии
+            'variable' => '~\$[a-z_]+~',         // переменные
+            'string'   => '~"[^"]*"~',           // строки в двойных кавычках
+            'section'  => '~[\{\}]~',            // начало или конец секции
+            'endline'  => '~;\s*$~m',            // конец директивы
+            'command'  => '~^\s*[a-z_]+~m'       // директива
+        );
+
+        $code = $this->highlightCodeString($code, $pattern, 'nginx');
+
+        return '<pre style="color:'.$this->settings['nginx']['colors']['default']['fore'].'">' . $code . '</pre>';
+
+    }
 
     /**
      * Функция для подсветки PHP
@@ -1231,6 +1286,32 @@ class Highlight {
         $code = $this->highlightCodeString($code, $pattern, 'python');
 
         return '<pre style="color:'.$this->settings['python']['colors']['default']['fore'].'">' . $code . '</pre>';
+
+    }
+    
+    /**
+     * Функция для подсветки Ruby
+     */
+    public function highlightRuby($code) {
+
+        $code = $this->trim($code);
+
+        foreach ($this->settings['ruby']['delimiter'] as $value) {
+            $delimiter[] = '\\'.$value;
+        }
+        $pattern = array(
+            'comment'   => '~# .*$~m',             // комментарии
+            'string1'   => '~[ru]{0,2}"[^"]*"~',   // строки в двойных кавычках
+            'string2'   => "~[ru]{0,2}'[^']*'~",   // строки в одинарных кавычках
+            'keyword1'  => '~\b('.implode('|', $this->settings['ruby']['keyword1']).')\b~', // ключевые слова
+            'keyword2'  => '~\b('.implode('|', $this->settings['ruby']['keyword2']).')\b~', // ключевые слова
+            'digit'     => '~\b\d+\b~',            // цифры
+            'delimiter' => '~'.implode('|', $delimiter).'~', // разделители
+        );
+
+        $code = $this->highlightCodeString($code, $pattern, 'ruby');
+
+        return '<pre style="color:'.$this->settings['ruby']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 
