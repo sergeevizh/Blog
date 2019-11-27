@@ -4,6 +4,12 @@ DirectoryIndex index.php
 RewriteEngine On
 
 #
+# 301 редирект с server.com на www.server.com
+#
+RewriteCond %{HTTP_HOST} ^host2.ru
+RewriteRule (.*) http://www.host12.ru/$1 [R=301,L]
+
+#
 # 301 редирект с /index.php на корень сайта «/»
 #
 # проверяем соответствие «GET /index.php?a=b HTTP/1.1»; «{3,9}» — потому

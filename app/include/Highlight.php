@@ -403,6 +403,7 @@ class Highlight {
         'ruby' => array(
             'colors' => array(
                 'default'   => array('fore' => '#008080'),
+                'here-doc'  => array('fore' => '#BB00BB'),
                 'comment'   => array('fore' => '#888888'),
                 'string1'   => array('fore' => '#0000FF'),
                 'string2'   => array('fore' => '#0000FF'),
@@ -574,7 +575,7 @@ class Highlight {
             'execute1'    => '~\$\([^)(]+\)~',                     // подстановка результата выполнения
             'execute2'    => '~\$\([^)(]+\)~',                     // подстановка результата выполнения
             'execute3'    => '~\`[^`]+`~',                         // подстановка результата выполнения
-            'string2'     => '~"[^"]*"~',                          // строки в двойных кавычках
+            'string2'     => '~"[^"]*"~u',                          // строки в двойных кавычках
             'here-doc'    => '~(?<=\<\<) ?-?([-_A-Za-z]+).*?\1~s', // here doc
             'arr-init'    => '~(?<=[a-z]\=)\([^)]*\)~i',           // инициализация массива
             'keyword'     => '~\b('.implode('|', $this->settings['bash']['keyword']).')\b~i', // ключевые слова
@@ -1300,6 +1301,7 @@ class Highlight {
             $delimiter[] = '\\'.$value;
         }
         $pattern = array(
+            'here-doc'  => '#\<\<(-|~)?([-_A-Za-z]+).*?\2#s', // here doc
             'comment'   => '~# .*$~m',             // комментарии
             'string1'   => '~[ru]{0,2}"[^"]*"~',   // строки в двойных кавычках
             'string2'   => "~[ru]{0,2}'[^']*'~",   // строки в одинарных кавычках
