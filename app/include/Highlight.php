@@ -89,6 +89,16 @@ class Highlight {
             ),
             'specchars' => array('&', '>', '<'),
         ),
+        'conf' => array(
+            'colors' => array(
+                'default'   => array('fore'   => '#5555FF'),
+                'comment'   => array('fore'   => '#888888'),
+                'selected1' => array('fore'   => '#EE0000'),
+                'selected2' => array('fore'   => '#008080'),
+                'selected3' => array('border' => '#FF0000'),
+            ),
+            'specchars' => array('&', '>', '<'),
+        ),
         'cli' => array(
             'colors' => array(
                 'default'   => array('fore' => '#0080FF'),
@@ -644,6 +654,33 @@ class Highlight {
         $code = str_replace(array('[red]', '[grn]', '[border]', '[/red]', '[/grn]', '[/border]'), '', $code);
 
         return '<pre style="color:'.$this->settings['code']['colors']['default']['fore'].'">' . $code . '</pre>';
+
+    }
+    
+    /**
+     * Функция для подсветки файлов конфигурации
+     */
+    public function highlightConfig($code) {
+
+        $code = $this->trim($code);
+
+        foreach ($this->settings['code']['specchars'] as $value) {
+            $specchars[] = '\\'.$value;
+        }
+
+        $pattern = array(
+            'comment'   => '~^#.*$~m',                      // комментарий
+            'selected1' => '~\[red\].*\[/red\]~sU',         // выделить текст
+            'selected2' => '~\[grn\].*\[/grn\]~sU',         // выделить текст
+            'selected3' => '~\[border\].*\[/border\]~sU',   // выделить текст
+            'specchars' => '~'.implode('|', $specchars).'~' // спец.символы
+        );
+
+        $code = $this->highlightCodeString($code, $pattern, 'conf');
+
+        $code = str_replace(array('[red]', '[grn]', '[border]', '[/red]', '[/grn]', '[/border]'), '', $code);
+
+        return '<pre style="color:'.$this->settings['conf']['colors']['default']['fore'].'">' . $code . '</pre>';
 
     }
 

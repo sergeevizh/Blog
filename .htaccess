@@ -6,8 +6,8 @@ RewriteEngine On
 #
 # 301 редирект с server.com на www.server.com
 #
-RewriteCond %{HTTP_HOST} ^host12.ru
-RewriteRule (.*) http://www.host12.ru/$1 [R=301,L]
+RewriteCond %{HTTP_HOST} !^www\.(.*) [NC]
+RewriteRule ^(.*)$ http://www.%1/$1 [R=301,L]
 
 #
 # 301 редирект с /index.php на корень сайта «/»
